@@ -1,8 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
-
+import App from "./app";
 import Welcome from "./welcome";
-import Registration from "./registration";
 
 let elem;
 
@@ -11,7 +10,7 @@ if (location.pathname == "/welcome") {
     elem = <Welcome />;
 } else {
     //they are logged in
-    elem = <img src="/logo.png" />;
+    elem = <img src="logo.png" alt="logo" />;
 }
 
 ReactDOM.render(elem, document.querySelector("main"));

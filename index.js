@@ -1,12 +1,32 @@
 const express = require("express");
 const app = express();
 const compression = require("compression");
+const cookieSession = require("cookie-session");
+const csurf = require("csurf");
+
+const db = require("./libs/db");
+const bc = require("./libs/bc");
+
+app.use(express.static("./public"));
+
+app.use(require("body-parser").json());
+
+app.use(
+    cookieSession({
+        secret: `I'm always angry.`,
+        maxAge: 1000 * 60 * 60 * 24 * 14
+    })
+);
+
+app.use(csurf());
+
+//axios can read the cookie
+app.use(function(req, res, next) {
+    res.cookie("mytoken", req.csrfToken());
+    next();
+});
 
 app.use(compression());
-
-app.use(require('cookie-session'){
-
-}
 
 if (process.env.NODE_ENV != "production") {
     app.use(
@@ -21,26 +41,76 @@ if (process.env.NODE_ENV != "production") {
 
 app.get("/welcome", (req, res) => {
     if (req.session.userId) {
-        res.redirect('/')
-    }
-    else {
-        res.sendfile(__dirname + '/index.html')
+        res.redirect("/");
+    } else {
+        res.sendFile(__dirname + "/index.html");
     }
 });
 
-app.get("/register", (req, res) => {
+// POST /register with async
+app.post("/register", async (req, res) => {
+    try {
+        let buff = Buffer.from(req.body.pwd, "base64");
+        let text = buff.toString("ascii");
+        let securedPwd = await bc.hashPassword(text);
+        let user = await db.addUser(
+            req.body.first,
+            req.body.last,
+            securedPwd,
+            req.body.email
+        );
+        req.session.userId = user.rows[0].id;
+        res.json({ success: true });
+    } catch (err) {
+        console.log("Error in POST /registration: ", err);
+        res.json({ success: false });
+    }
+});
 
-})
+app.post("/login", (req, res) => {
+    let userInfo;
+    db.getUserByEmail(req.body.login)
+        .then(val => {
+            if (val.rowCount > 0) {
+                userInfo = val.rows[0];
+                let buff = Buffer.from(req.body.pwd, "base64");
+                let text = buff.toString("ascii");
+                return bc.checkPassword(text, val.rows[0].pwd);
+            } else {
+                return Promise.reject();
+            }
+        })
+        .then(matched => {
+            if (matched) {
+                req.session.userId = userInfo.id;
+                res.json({ success: true });
+            } else {
+                return Promise.reject();
+            }
+        }, userInfo)
+        .catch(err => {
+            console.log("Error in POST /login: ", err);
+            res.json({ success: false });
+        });
+});
+
+app.get("/logout", (req, res) => {
+    req.session = null;
+    res.json({
+        success: true
+    });
+});
 
 app.get("*", function(req, res) {
     if (!req.session.userId) {
-        res.redirect('/welcome')
-    }
-    else {
-        res.sendfile(__dirname + '/index.html')
+        res.redirect("/welcome");
+    } else {
+        res.sendFile(__dirname + "/index.html");
     }
 });
 
-app.listen(8080, function() {
-    console.log("I'm listening.");
-});
+if (require.main == module) {
+    app.listen(process.env.PORT || 8080, () =>
+        console.log("Server is Running at localhost:8080")
+    );
+}

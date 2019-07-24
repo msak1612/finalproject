@@ -29,3 +29,42 @@ How to set up logged-in or not? (3ways)
 2. startjs can look at cookies. loggein = true.
 
 3. axios request.. some route to know whether user has logged-in or not.
+
+Day-2
+
+---
+
+index.js -
+browserFetch replaces axios
+
+Part-2
+++++++
+can be element.. no need of form ... ajax-req to server. hash(bcrypt)
+sends res.json .. if doesnt works, sends error message
+Login to be class component.
+o/p -> redirects to /, user can see logo..
+conditional routing based on url, use React Router. For other things, use your logic.
+third section try to apply on Part-1 and Part-2
+
+--- Use React Router
+--- Use React Link instead of anchor href
+
+DATA FLOW in React
++++++++++++++++++++
+
+/welcome GET 1. Server gets Request & it sends HTML as response 2. HTML makes request for file bundle.js 3. bundle.js file comes from the second server that we run. (node bundle-server.js) 4. bundle.js contains all REACT and bundle.js activates REACT. 5. When bundle.js runs and available in browser then our REACT code runs. 6. ReactDOM.render renders a component onscreen. If it is no not present, we dont get any bugs but nothing is rendered on the screen.
+
+Registration Flow:
++++++++++++++++++
+
+F.E -> user enters all input data(name, email,id etc) in Registration
+user clicks register button and sends axios http POST request to server(index.js)
+
+1. FE -> Server /post register
+2. server -> DB
+3. DB -> Server
+4. Server -> FE
+
+    ```
+
+    ```

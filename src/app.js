@@ -1,17 +1,20 @@
 // src/App.js
 import React from "react";
-import HelloWorld from "./start";
-import axios from "axios";
+import axios from "./axios";
+
+// let elem;
+//
+// if (location.pathname == "/welcome") {
+//     //they are logged out
+//     elem = <Login />;
+// } else {
+//     //they are logged in
+// }
 
 export default class App extends React.Component {
-    constructor() {
-        super();
-        this.state = {
-            name: "",
-            cutenessScore: null
-        };
-        this.handleChange = this.handleChange.bind(this);
-        this.handleClick = this.handleClick.bind(this);
+    constructor(props) {
+        super(props);
+        this.state = { isLoggedIn: false };
     }
 
     // componentDidMount is the React version of "mounted"
