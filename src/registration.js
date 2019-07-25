@@ -8,20 +8,7 @@ export default class Registration extends React.Component {
     constructor(props) {
         super(props);
         this.state = { pwd: "", pwd1: "", error: "" };
-        this.handleRegisterClick = this.handleRegisterClick.bind(this);
-        this.handleChange = this.handleChange.bind(this);
     } //closes constructor
-
-    // componentDidMount() {
-    //     axios.get("/register").then(response => {
-    //         this.setState({
-    //             first: response.data.first,
-    //             last: response.data.last,
-    //             email: response.data.email,
-    //             pwd: response.data.pwd
-    //         });
-    //     });
-    // } //closes componentDidMount
 
     handleChange(event) {
         this.setState({
@@ -60,9 +47,7 @@ export default class Registration extends React.Component {
             .catch(err => {
                 console.log("Error Message: ", err);
             });
-    } //closes handleClick
-    //single page - logged in & Registration - single page.. switch between these components.
-    //add this in index.js
+    } //closes handleRegisterClick
 
     render() {
         return (
@@ -75,7 +60,7 @@ export default class Registration extends React.Component {
                     name="first"
                     type="text"
                     placeholder="first name"
-                    onChange={this.handleChange}
+                    onChange={e => this.handleChange(e)}
                     required
                 />
                 <label htmlFor="last">Last Name</label>
@@ -83,7 +68,7 @@ export default class Registration extends React.Component {
                     name="last"
                     type="text"
                     placeholder="last name"
-                    onChange={this.handleChange}
+                    onChange={e => this.handleChange(e)}
                     required
                 />
                 <label htmlFor="email">Email</label>
@@ -91,7 +76,7 @@ export default class Registration extends React.Component {
                     name="email"
                     type="email"
                     placeholder="email"
-                    onChange={this.handleChange}
+                    onChange={e => this.handleChange(e)}
                     required
                 />
                 <label htmlFor="pwd">Password</label>
@@ -99,7 +84,7 @@ export default class Registration extends React.Component {
                     name="pwd"
                     type="password"
                     placeholder="password"
-                    onChange={this.handleChange}
+                    onChange={e => this.handleChange(e)}
                     required
                 />
                 <label htmlFor="pwd1">Re-enter Password</label>
@@ -107,15 +92,16 @@ export default class Registration extends React.Component {
                     name="pwd1"
                     type="password"
                     placeholder="Enter password again"
-                    onChange={this.handleChange}
+                    onChange={e => this.handleChange(e)}
                     required
                 />
-                <button name="register" onClick={this.handleRegisterClick}>
+                <button
+                    name="register"
+                    onClick={e => this.handleRegisterClick(e)}
+                >
                     Register
                 </button>
             </div>
         );
     } //closes render
 } //closes Registration
-
-//<button onClick={e => this.submit(e)}>Register</button>

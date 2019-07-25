@@ -7,7 +7,7 @@ import Login from "./login";
 export default function Welcome() {
     return (
         <div>
-            <h1>Welcome to WAT Community (Where Are They)</h1>
+            <h1>Welcome to WAT Now Community (Where Are They NOW?)</h1>
             <img src="/images/logo.png" alt="logo" />
             <p>
                 It's a social networking application for communicating with your
@@ -26,5 +26,4 @@ export default function Welcome() {
             </HashRouter>
         </div>
     );
-}
-// welcome#/ welcome#login->
+} //closes Welcome

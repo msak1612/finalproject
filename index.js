@@ -6,6 +6,12 @@ const csurf = require("csurf");
 
 const db = require("./libs/db");
 const bc = require("./libs/bc");
+const s3 = require("./libs/s3");
+
+var multer = require("multer");
+var uidSafe = require("uid-safe");
+var path = require("path");
+var config = require("./config");
 
 app.use(express.static("./public"));
 
@@ -38,6 +44,54 @@ if (process.env.NODE_ENV != "production") {
 } else {
     app.use("/bundle.js", (req, res) => res.sendFile(`${__dirname}/bundle.js`));
 }
+
+var diskStorage = multer.diskStorage({
+    destination: function(req, file, callback) {
+        callback(null, __dirname + "/uploads");
+    },
+    filename: function(req, file, callback) {
+        uidSafe(24).then(function(uid) {
+            callback(null, uid + path.extname(file.originalname));
+        });
+    }
+});
+
+var uploader = multer({
+    storage: diskStorage,
+    limits: {
+        fileSize: 2097152
+    }
+});
+
+app.post("/upload", uploader.single("file"), s3.upload, function(req, res) {
+    if (req.file) {
+        const imageUrl = config.s3Url + req.file.filename;
+        db.addProfilePic(imageUrl, req.session.userId)
+            .then(vals => {
+                res.json({ image: vals.rows[0].profile_pic });
+            })
+            .catch(err => {
+                console.log("Error in upload: ", err);
+                res.status(500).json();
+            });
+    } else {
+        console.log("Error in upload: ");
+        res.status(500).json();
+    }
+});
+
+app.get("/user", async (req, res) => {
+    console.log("req.session.userId: ", req.session.userId);
+    try {
+        const user = await db.getUserById(req.session.userId);
+        if (!user.profile_pic) {
+            user.profile_pic = "/images/default.png";
+        }
+        res.json(user.rows[0]);
+    } catch (err) {
+        console.log("Error Message: ", err);
+    }
+});
 
 app.get("/welcome", (req, res) => {
     if (req.session.userId) {
@@ -96,9 +150,6 @@ app.post("/login", (req, res) => {
 
 app.get("/logout", (req, res) => {
     req.session = null;
-    res.json({
-        success: true
-    });
 });
 
 app.get("*", function(req, res) {

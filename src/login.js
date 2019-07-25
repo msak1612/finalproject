@@ -1,22 +1,12 @@
 import React from "react";
 import axios from "./axios";
+import { Link } from "react-router-dom";
 
 export default class Login extends React.Component {
     constructor(props) {
         super(props);
         this.state = {};
-        this.handleClick = this.handleClick.bind(this);
-        this.handleChange = this.handleChange.bind(this);
     } //closes constructor
-
-    // componentDidMount() {
-    //     axios.get("/login").then(response => {
-    //         this.setState({
-    //             login: response.data.email,
-    //             pwd: response.data.pwd
-    //         });
-    //     });
-    // } //closes componentDidMount
 
     handleChange(event) {
         this.setState({
@@ -24,7 +14,7 @@ export default class Login extends React.Component {
         });
     } //closes handleChange
 
-    handleClick(event) {
+    handleLoginClick(event) {
         event.preventDefault();
         axios
             .post("/login", {
@@ -55,18 +45,18 @@ export default class Login extends React.Component {
                     name="email"
                     type="email"
                     placeholder="Login name"
-                    onChange={this.handleChange}
+                    onChange={e => this.handleChange(e)}
                     required
                 />
                 <input
                     name="pwd"
                     type="password"
                     placeholder="password"
-                    onChange={this.handleChange}
+                    onChange={e => this.handleChange(e)}
                     required
                 />
 
-                <button onClick={this.handleClick}>Login</button>
+                <button onClick={e => this.handleLoginClick(e)}>Login</button>
             </div>
         );
     } //closes render

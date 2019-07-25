@@ -1,67 +1,46 @@
-// src/App.js
 import React from "react";
+import Uploader from "./uploader";
+import ProfilePic from "./profilepic";
 import axios from "./axios";
-
-// let elem;
-//
-// if (location.pathname == "/welcome") {
-//     //they are logged out
-//     elem = <Login />;
-// } else {
-//     //they are logged in
-// }
 
 export default class App extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { isLoggedIn: false };
-    }
+        this.state = {
+            uploaderIsVisible: false
+        };
+    } //closes constructor
 
-    // componentDidMount is the React version of "mounted"
-    componentDidMount() {
-        axios.get("/get-animal").then(resp => {
-            this.setState({
-                name: resp.data.name,
-                cutenessScore: resp.data.cutenessScore
-            });
-        });
-    }
-
-    handleChange(e) {
-        this.setState({
-            [e.target.name]: e.target.value
-        });
-    }
-
-    handleClick(e) {
-        e.preventDefault();
-        console.log("this.state: ", this.state);
-        // from here you could make a POST request with
-        // axios... just like we did with Vue!
-    }
+    async componentDidMount() {
+        const { data } = await axios.get("/user"); //do GET /user in server - db query to user info
+        this.setState(data);
+    } //closes componentDidMount
 
     render() {
+        console.log("ID: ", this.state.id);
+        if (!this.state.id) {
+            return null;
+        }
         return (
             <div>
-                <AnimalsContainer
-                    name={this.state.name}
-                    cutenessScore={this.state.cutenessScore}
+                <img src="/images/group.png" alt="WAT Now" />
+                <ProfilePic
+                    image={this.state.profile_pic}
+                    first={this.state.first}
+                    last={this.state.last}
+                    onClick={() => this.setState({ uploaderIsVisible: true })}
                 />
-                <HelloWorld />
-                <form>
-                    <input
-                        type="text"
-                        name="name"
-                        onChange={this.handleChange}
+
+                {this.state.uploaderIsVisible && (
+                    <Uploader
+                        done={image => this.setState({ image })}
+                        onUpload={imageUrl => {
+                            this.setState({ profile_pic: imageUrl });
+                            this.setState({ uploaderIsVisible: false });
+                        }}
                     />
-                    <input
-                        type="text"
-                        name="cutenessScore"
-                        onChange={this.handleChange}
-                    />
-                    <button onClick={this.handleClick}>submit</button>
-                </form>
+                )}
             </div>
         );
-    }
-}
+    } //closes render
+} //closes App
