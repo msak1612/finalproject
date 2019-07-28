@@ -1,6 +1,7 @@
 import React from "react";
 import Uploader from "./uploader";
 import ProfilePic from "./profilepic";
+import Profile from "./profile";
 import axios from "./axios";
 
 export default class App extends React.Component {
@@ -12,7 +13,7 @@ export default class App extends React.Component {
     } //closes constructor
 
     async componentDidMount() {
-        const { data } = await axios.get("/user"); //do GET /user in server - db query to user info
+        const { data } = await axios.get("/user");
         this.setState(data);
     } //closes componentDidMount
 
@@ -29,6 +30,20 @@ export default class App extends React.Component {
                     first={this.state.first}
                     last={this.state.last}
                     onClick={() => this.setState({ uploaderIsVisible: true })}
+                />
+
+                <Profile
+                    bio={this.state.bio}
+                    profilePic={
+                        <ProfilePic
+                            image={this.state.profile_pic}
+                            first={this.state.first}
+                            last={this.state.last}
+                            onClick={() =>
+                                this.setState({ uploaderIsVisible: true })
+                            }
+                        />
+                    }
                 />
 
                 {this.state.uploaderIsVisible && (

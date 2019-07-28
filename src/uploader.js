@@ -29,7 +29,7 @@ export default class Uploader extends React.Component {
             .catch(err => {
                 console.log("Error Message: ", err);
             });
-    } //handleSubmitClick
+    } //handleUploadClick
 
     render() {
         return (
@@ -42,7 +42,7 @@ export default class Uploader extends React.Component {
                         onChange={e => this.handleChange(e)}
                     />
                 </label>
-                <button type="submit" onClick={e => this.handleUploadClick(e)}>
+                <button type="upload" onClick={e => this.handleUploadClick(e)}>
                     Upload
                 </button>
             </div>

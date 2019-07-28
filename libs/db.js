@@ -21,7 +21,7 @@ module.exports.getUserByEmail = function(email) {
 };
 
 module.exports.getUserById = function(id) {
-    return db.query(`SELECT * FROM users WHERE id='${id}'`);
+    return db.query(`SELECT * FROM users WHERE id=${id}`);
 };
 
 //addProfilePic
@@ -29,6 +29,13 @@ module.exports.addProfilePic = function(imageUrl, id) {
     return db.query(`
         UPDATE users
         SET profile_pic = '${imageUrl}'
-        WHERE id = '${id}'
+        WHERE id = ${id}
         RETURNING *`);
+};
+
+//addBio
+module.exports.addBio = function(bio, id) {
+    return db.query(
+        `UPDATE users SET bio = '${bio}' WHERE id = ${id} RETURNING *`
+    );
 };

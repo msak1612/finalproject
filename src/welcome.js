@@ -1,29 +1,27 @@
 //function component
 import React from "react";
-import { HashRouter, Route, Link } from "react-router-dom";
+import { HashRouter, Route, Link, Switch } from "react-router-dom";
 import Registration from "./registration";
+import SignInInfo from "./signin-info";
+import SignUpInfo from "./signup-info";
 import Login from "./login";
-
 export default function Welcome() {
     return (
-        <div>
-            <h1>Welcome to WAT Now Community (Where Are They NOW?)</h1>
-            <img src="/images/logo.png" alt="logo" />
-            <p>
-                It's a social networking application for communicating with your
-                family and friends.
-            </p>
-            <HashRouter>
-                <div>
-                    <p>Join the Mission!</p>
-                    <Route exact path="/" component={Registration} />
-                    <p>
-                        If already a member? Click here to
-                        <Link to="/login"> Login</Link>
-                    </p>
-                    <Route path="/login" component={Login} />
+        <HashRouter>
+            <div>
+                <img src="/images/logo.png" alt="logo" width="120px" />
+
+                <div id="auth-container">
+                    <Switch>
+                        <Route exact path="/" component={Registration} />
+                        <Route component={SignUpInfo} />
+                    </Switch>
+                    <Switch>
+                        <Route path="/login" component={Login} />
+                        <Route path="/" component={SignInInfo} />
+                    </Switch>
                 </div>
-            </HashRouter>
-        </div>
+            </div>
+        </HashRouter>
     );
 } //closes Welcome

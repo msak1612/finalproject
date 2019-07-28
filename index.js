@@ -148,6 +148,18 @@ app.post("/login", (req, res) => {
         });
 });
 
+app.post("/bio", (req, res) => {
+    console.log("req.body: ", req.body);
+    const bio = req.body.bio;
+    db.addBio(bio, req.session.userId)
+        .then(val => {
+            res.json({ success: true });
+        })
+        .catch(err => {
+            console.log("Error Message: ", err);
+        });
+});
+
 app.get("/logout", (req, res) => {
     req.session = null;
 });
