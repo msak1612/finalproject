@@ -2,8 +2,6 @@ import React from "react";
 import axios from "./axios";
 import { Link } from "react-router-dom";
 
-//one component per file - always export default,
-//Registration is class component - needs state
 export default class Registration extends React.Component {
     constructor(props) {
         super(props);

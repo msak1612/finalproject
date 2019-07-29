@@ -63,7 +63,7 @@ export default class BioEditor extends React.Component {
                         <textarea
                             rows="10"
                             name="draftBio"
-                            value={this.state.bio}
+                            defaultValue={this.state.bio}
                             placeholder="Describe who you are"
                             onChange={e => this.handleChange(e)}
                         ></textarea>

@@ -124,6 +124,9 @@ button {
 
 .error {
     margin: 10px;
+    font-weight: 600;
+    font-size: 24px;
+    border: 1px solid red;
 }
 
 h1 {

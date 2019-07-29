@@ -93,6 +93,21 @@ app.get("/user", async (req, res) => {
     }
 });
 
+app.get("/api/user/:id", async (req, res) => {
+    console.log("req.params: ", req.params);
+    try {
+        const { id } = req.params;
+        console.log("ID: ", id);
+        const user = await db.getUserById(id);
+        if (!user.profile_pic) {
+            user.profile_pic = "/images/default.png";
+        }
+        res.json({ user: user.rows[0], sameUser: req.session.userId == id });
+    } catch (err) {
+        console.log("Error Message: ", err);
+    }
+}); //url should be different than in BR
+
 app.get("/welcome", (req, res) => {
     if (req.session.userId) {
         res.redirect("/");
