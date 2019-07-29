@@ -5,6 +5,7 @@ export default class BioEditor extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            bio: this.props.bio,
             draftBio: "",
             editing: false,
             bioAvailable: false
@@ -23,6 +24,7 @@ export default class BioEditor extends React.Component {
                 bio: this.state.draftBio
             })
             .then(({ data }) => {
+                console.log(data);
                 this.setState({ editing: false });
                 this.setState({ bio: data.bio });
             })
@@ -34,7 +36,8 @@ export default class BioEditor extends React.Component {
 
     render() {
         let button;
-        if (this.props.bio) {
+
+        if (this.state.bio) {
             button = (
                 <button onClick={e => this.setState({ editing: true })}>
                     Edit
@@ -43,22 +46,42 @@ export default class BioEditor extends React.Component {
         } else {
             button = (
                 <button onClick={e => this.setState({ editing: true })}>
-                    Add
+                    Add Bio
                 </button>
             );
         }
         return (
-            <div>
+            <div id="biocontainer">
+                {!this.state.editing && (
+                    <span>
+                        <i>{this.state.bio}</i>
+                    </span>
+                )}
                 {this.state.editing && (
-                    <div>
+                    <div id="bioeditor">
+                        <p>Add a short bio to tell more about yourself.</p>
                         <textarea
+                            rows="10"
                             name="draftBio"
+                            value={this.state.bio}
+                            placeholder="Describe who you are"
                             onChange={e => this.handleChange(e)}
                         ></textarea>
-                        <button onClick={e => this.handleSaveClick(e)}>
-                            Save
-                        </button>
-                    </div> //more to Edit
+                        <div id="bio-btn">
+                            <button
+                                name="save"
+                                onClick={e => this.handleSaveClick(e)}
+                            >
+                                Save
+                            </button>
+                            <button
+                                name="cancel"
+                                onClick={e => this.setState({ editing: false })}
+                            >
+                                Cancel
+                            </button>
+                        </div>
+                    </div>
                 )}
                 {!this.state.editing && button}
             </div>

@@ -31,9 +31,13 @@ export default class Uploader extends React.Component {
             });
     } //handleUploadClick
 
+    handleCancelClick(event) {
+        event.preventDefault();
+        this.props.onCancel();
+    }
     render() {
         return (
-            <div>
+            <div id="upload-container">
                 <label>
                     Upload file
                     <input
@@ -44,6 +48,9 @@ export default class Uploader extends React.Component {
                 </label>
                 <button type="upload" onClick={e => this.handleUploadClick(e)}>
                     Upload
+                </button>
+                <button type="cancel" onClick={e => this.handleCancelClick(e)}>
+                    Cancel
                 </button>
             </div>
         );

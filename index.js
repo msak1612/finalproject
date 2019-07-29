@@ -153,7 +153,7 @@ app.post("/bio", (req, res) => {
     const bio = req.body.bio;
     db.addBio(bio, req.session.userId)
         .then(val => {
-            res.json({ success: true });
+            res.json(val.rows[0]);
         })
         .catch(err => {
             console.log("Error Message: ", err);

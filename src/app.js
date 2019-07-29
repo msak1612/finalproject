@@ -3,6 +3,7 @@ import Uploader from "./uploader";
 import ProfilePic from "./profilepic";
 import Profile from "./profile";
 import axios from "./axios";
+import { Route, BrowserRouter } from "react-router-dom";
 
 export default class App extends React.Component {
     constructor(props) {
@@ -23,34 +24,38 @@ export default class App extends React.Component {
             return null;
         }
         return (
-            <div>
-                <img src="/images/group.png" alt="WAT Now" />
-                <ProfilePic
-                    image={this.state.profile_pic}
-                    first={this.state.first}
-                    last={this.state.last}
-                    onClick={() => this.setState({ uploaderIsVisible: true })}
-                />
-
+            <div id="main-app">
+                <header>
+                    <img id="logo" src="/images/logo.png" alt="logo" />{" "}
+                    <ProfilePic
+                        image={this.state.profile_pic}
+                        first={this.state.first_name}
+                        last={this.state.last_name}
+                    />
+                </header>
                 <Profile
                     bio={this.state.bio}
+                    first={this.state.first_name}
+                    last={this.state.last_name}
                     profilePic={
                         <ProfilePic
                             image={this.state.profile_pic}
-                            first={this.state.first}
-                            last={this.state.last}
+                            first={this.state.first_name}
+                            last={this.state.last_name}
                             onClick={() =>
                                 this.setState({ uploaderIsVisible: true })
                             }
                         />
                     }
                 />
-
                 {this.state.uploaderIsVisible && (
                     <Uploader
                         done={image => this.setState({ image })}
                         onUpload={imageUrl => {
                             this.setState({ profile_pic: imageUrl });
+                            this.setState({ uploaderIsVisible: false });
+                        }}
+                        onCancel={() => {
                             this.setState({ uploaderIsVisible: false });
                         }}
                     />

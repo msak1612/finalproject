@@ -9,7 +9,7 @@ export default function Welcome() {
     return (
         <HashRouter>
             <div>
-                <img src="/images/logo.png" alt="logo" width="120px" />
+                <img id="logo" src="/images/logo.png" alt="logo" />
 
                 <div id="auth-container">
                     <Switch>
