@@ -39,3 +39,20 @@ module.exports.addBio = function(bio, id) {
         `UPDATE users SET bio = '${bio}' WHERE id = ${id} RETURNING *`
     );
 };
+
+//getRecentUsers
+module.exports.getRecentUsers = function() {
+    return db.query(
+        `SELECT id,first_name, last_name, profile_pic
+        FROM users ORDER BY created_at DESC LIMIT 3`
+    );
+};
+
+//searchUsers
+module.exports.searchUsers = function(val) {
+    return db.query(
+        `SELECT id, first_name, last_name, profile_pic FROM users
+        WHERE first_name ILIKE '${val}%'
+        OR last_name ILIKE '${val}%'`
+    );
+};

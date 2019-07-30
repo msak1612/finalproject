@@ -3,6 +3,7 @@ import Uploader from "./uploader";
 import ProfilePic from "./profilepic";
 import Profile from "./profile";
 import OtherProfile from "./other-profile";
+import FindPeople from "./findpeople";
 import axios from "./axios";
 import { Route, BrowserRouter, Link } from "react-router-dom";
 
@@ -25,17 +26,21 @@ export default class App extends React.Component {
             return null;
         }
         return (
-            <div id="main-app">
-                <header>
-                    <img id="logo" src="/images/logo.png" alt="logo" />{" "}
-                    <ProfilePic
-                        image={this.state.profile_pic}
-                        first={this.state.first_name}
-                        last={this.state.last_name}
-                    />
-                </header>
+            <BrowserRouter>
+                <div id="main-app">
+                    <header>
+                        <img id="logo" src="/images/logo.png" alt="logo" />
+                        <Link to="/">Home</Link>
+                        <Link to="/users">Find People</Link>
 
-                <BrowserRouter>
+                        <Link to="/logout">Logout</Link>
+                        <ProfilePic
+                            image={this.state.profile_pic}
+                            first={this.state.first_name}
+                            last={this.state.last_name}
+                        />
+                    </header>
+
                     <div>
                         <Route
                             exact
@@ -61,24 +66,23 @@ export default class App extends React.Component {
                             )}
                         />
                         <Route path="/user/:id" component={OtherProfile} />
-                        <Link to="/">Home</Link>&nbsp;&nbsp;
-                        <Link to="/logout">Logout</Link>
+                        <Route path="/users" component={FindPeople} />
                     </div>
-                </BrowserRouter>
 
-                {this.state.uploaderIsVisible && (
-                    <Uploader
-                        done={image => this.setState({ image })}
-                        onUpload={imageUrl => {
-                            this.setState({ profile_pic: imageUrl });
-                            this.setState({ uploaderIsVisible: false });
-                        }}
-                        onCancel={() => {
-                            this.setState({ uploaderIsVisible: false });
-                        }}
-                    />
-                )}
-            </div>
+                    {this.state.uploaderIsVisible && (
+                        <Uploader
+                            done={image => this.setState({ image })}
+                            onUpload={imageUrl => {
+                                this.setState({ profile_pic: imageUrl });
+                                this.setState({ uploaderIsVisible: false });
+                            }}
+                            onCancel={() => {
+                                this.setState({ uploaderIsVisible: false });
+                            }}
+                        />
+                    )}
+                </div>
+            </BrowserRouter>
         );
     } //closes render
 } //closes App

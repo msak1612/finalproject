@@ -37,7 +37,7 @@ export default class Uploader extends React.Component {
     }
     render() {
         return (
-            <div id="upload-container">
+            <div id="modal-container">
                 <label>
                     Upload file
                     <input

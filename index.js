@@ -171,7 +171,23 @@ app.post("/bio", (req, res) => {
             res.json(val.rows[0]);
         })
         .catch(err => {
-            console.log("Error Message: ", err);
+            console.log("Error in adding bio of user ", err);
+        });
+});
+
+app.get("/api/users", (req, res) => {
+    let promise;
+    if (req.query.search) {
+        promise = db.searchUsers(req.query.search);
+    } else {
+        promise = db.getRecentUsers();
+    }
+    promise
+        .then(val => {
+            res.json(val.rows);
+        })
+        .catch(err => {
+            console.log("Error in Getting Recently joined users ", err);
         });
 });
 
