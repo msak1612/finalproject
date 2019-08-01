@@ -20,7 +20,7 @@ function FindPeople() {
         return () => {
             ignore = true;
         };
-    }, [val]);
+    }, [val]); //closes useEffect
 
     return (
         <section style={{ display: "flex", flexDirection: "column" }}>
@@ -51,7 +51,9 @@ function FindPeople() {
                             }}
                         />
                         <span>
-                            {user.first_name} {user.last_name}
+                            <a href={"/user/" + user.id}>
+                                {user.first_name} {user.last_name}
+                            </a>
                         </span>
                     </div>
                 ))}
@@ -67,6 +69,6 @@ function FindPeople() {
             )}
         </section>
     );
-}
+} //closes FindPeople
 
 export default FindPeople;

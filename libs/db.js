@@ -56,3 +56,42 @@ module.exports.searchUsers = function(val) {
         OR last_name ILIKE '${val}%'`
     );
 };
+
+//showFriendship
+module.exports.showFriendship = function(sender, receiver) {
+    return db.query(`SELECT * FROM friendships
+        WHERE sender_id = ${sender} AND receiver_id = ${receiver}
+        OR sender_id = ${receiver} AND receiver_id = ${sender}`);
+};
+
+//makeFriend
+module.exports.makeFriendship = function(sender, receiver) {
+    return db.query(
+        `INSERT INTO friendships(sender_id, receiver_id, accepted)
+        VALUES (${sender}, ${receiver}, ${false})
+        RETURNING *`
+    );
+};
+
+module.exports.cancelFriendship = function(sender, receiver) {
+    return db.query(
+        `DELETE FROM friendships
+        WHERE sender_id = ${sender} AND receiver_id = ${receiver}
+        OR sender_id = ${receiver} AND receiver_id = ${sender}`
+    );
+};
+
+module.exports.acceptFriendship = function(sender, receiver) {
+    return db.query(
+        `UPDATE friendships SET accepted=true WHERE sender_id = ${sender}
+        AND receiver_id = ${receiver} RETURNING *`
+    );
+};
+
+module.exports.endFriendship = function(sender, receiver) {
+    return db.query(
+        `DELETE FROM friendships
+        WHERE sender_id = ${sender} AND receiver_id = ${receiver}
+        OR sender_id = ${receiver} AND receiver_id = ${sender}`
+    );
+};

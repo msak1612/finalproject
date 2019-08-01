@@ -33,7 +33,7 @@ export default class App extends React.Component {
                         <Link to="/">Home</Link>
                         <Link to="/users">Find People</Link>
 
-                        <Link to="/logout">Logout</Link>
+                        <a href="/logout">Logout</a>
                         <ProfilePic
                             image={this.state.profile_pic}
                             first={this.state.first_name}

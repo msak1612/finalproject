@@ -93,6 +93,7 @@ app.get("/user", async (req, res) => {
     }
 });
 
+//Part 5 + Part 7
 app.get("/api/user/:id", async (req, res) => {
     console.log("req.params: ", req.params);
     try {
@@ -102,11 +103,51 @@ app.get("/api/user/:id", async (req, res) => {
         if (!user.profile_pic) {
             user.profile_pic = "/images/default.png";
         }
-        res.json({ user: user.rows[0], sameUser: req.session.userId == id });
+        const friendshipStatus = await db.showFriendship(
+            req.session.userId,
+            id
+        );
+        res.json({
+            user: user.rows[0],
+            sameUser: req.session.userId == id,
+            friendshipStatus: friendshipStatus.rows[0]
+        });
     } catch (err) {
         console.log("Error Message: ", err);
     }
 }); //url should be different than in BR
+
+// Part 7
+app.post("/api/user/:id", async (req, res) => {
+    console.log("req.params: ", req.params);
+    try {
+        let friendshipStatus;
+        const { id } = req.params;
+        let action = req.body.action;
+        let receiver_id = id;
+        let sender_id = req.session.userId;
+        if (action == "send") {
+            friendshipStatus = await db.makeFriendship(sender_id, receiver_id);
+        } else if (action == "cancel") {
+            friendshipStatus = await db.cancelFriendship(
+                sender_id,
+                receiver_id
+            );
+        } else if (action == "accept") {
+            friendshipStatus = await db.acceptFriendship(
+                receiver_id,
+                sender_id
+            );
+        } else if (action == "end") {
+            friendshipStatus = await db.endFriendship(sender_id, receiver_id);
+        }
+        res.json({
+            friendshipStatus: friendshipStatus.rows[0]
+        });
+    } catch (err) {
+        console.log("Error Message: ", err);
+    }
+});
 
 app.get("/welcome", (req, res) => {
     if (req.session.userId) {
@@ -193,6 +234,7 @@ app.get("/api/users", (req, res) => {
 
 app.get("/logout", (req, res) => {
     req.session = null;
+    res.redirect("/welcome");
 });
 
 app.get("*", function(req, res) {
