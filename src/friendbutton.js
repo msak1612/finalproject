@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "./axios";
 
 function SendButton(props) {
     const [submit, error] = useFriendButtonSubmit(props, "send");
     return (
         <div>
-            {error && <div>Oops!</div>}
+            {error && <div>Oops something happened!</div>}
             <button onClick={submit}>Make Friend Request</button>
         </div>
     );
@@ -15,6 +15,7 @@ function CancelButton(props) {
     const [submit, error] = useFriendButtonSubmit(props, "cancel");
     return (
         <div>
+            {error && <div>Oops something happened!</div>}
             <button onClick={submit}>Cancel Friend Request</button>
         </div>
     );
@@ -24,6 +25,7 @@ function AcceptButton(props) {
     const [submit, error] = useFriendButtonSubmit(props, "accept");
     return (
         <div>
+            {error && <div>Oops something happened!</div>}
             <button onClick={submit}>Accept Friend Request</button>
         </div>
     );
@@ -33,13 +35,14 @@ function EndButton(props) {
     const [submit, error] = useFriendButtonSubmit(props, "end");
     return (
         <div>
+            {error && <div>Oops something happened!</div>}
             <button onClick={submit}>End Friendship</button>
         </div>
     );
 }
 
 function useFriendButtonSubmit(props, action) {
-    let error;
+    const [error, setError] = useState(false);
     function submit() {
         axios
             .post(`/api/user/${props.id}`, {
@@ -49,7 +52,7 @@ function useFriendButtonSubmit(props, action) {
                 props.callback(data.friendshipStatus);
             })
             .catch(err => {
-                error = err;
+                setError(true);
                 console.log("Error Message: ", err);
             });
     }
