@@ -95,3 +95,15 @@ module.exports.endFriendship = function(sender, receiver) {
         OR sender_id = ${receiver} AND receiver_id = ${sender}`
     );
 };
+
+//get the list of friends and wannabes
+module.exports.getFriendsAndWannabes = function(sender, receiver) {
+    return db.query(
+        `SELECT users.id, first, last, profile_pic, accepted
+                FROM friendships
+                JOIN users
+                ON (accepted = false AND recipient_id = ${sender} AND requester_id = users.id)
+                OR (accepted = true AND recipient_id = ${sender} AND requester_id = users.id)
+                OR (accepted = true AND requester_id = ${sender} AND recipient_id = users.id)`
+    );
+};

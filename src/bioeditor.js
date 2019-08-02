@@ -1,90 +1,60 @@
-import React from "react";
+import React, { useCallback } from "react";
 import axios from "./axios";
+import { useDispatch, useSelector } from "react-redux";
+import { showBio, updateBio } from "./reducers";
 
-export default class BioEditor extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            bio: this.props.bio,
-            draftBio: "",
-            editing: false,
-            bioAvailable: false
-        };
-    } //closes constructor
-
-    handleChange(event) {
-        this.setState({
-            [event.target.name]: event.target.value
-        });
-    } //closes handleChange
-
-    handleSaveClick() {
-        axios
-            .post("/bio", {
-                bio: this.state.draftBio
-            })
-            .then(({ data }) => {
-                console.log(data);
-                this.setState({ editing: false });
-                this.setState({ bio: data.bio });
-            })
-            .catch(err => {
-                console.log(err);
-                this.setState({ editing: false });
-            });
-    } //closes handleSaveClick
-
-    render() {
-        let button;
-
-        if (this.state.bio) {
-            button = (
-                <button onClick={e => this.setState({ editing: true })}>
-                    Edit
-                </button>
-            );
-        } else {
-            button = (
-                <button onClick={e => this.setState({ editing: true })}>
-                    Add Bio
-                </button>
-            );
-        }
-        return (
-            <div id="biocontainer">
-                {!this.state.editing && (
-                    <span>
-                        <i>{this.state.bio}</i>
-                    </span>
-                )}
-                {this.state.editing && (
-                    <div id="bioeditor">
-                        <p>Add a short bio to tell more about yourself.</p>
-                        <textarea
-                            rows="10"
-                            name="draftBio"
-                            defaultValue={this.state.bio}
-                            placeholder="Describe who you are"
-                            onChange={e => this.handleChange(e)}
-                        ></textarea>
-                        <div id="bio-btn">
-                            <button
-                                name="save"
-                                onClick={e => this.handleSaveClick(e)}
-                            >
-                                Save
-                            </button>
-                            <button
-                                name="cancel"
-                                onClick={e => this.setState({ editing: false })}
-                            >
-                                Cancel
-                            </button>
-                        </div>
-                    </div>
-                )}
-                {!this.state.editing && button}
-            </div>
+export default function BioEditor() {
+    let button;
+    const bio = useSelector(state => state.user.bio);
+    const editing = !useSelector(state => state.showBio);
+    const dispatch = useDispatch();
+    if (bio) {
+        button = (
+            <button
+                onClick={() => dispatch({ type: "SHOW_BIO", visible: false })}
+            >
+                Edit
+            </button>
         );
-    } //closes render
+    } else {
+        button = (
+            <button
+                onClick={() => dispatch({ type: "SHOW_BIO", visible: false })}
+            >
+                Add Bio
+            </button>
+        );
+    }
+    return (
+        <div id="biocontainer">
+            {!editing && (
+                <span>
+                    <i>{bio}</i>
+                </span>
+            )}
+            {editing && (
+                <div id="bioeditor">
+                    <p>Add a short bio to tell more about yourself.</p>
+                    <textarea
+                        rows="10"
+                        name="draftBio"
+                        defaultValue={bio}
+                        placeholder="Describe who you are"
+                    ></textarea>
+                    <div id="bio-btn">
+                        <button name="save">Save</button>
+                        <button
+                            name="cancel"
+                            onClick={() =>
+                                dispatch({ type: "SHOW_BIO", visible: true })
+                            }
+                        >
+                            Cancel
+                        </button>
+                    </div>
+                </div>
+            )}
+            {!editing && button}
+        </div>
+    );
 } //closes BioEditor
