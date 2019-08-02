@@ -1,29 +1,27 @@
 import React from "react";
 import axios from "./axios";
+import { saveProfilePic, fileToUpload, showUploader } from "./actions";
+import { useDispatch, useSelector } from "react-redux";
 
-export default class Uploader extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {};
-    } //closes constructor
+export default function Uploader() {
+    const dispatch = useDispatch();
+    const file = useSelector(state => state.fileToUpload);
 
-    handleChange(event) {
-        this.setState({
-            [event.target.name]: event.target.files[0]
-        });
+    function handleChange(event) {
+        dispatch(fileToUpload(event.target.files[0]));
     } //handleChange
 
-    handleUploadClick(event) {
+    function handleUploadClick(event) {
         event.preventDefault();
         var formData = new FormData();
-        formData.append("file", this.state.file);
+        formData.append("file", file);
         axios
             .post("/upload", formData)
             .then(({ data }) => {
                 if (data.image) {
                     //to show profile pic
                     console.log(data.image);
-                    this.props.onUpload(data.image);
+                    dispatch(saveProfilePic(data.image));
                 }
             })
             .catch(err => {
@@ -31,28 +29,22 @@ export default class Uploader extends React.Component {
             });
     } //handleUploadClick
 
-    handleCancelClick(event) {
-        event.preventDefault();
-        this.props.onCancel();
-    }
-    render() {
-        return (
-            <div id="modal-container">
-                <label>
-                    Upload file
-                    <input
-                        type="file"
-                        name="file"
-                        onChange={e => this.handleChange(e)}
-                    />
-                </label>
-                <button type="upload" onClick={e => this.handleUploadClick(e)}>
-                    Upload
-                </button>
-                <button type="cancel" onClick={e => this.handleCancelClick(e)}>
-                    Cancel
-                </button>
-            </div>
-        );
-    } //closes render
+    return (
+        <div id="modal-container">
+            <label>
+                Upload file
+                <input
+                    type="file"
+                    name="file"
+                    onChange={e => handleChange(e)}
+                />
+            </label>
+            <button type="upload" onClick={e => handleUploadClick(e)}>
+                Upload
+            </button>
+            <button type="cancel" onClick={() => dispatch(showUploader(false))}>
+                Cancel
+            </button>
+        </div>
+    );
 } //closes Uploader

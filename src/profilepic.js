@@ -1,21 +1,33 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { showUploader } from "./reducers";
+import { showUploader } from "./actions";
 
-export default function ProfilePic() {
+export default function ProfilePic(props) {
     const user = useSelector(state => state.user);
     const dispatch = useDispatch();
-    let image = (user && user.profile_pic) || "/images/default.png";
-    return (
-        <img
-            id="profile-pic"
-            src={image}
-            alt={`${user.first_name} ${user.last_name}`}
-            onClick={() =>
-                dispatch({
-                    showUploader
-                })
-            }
-        />
-    );
+    let pic = (user && user.profile_pic) || "/images/default.png";
+    let image;
+
+    if (!props.upload) {
+        image = (
+            <img
+                id="profile-pic"
+                src={pic}
+                alt={`${user.first_name} ${user.last_name}`}
+            />
+        );
+    } else {
+        image = (
+            <img
+                id="profile-pic"
+                src={pic}
+                alt={`${user.first_name} ${user.last_name}`}
+                onClick={() => dispatch(showUploader(true))}
+            />
+        );
+    }
+    return image;
 }
+
+//size
+//width

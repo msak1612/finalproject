@@ -1,19 +1,35 @@
-export function getUser(user) {
-    return { type: "GET_USER", user: user };
+export function setUser(user) {
+    return { type: "SET_USER", user: user };
 }
 
-export function getUserError(error) {
-    return { type: "GET_USER_ERROR", error: error };
+export function showBio(visible) {
+    return { type: "SHOW_BIO", visible: visible };
 }
 
-export function showBio() {
-    return { type: "SHOW_BIO", visible: true };
+export function saveBio(bio) {
+    return { type: "SAVE_BIO", bio: bio };
 }
 
-export function updateBio(bio) {
-    return { type: "UPDATE_BIO", bio: bio };
+export function draftBio(bio) {
+    return { type: "DRAFT_BIO", bio: bio };
 }
 
-export function showUploader() {
-    return { type: "SHOW_UPLOADER", visible: true };
+export function showUploader(visible) {
+    return { type: "SHOW_UPLOADER", visible: visible };
+}
+
+export function fileToUpload(file) {
+    return { type: "FILE_TO_UPLOAD", file: file };
+}
+
+export function saveProfilePic(pic) {
+    return { type: "SAVE_PROFILE_PIC", pic: pic };
+}
+
+export function setOtherUser(user) {
+    return { type: "SET_OTHER_USER", user: user };
+}
+
+export function setFriendshipStatus(status) {
+    return { type: "SET_FRIENDSHIP_STATUS", status: status };
 }

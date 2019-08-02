@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
 import axios from "./axios";
+import { useDispatch, useSelector } from "react-redux";
+import { setFriendshipStatus } from "./actions";
 
-function SendButton(props) {
-    const [submit, error] = useFriendButtonSubmit(props, "send");
+function SendButton() {
+    const [submit, error] = useFriendButtonSubmit("send");
     return (
         <div>
             {error && <div>Oops something happened!</div>}
@@ -11,8 +13,8 @@ function SendButton(props) {
     );
 }
 
-function CancelButton(props) {
-    const [submit, error] = useFriendButtonSubmit(props, "cancel");
+function CancelButton() {
+    const [submit, error] = useFriendButtonSubmit("cancel");
     return (
         <div>
             {error && <div>Oops something happened!</div>}
@@ -21,8 +23,8 @@ function CancelButton(props) {
     );
 }
 
-function AcceptButton(props) {
-    const [submit, error] = useFriendButtonSubmit(props, "accept");
+function AcceptButton() {
+    const [submit, error] = useFriendButtonSubmit("accept");
     return (
         <div>
             {error && <div>Oops something happened!</div>}
@@ -31,8 +33,8 @@ function AcceptButton(props) {
     );
 }
 
-function EndButton(props) {
-    const [submit, error] = useFriendButtonSubmit(props, "end");
+function EndButton() {
+    const [submit, error] = useFriendButtonSubmit("end");
     return (
         <div>
             {error && <div>Oops something happened!</div>}
@@ -41,15 +43,18 @@ function EndButton(props) {
     );
 }
 
-function useFriendButtonSubmit(props, action) {
+function useFriendButtonSubmit(action) {
+    const id = useSelector(state => state.otherUser.id);
+    const dispatch = useDispatch();
     const [error, setError] = useState(false);
     function submit() {
         axios
-            .post(`/api/user/${props.id}`, {
+            .post(`/api/user/${id}`, {
                 action: action
             })
             .then(({ data }) => {
-                props.callback(data.friendshipStatus);
+                console.log(data.friendshipStatus);
+                dispatch(setFriendshipStatus(data.friendshipStatus));
             })
             .catch(err => {
                 setError(true);
@@ -59,55 +64,24 @@ function useFriendButtonSubmit(props, action) {
     return [submit, error];
 } //closes useFriendButtonSubmit
 
-export default class FriendButton extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            friendshipStatus: this.props.friendshipStatus,
-            id: this.props.id
-        };
-    } //closes constructor
+export default function FriendButton() {
+    const id = useSelector(state => state.otherUser.id);
+    const friendshipStatus = useSelector(state => state.friendshipStatus);
 
-    render() {
-        let button;
-        console.log(this.props.id);
-        if (!this.state.friendshipStatus) {
-            button = (
-                <SendButton
-                    id={this.state.id}
-                    callback={e => this.setState({ friendshipStatus: e })}
-                />
-            );
+    console.log(friendshipStatus);
+    let button;
+    if (!friendshipStatus) {
+        button = <SendButton />;
+    } else {
+        if (friendshipStatus.accepted) {
+            button = <EndButton />;
         } else {
-            if (this.state.friendshipStatus.accepted) {
-                button = (
-                    <EndButton
-                        id={this.state.id}
-                        callback={e => this.setState({ friendshipStatus: e })}
-                    />
-                );
+            if (friendshipStatus.sender_id == id) {
+                button = <AcceptButton />;
             } else {
-                if (this.state.friendshipStatus.sender_id == this.state.id) {
-                    button = (
-                        <AcceptButton
-                            id={this.state.id}
-                            callback={e =>
-                                this.setState({ friendshipStatus: e })
-                            }
-                        />
-                    );
-                } else {
-                    button = (
-                        <CancelButton
-                            id={this.state.id}
-                            callback={e =>
-                                this.setState({ friendshipStatus: e })
-                            }
-                        />
-                    );
-                }
+                button = <CancelButton />;
             }
         }
-        return <div>{button}</div>;
-    } //closes render
+    }
+    return <div>{button}</div>;
 } //closes FriendButton

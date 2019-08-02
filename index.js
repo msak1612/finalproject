@@ -234,7 +234,7 @@ app.get("/api/users", (req, res) => {
 
 app.get("/logout", (req, res) => {
     req.session = null;
-    res.redirect("/welcome");
+    res.redirect("/");
 });
 
 app.get("*", function(req, res) {

@@ -19,7 +19,7 @@ if (location.pathname == "/welcome") {
         composeWithDevTools(applyMiddleware(reduxPromise))
     );
 
-    store.dispatch(fetchUser());
+    // store.dispatch(fetchUser());
 
     elem = (
         <Provider store={store}>

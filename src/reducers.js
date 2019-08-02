@@ -1,60 +1,25 @@
-// export default function(state = {}, action) {
-//     if (action.type == "RETREIVE_FRIENDS") {
-//         state = {
-//             ...state,
-//             friendswannable: action.friendswannable
-//         };
-//     }
-//     if (action.type == "ALREADY_FRIEND" || action.type == "WANT_TO_BE_FRIEND") {
-//         state = {
-//             ...state,
-//             friendswannable: action.friendswannable.map(friendswannable => {
-//                 if (friendswannable.id != action.id) {
-//                     return friendswannable;
-//                 }
-//                 return {
-//                     ...friendswannable,
-//                     isFriend: action.type == "alreadyFriend"
-//                 };
-//             })
-//         };
-//     }
-//
-//     return state;
-// }
-
-// const friends = useSelector() //filter out friends
-// const wannabes = useSelector()//filter out wannabes
-
-import * as actions from "./actions";
-
-export function fetchUser() {
-    return fetch("/user")
-        .then(handleErrors)
-        .then(res => res.json())
-        .then(json => {
-            return actions.getUser(json);
-        })
-        .catch(error => actions.getUserError(error));
-}
-
-function handleErrors(response) {
-    if (!response.ok) {
-        throw Error(response.statusText);
-    }
-    return response;
-}
+import "./actions";
 
 const initialState = {
     user: {},
+    otherUser: {},
+    friendshipStatus: {},
     showBio: true,
-    showUploader: false
+    draftBio: "",
+    showUploader: false,
+    fileToUpload: ""
 };
+
 export function reducer(state = initialState, action) {
-    if (action.type === "GET_USER") {
+    if (action.type === "SET_USER") {
         const user = action.user;
-        console.log(user);
         return { ...state, user };
+    }
+    if (action.type === "SET_OTHER_USER") {
+        return { ...state, otherUser: action.user };
+    }
+    if (action.type === "SET_FRIENDSHIP_STATUS") {
+        return { ...state, friendshipStatus: action.status };
     }
     if (action.type === "SHOW_UPLOADER") {
         return { ...state, showUploader: action.visible };
@@ -62,23 +27,39 @@ export function reducer(state = initialState, action) {
     if (action.type === "SHOW_BIO") {
         return { ...state, showBio: action.visible };
     }
+    if (action.type === "SAVE_BIO") {
+        let user = state.user;
+        user.bio = action.bio;
+        return { ...state, user: user, showBio: true };
+    }
+    if (action.type === "DRAFT_BIO") {
+        return { ...state, draftBio: action.bio };
+    }
+    if (action.type === "FILE_TO_UPLOAD") {
+        return { ...state, fileToUpload: action.file };
+    }
+    if (action.type === "SAVE_PROFILE_PIC") {
+        let user = state.user;
+        user.profile_pic = action.pic;
+        return { ...state, user: user, showUploader: false };
+    }
     if (action.type == "RETREIVE_FRIENDS") {
-        return { ...state, users: action.users };
+        return { ...state, user: action.user };
     }
-    if (action.type == "ALREADY_FRIEND" || action.type == "WANT_FRIEND") {
-        return {
-            ...state,
-            users: state.users.map(user => {
-                if (user.id != action.id) {
-                    return user;
-                }
-                return {
-                    ...user,
-                    hot: action.type == "ALREADY_FRIEND"
-                };
-            })
-        };
-    }
+    // if (action.type == "ALREADY_FRIEND" || action.type == "WANT_FRIEND") {
+    //     return {
+    //         ...state,
+    //         user: state.user.map(user => {
+    //             if (user.id != action.id) {
+    //                 return user;
+    //             }
+    //             return {
+    //                 ...user,
+    //                 isFriend: action.type == "ALREADY_FRIEND"
+    //             };
+    //         })
+    //     };
+    // }
 
     return state;
 }
