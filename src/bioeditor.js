@@ -13,7 +13,12 @@ export default function BioEditor() {
         button = <button onClick={() => dispatch(showBio(false))}>Edit</button>;
     } else {
         button = (
-            <button onClick={() => dispatch(showBio(false))}>Add Bio</button>
+            <div>
+                <p>Add a short bio to tell more about yourself.</p>
+                <button onClick={() => dispatch(showBio(false))}>
+                    Add Bio
+                </button>
+            </div>
         );
     }
 
@@ -46,7 +51,6 @@ export default function BioEditor() {
             )}
             {editing && (
                 <div id="bioeditor">
-                    <p>Add a short bio to tell more about yourself.</p>
                     <textarea
                         rows="10"
                         name="draftBio"

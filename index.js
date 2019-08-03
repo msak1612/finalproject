@@ -81,7 +81,6 @@ app.post("/upload", uploader.single("file"), s3.upload, function(req, res) {
 });
 
 app.get("/user", async (req, res) => {
-    console.log("req.session.userId: ", req.session.userId);
     try {
         const user = await db.getUserById(req.session.userId);
         if (!user.profile_pic) {
@@ -90,6 +89,7 @@ app.get("/user", async (req, res) => {
         res.json(user.rows[0]);
     } catch (err) {
         console.log("Error Message: ", err);
+        res.status(500).json();
     }
 });
 
@@ -114,6 +114,7 @@ app.get("/api/user/:id", async (req, res) => {
         });
     } catch (err) {
         console.log("Error Message: ", err);
+        res.status(500).json();
     }
 }); //url should be different than in BR
 
@@ -146,6 +147,17 @@ app.post("/api/user/:id", async (req, res) => {
         });
     } catch (err) {
         console.log("Error Message: ", err);
+        res.status(500).json();
+    }
+});
+
+app.get("/api/friends", async (req, res) => {
+    try {
+        const friends = await db.getFriendsAndWannabes(req.session.userId);
+        res.json(friends.rows);
+    } catch (err) {
+        console.log("Error Message: ", err);
+        res.status(500).json();
     }
 });
 
@@ -159,20 +171,34 @@ app.get("/welcome", (req, res) => {
 
 // POST /register with async
 app.post("/register", async (req, res) => {
-    try {
-        let buff = Buffer.from(req.body.pwd, "base64");
-        let text = buff.toString("ascii");
-        let securedPwd = await bc.hashPassword(text);
-        let user = await db.addUser(
-            req.body.first,
-            req.body.last,
-            securedPwd,
-            req.body.email
-        );
-        req.session.userId = user.rows[0].id;
-        res.json({ success: true });
-    } catch (err) {
-        console.log("Error in POST /registration: ", err);
+    var alphanum = /^[0-9a-zA-Z]+$/;
+    var email = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/;
+    var first = req.body.first ? req.body.first : "";
+    var last = req.body.last ? req.body.last : "";
+    if (
+        ((first && alphanum.test(String(first.value).toLowerCase())) ||
+            (last && alphanum.test(String(last.value).toLowerCase()))) &&
+        req.body.pwd &&
+        (req.body.email && email.test(String(req.body.email).toLowerCase()))
+    ) {
+        try {
+            let buff = Buffer.from(req.body.pwd, "base64");
+            let text = buff.toString("ascii");
+            let securedPwd = await bc.hashPassword(text);
+            let user = await db.addUser(
+                first,
+                last,
+                securedPwd,
+                req.body.email
+            );
+            req.session.userId = user.rows[0].id;
+            res.json({ success: true });
+        } catch (err) {
+            console.log("Error in POST /registration: ", err);
+            res.json({ success: false });
+        }
+    } else {
+        console.log("Invalid input for registration");
         res.json({ success: false });
     }
 });

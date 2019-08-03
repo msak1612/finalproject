@@ -20,13 +20,23 @@ export default function App() {
         axios
             .get("/user")
             .then(({ data }) => {
-                console.log(data);
                 dispatch(setUser(data));
             })
             .catch(err => {
                 console.log(err);
             });
     }, [user.id]); //closes useEffect
+
+    function handleLogoutClick() {
+        axios
+            .get("/logout")
+            .then(() => {
+                location.replace("/welcome");
+            })
+            .catch(err => {
+                console.log(err);
+            });
+    }
 
     return (
         <BrowserRouter>
@@ -37,7 +47,9 @@ export default function App() {
                         <Link to="/">Home</Link>
                         <Link to="/users">Find People</Link>
                         <Link to="/friends">Friends</Link>
-                        <a href="/logout">Logout</a>
+                        <Link to="/logout" onClick={handleLogoutClick}>
+                            Logout
+                        </Link>
                         <ProfilePic />
                     </header>
                     <div>

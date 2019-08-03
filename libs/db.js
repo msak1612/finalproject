@@ -97,13 +97,14 @@ module.exports.endFriendship = function(sender, receiver) {
 };
 
 //get the list of friends and wannabes
-module.exports.getFriendsAndWannabes = function(sender, receiver) {
+module.exports.getFriendsAndWannabes = function(sender) {
     return db.query(
-        `SELECT users.id, first, last, profile_pic, accepted
-                FROM friendships
-                JOIN users
-                ON (accepted = false AND recipient_id = ${sender} AND requester_id = users.id)
-                OR (accepted = true AND recipient_id = ${sender} AND requester_id = users.id)
-                OR (accepted = true AND requester_id = ${sender} AND recipient_id = users.id)`
+        `SELECT users.id, first_name, last_name, profile_pic, accepted
+     FROM friendships
+     JOIN users
+     ON (receiver_id = ${sender} AND sender_id = users.id)
+     OR (accepted = true AND sender_id =${sender} AND receiver_id = users.id)`
     );
 };
+
+//route for making a wannabe a friend (you probably already have a perfectly usable one)

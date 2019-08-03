@@ -17,8 +17,7 @@ export default function OtherProfile(props) {
                 if (data.sameUser) {
                     props.history.push("/");
                 }
-                dispatch(setOtherUser(data.user));
-                dispatch(setFriendshipStatus(data.friendshipStatus));
+                dispatch(setOtherUser(data.user, data.friendshipStatus));
             })
             .catch(err => {
                 console.log(err);

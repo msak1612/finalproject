@@ -3,11 +3,11 @@ import "./actions";
 const initialState = {
     user: {},
     otherUser: {},
-    friendshipStatus: {},
     showBio: true,
     draftBio: "",
     showUploader: false,
-    fileToUpload: ""
+    fileToUpload: "",
+    friends: []
 };
 
 export function reducer(state = initialState, action) {
@@ -16,10 +16,17 @@ export function reducer(state = initialState, action) {
         return { ...state, user };
     }
     if (action.type === "SET_OTHER_USER") {
-        return { ...state, otherUser: action.user };
+        const user = action.user;
+        user.friendship = action.friendship;
+        return {
+            ...state,
+            otherUser: user
+        };
     }
-    if (action.type === "SET_FRIENDSHIP_STATUS") {
-        return { ...state, friendshipStatus: action.status };
+    if (action.type === "SET_OTHER_FRIENDSHIP") {
+        const otherUser = state.otherUser;
+        otherUser.friendship = action.friendship;
+        return { ...state, otherUser: otherUser };
     }
     if (action.type === "SHOW_UPLOADER") {
         return { ...state, showUploader: action.visible };
@@ -43,23 +50,22 @@ export function reducer(state = initialState, action) {
         user.profile_pic = action.pic;
         return { ...state, user: user, showUploader: false };
     }
-    if (action.type == "RETREIVE_FRIENDS") {
-        return { ...state, user: action.user };
+
+    if (action.type == "SET_FRIENDS") {
+        return { ...state, friends: action.friends };
     }
-    // if (action.type == "ALREADY_FRIEND" || action.type == "WANT_FRIEND") {
-    //     return {
-    //         ...state,
-    //         user: state.user.map(user => {
-    //             if (user.id != action.id) {
-    //                 return user;
-    //             }
-    //             return {
-    //                 ...user,
-    //                 isFriend: action.type == "ALREADY_FRIEND"
-    //             };
-    //         })
-    //     };
-    // }
+
+    if (action.type == "ACCEPT_FRIEND") {
+        const friends = state.friends;
+        let index = friends.findIndex(friend => friend.id == action.id);
+        friends[index].accepted = true;
+        return { ...state, friends: friends };
+    }
+
+    if (action.type == "END_FRIENDSHIP") {
+        const result = state.friends.filter(friend => friend.id != action.id);
+        return { ...state, friends: result };
+    }
 
     return state;
 }

@@ -52,7 +52,7 @@ export default class Registration extends React.Component {
             <div className="signup-container">
                 <h2>Create Account</h2>
                 {this.state.error && (
-                    <div className="error">{this.state.error}</div>
+                    <div className="error">Provide valid input!</div>
                 )}
                 <input
                     name="first"

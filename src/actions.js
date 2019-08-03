@@ -26,10 +26,22 @@ export function saveProfilePic(pic) {
     return { type: "SAVE_PROFILE_PIC", pic: pic };
 }
 
-export function setOtherUser(user) {
-    return { type: "SET_OTHER_USER", user: user };
+export function setOtherUser(user, friendship) {
+    return { type: "SET_OTHER_USER", user: user, friendship: friendship };
 }
 
-export function setFriendshipStatus(status) {
-    return { type: "SET_FRIENDSHIP_STATUS", status: status };
+export function setFriendship(friendship) {
+    return { type: "SET_OTHER_FRIENDSHIP", friendship: friendship };
+}
+
+export function setFriends(friends) {
+    return { type: "SET_FRIENDS", friends: friends };
+}
+
+export function acceptFriend(id) {
+    return { type: "ACCEPT_FRIEND", id: id };
+}
+
+export function endFriendship(id) {
+    return { type: "END_FRIENDSHIP", id: id };
 }

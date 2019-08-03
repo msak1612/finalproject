@@ -112,13 +112,25 @@ button {
 #bio-btn {
     background-color: #f2f6f5;
     border: 1px solid silver;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
 }
 
-#bioeditor button {
-    margin-top: 4vh;
-    margin-left: 10px;
+#bio-btn button {
+    /* margin-top: 4vh;
+    margin-left: 5px; */
     width: 8vw;
     height: 4vh;
+    margin: 4vh 2px 5px 2px;
+}
+
+#bio-btn button[name="save"] {
+    justify-content: flex-start;
+}
+
+#bio-btn button[name="cancel"] {
+    justify-content: flex-end;
 }
 
 #upload-container {

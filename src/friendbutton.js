@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "./axios";
 import { useDispatch, useSelector } from "react-redux";
-import { setFriendshipStatus } from "./actions";
+import { setFriendship } from "./actions";
 
 function SendButton() {
     const [submit, error] = useFriendButtonSubmit("send");
@@ -53,8 +53,7 @@ function useFriendButtonSubmit(action) {
                 action: action
             })
             .then(({ data }) => {
-                console.log(data.friendshipStatus);
-                dispatch(setFriendshipStatus(data.friendshipStatus));
+                dispatch(setFriendship(data.friendshipStatus));
             })
             .catch(err => {
                 setError(true);
@@ -66,17 +65,16 @@ function useFriendButtonSubmit(action) {
 
 export default function FriendButton() {
     const id = useSelector(state => state.otherUser.id);
-    const friendshipStatus = useSelector(state => state.friendshipStatus);
+    const friendship = useSelector(state => state.otherUser.friendship);
 
-    console.log(friendshipStatus);
     let button;
-    if (!friendshipStatus) {
+    if (!friendship) {
         button = <SendButton />;
     } else {
-        if (friendshipStatus.accepted) {
+        if (friendship.accepted) {
             button = <EndButton />;
         } else {
-            if (friendshipStatus.sender_id == id) {
+            if (friendship.sender_id == id) {
                 button = <AcceptButton />;
             } else {
                 button = <CancelButton />;
