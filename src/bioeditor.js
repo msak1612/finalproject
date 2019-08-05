@@ -5,16 +5,23 @@ import { draftBio, saveBio, showBio } from "./actions";
 
 export default function BioEditor() {
     let button;
-    const draft = useSelector(state => state.draftBio);
+    const draft = useSelector(state => state.edit.draftBio);
     const bio = useSelector(state => state.user.bio);
-    const editing = !useSelector(state => state.showBio);
+    const editing = !useSelector(state => state.edit.showBio);
     const dispatch = useDispatch();
     if (bio) {
-        button = <button onClick={() => dispatch(showBio(false))}>Edit</button>;
+        button = (
+            <div id="biocontainer">
+                <span>
+                    <i>{bio}</i>
+                </span>
+                <button onClick={() => dispatch(showBio(false))}>Edit</button>
+            </div>
+        );
     } else {
         button = (
-            <div>
-                <p>Add a short bio to tell more about yourself.</p>
+            <div id="biocontainer">
+                <span>Add a short bio to tell more about yourself.</span>
                 <button onClick={() => dispatch(showBio(false))}>
                     Add Bio
                 </button>
@@ -31,24 +38,18 @@ export default function BioEditor() {
             .post("/bio", {
                 bio: draft
             })
-            .then(({ data }) => {
-                console.log(data);
-                dispatch(showBio(false));
+            .then(() => {
+                dispatch(showBio(true));
                 dispatch(saveBio(draft));
             })
             .catch(err => {
                 console.log(err);
-                dispatch(showBio(false));
+                dispatch(showBio(true));
             });
     } //closes handleSaveClick
 
     return (
-        <div id="biocontainer">
-            {!editing && (
-                <span>
-                    <i>{bio}</i>
-                </span>
-            )}
+        <div>
             {editing && (
                 <div id="bioeditor">
                     <textarea

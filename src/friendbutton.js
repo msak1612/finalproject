@@ -1,59 +1,41 @@
 import React, { useState, useEffect } from "react";
 import axios from "./axios";
 import { useDispatch, useSelector } from "react-redux";
-import { setFriendship } from "./actions";
+import {
+    setFriends,
+    acceptFriend,
+    endFriendship,
+    cancelFriendship
+} from "./actions";
 
-function SendButton() {
-    const [submit, error] = useFriendButtonSubmit("send");
+function Button(props) {
+    const [submit, error] = useFriendButtonSubmit(props);
     return (
         <div>
             {error && <div>Oops something happened!</div>}
-            <button onClick={submit}>Make Friend Request</button>
+            <button onClick={submit}>{props.text}</button>
         </div>
     );
 }
 
-function CancelButton() {
-    const [submit, error] = useFriendButtonSubmit("cancel");
-    return (
-        <div>
-            {error && <div>Oops something happened!</div>}
-            <button onClick={submit}>Cancel Friend Request</button>
-        </div>
-    );
-}
-
-function AcceptButton() {
-    const [submit, error] = useFriendButtonSubmit("accept");
-    return (
-        <div>
-            {error && <div>Oops something happened!</div>}
-            <button onClick={submit}>Accept Friend Request</button>
-        </div>
-    );
-}
-
-function EndButton() {
-    const [submit, error] = useFriendButtonSubmit("end");
-    return (
-        <div>
-            {error && <div>Oops something happened!</div>}
-            <button onClick={submit}>End Friendship</button>
-        </div>
-    );
-}
-
-function useFriendButtonSubmit(action) {
-    const id = useSelector(state => state.otherUser.id);
+function useFriendButtonSubmit(props) {
     const dispatch = useDispatch();
     const [error, setError] = useState(false);
     function submit() {
         axios
-            .post(`/api/user/${id}`, {
-                action: action
+            .post(`/api/user/${props.id}`, {
+                action: props.action
             })
             .then(({ data }) => {
-                dispatch(setFriendship(data.friendshipStatus));
+                if (props.action === "accept") {
+                    dispatch(acceptFriend(props.id));
+                } else if (props.action === "end") {
+                    dispatch(endFriendship(props.id));
+                } else if (props.action === "cancel") {
+                    dispatch(cancelFriendship(props.id));
+                } else if (props.action === "send") {
+                    dispatch(setFriends([data.friendshipStatus]));
+                }
             })
             .catch(err => {
                 setError(true);
@@ -63,21 +45,29 @@ function useFriendButtonSubmit(action) {
     return [submit, error];
 } //closes useFriendButtonSubmit
 
-export default function FriendButton() {
-    const id = useSelector(state => state.otherUser.id);
-    const friendship = useSelector(state => state.otherUser.friendship);
-
+export default function FriendButton(props) {
+    const id = props.id;
+    const friendship = useSelector(state =>
+        state.friends.find(friend => friend.id == id)
+    );
     let button;
     if (!friendship) {
-        button = <SendButton />;
+        button = <Button id={id} action="send" text="Send Friend Request" />;
     } else {
         if (friendship.accepted) {
-            button = <EndButton />;
+            button = <Button id={id} action="end" text="End Friendship" />;
         } else {
             if (friendship.sender_id == id) {
-                button = <AcceptButton />;
+                button = (
+                    <div className="display-rowwise">
+                        <Button id={id} action="accept" text="Accept" />
+                        <Button id={id} action="end" text="Reject" />
+                    </div>
+                );
             } else {
-                button = <CancelButton />;
+                button = (
+                    <Button id={id} action="cancel" text="Cancel Invite" />
+                );
             }
         }
     }

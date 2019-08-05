@@ -22,16 +22,8 @@ export function fileToUpload(file) {
     return { type: "FILE_TO_UPLOAD", file: file };
 }
 
-export function saveProfilePic(pic) {
-    return { type: "SAVE_PROFILE_PIC", pic: pic };
-}
-
-export function setOtherUser(user, friendship) {
-    return { type: "SET_OTHER_USER", user: user, friendship: friendship };
-}
-
-export function setFriendship(friendship) {
-    return { type: "SET_OTHER_FRIENDSHIP", friendship: friendship };
+export function setOtherUser(user) {
+    return { type: "SET_OTHER_USER", user: user };
 }
 
 export function setFriends(friends) {
@@ -44,4 +36,8 @@ export function acceptFriend(id) {
 
 export function endFriendship(id) {
     return { type: "END_FRIENDSHIP", id: id };
+}
+
+export function cancelFriendship(id) {
+    return { type: "CANCEL_FRIENDSHIP", id: id };
 }

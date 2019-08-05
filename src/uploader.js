@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 export default function Uploader() {
     const dispatch = useDispatch();
-    const file = useSelector(state => state.fileToUpload);
+    const file = useSelector(state => state.edit.fileToUpload);
 
     function handleChange(event) {
         dispatch(fileToUpload(event.target.files[0]));
@@ -22,6 +22,7 @@ export default function Uploader() {
                     //to show profile pic
                     console.log(data.image);
                     dispatch(saveProfilePic(data.image));
+                    dispatch(showUploader(false));
                 }
             })
             .catch(err => {
@@ -30,7 +31,7 @@ export default function Uploader() {
     } //handleUploadClick
 
     return (
-        <div id="modal-container">
+        <div className="display-colwise">
             <label>
                 Upload file
                 <input

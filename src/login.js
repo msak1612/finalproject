@@ -1,6 +1,5 @@
 import React from "react";
 import axios from "./axios";
-import { Link } from "react-router-dom";
 
 export default class Login extends React.Component {
     constructor(props) {
@@ -21,8 +20,8 @@ export default class Login extends React.Component {
                 login: this.state.email,
                 pwd: btoa(this.state.pwd)
             })
-            .then(({ data }) => {
-                if (data.success) {
+            .then(({ status }) => {
+                if (status == 200) {
                     location.replace("/");
                 } else {
                     this.setState({

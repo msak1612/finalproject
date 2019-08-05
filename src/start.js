@@ -1,9 +1,11 @@
 import React from "react";
 import ReactDOM from "react-dom";
+import * as socket from "./socket";
+
 import { Provider } from "react-redux";
 import { createStore, applyMiddleware } from "redux";
 import reduxPromise from "redux-promise";
-import { reducer, fetchUser } from "./reducers";
+import { reducer } from "./reducers";
 import { composeWithDevTools } from "redux-devtools-extension";
 
 import App from "./app";

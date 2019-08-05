@@ -1,71 +1,111 @@
 import "./actions";
+import { combineReducers } from "redux";
 
-const initialState = {
-    user: {},
-    otherUser: {},
+function createReducer(initialState, handlers) {
+    return function reducer(state = initialState, action) {
+        if (handlers.hasOwnProperty(action.type)) {
+            return handlers[action.type](state, action);
+        } else {
+            return state;
+        }
+    };
+}
+
+function onSetFriends(state, action) {
+    return action.friends;
+}
+
+function onAcceptFriend(state, action) {
+    let newFriends = state;
+    let index = newFriends.findIndex(item => item.id == action.id);
+    newFriends[index].accepted = true;
+    return newFriends;
+}
+
+function onEndFriendship(state, action) {
+    return state.filter(friend => friend.id != action.id);
+}
+
+function onShowUploader(state, action) {
+    let showBio = state.showBio;
+    if (!showBio && action.visible) {
+        showBio = true;
+    }
+    return { ...state, showUploader: action.visible, showBio: showBio };
+}
+
+function onShowBio(state, action) {
+    let showUploader = state.showUploader;
+    if (showUploader && !action.visible) {
+        showUploader = false;
+    }
+    return { ...state, showBio: action.visible, showUploader: showUploader };
+}
+
+function onDraftBio(state, action) {
+    return { ...state, draftBio: action.bio };
+}
+
+function onFileToUpload(state, action) {
+    return { ...state, fileToUpload: action.file };
+}
+
+function onSetUser(state, action) {
+    return action.user;
+}
+
+function onSaveBio(state, action) {
+    return { ...state, bio: action.bio };
+}
+
+function onSaveProfilePic(state, action) {
+    return { ...state, profile_pic: action.pic };
+}
+
+function onSetOtherUser(state, action) {
+    return action.user;
+}
+
+const friendsReducer = createReducer([], {
+    SET_FRIENDS: onSetFriends,
+    ACCEPT_FRIEND: onAcceptFriend,
+    END_FRIENDSHIP: onEndFriendship,
+    CANCEL_FRIENDSHIP: onEndFriendship
+});
+
+const initialEditState = {
+    showUploader: false,
     showBio: true,
     draftBio: "",
-    showUploader: false,
-    fileToUpload: "",
-    friends: []
+    fileToUpload: ""
 };
 
-export function reducer(state = initialState, action) {
-    if (action.type === "SET_USER") {
-        const user = action.user;
-        return { ...state, user };
-    }
-    if (action.type === "SET_OTHER_USER") {
-        const user = action.user;
-        user.friendship = action.friendship;
-        return {
-            ...state,
-            otherUser: user
-        };
-    }
-    if (action.type === "SET_OTHER_FRIENDSHIP") {
-        const otherUser = state.otherUser;
-        otherUser.friendship = action.friendship;
-        return { ...state, otherUser: otherUser };
-    }
-    if (action.type === "SHOW_UPLOADER") {
-        return { ...state, showUploader: action.visible };
-    }
-    if (action.type === "SHOW_BIO") {
-        return { ...state, showBio: action.visible };
-    }
-    if (action.type === "SAVE_BIO") {
-        let user = state.user;
-        user.bio = action.bio;
-        return { ...state, user: user, showBio: true };
-    }
-    if (action.type === "DRAFT_BIO") {
-        return { ...state, draftBio: action.bio };
-    }
-    if (action.type === "FILE_TO_UPLOAD") {
-        return { ...state, fileToUpload: action.file };
-    }
-    if (action.type === "SAVE_PROFILE_PIC") {
-        let user = state.user;
-        user.profile_pic = action.pic;
-        return { ...state, user: user, showUploader: false };
-    }
+const editReducer = createReducer(initialEditState, {
+    SHOW_UPLOADER: onShowUploader,
+    SHOW_BIO: onShowBio,
+    DRAFT_BIO: onDraftBio,
+    FILE_TO_UPLOAD: onFileToUpload
+});
 
-    if (action.type == "SET_FRIENDS") {
-        return { ...state, friends: action.friends };
+const userReducer = createReducer(
+    {},
+    {
+        SET_USER: onSetUser,
+        SAVE_BIO: onSaveBio,
+        SAVE_PROFILE_PIC: onSaveProfilePic
     }
+);
 
-    if (action.type == "ACCEPT_FRIEND") {
-        const friends = state.friends;
-        let index = friends.findIndex(friend => friend.id == action.id);
-        friends[index].accepted = true;
-        return { ...state, friends: friends };
+const otherUserReducer = createReducer(
+    {},
+    {
+        SET_OTHER_USER: onSetOtherUser
     }
+);
 
-    if (action.type == "END_FRIENDSHIP") {
-        const result = state.friends.filter(friend => friend.id != action.id);
-        return { ...state, friends: result };
-    }
-
-    return state;
-}
+export const reducer = combineReducers({
+    friends: friendsReducer,
+    edit: editReducer,
+    user: userReducer,
+    otherUser: otherUserReducer
+});

@@ -43,7 +43,7 @@ module.exports.addBio = function(bio, id) {
 //getRecentUsers
 module.exports.getRecentUsers = function() {
     return db.query(
-        `SELECT id,first_name, last_name, profile_pic
+        `SELECT id,first_name, last_name, profile_pic,bio
         FROM users ORDER BY created_at DESC LIMIT 3`
     );
 };
@@ -51,15 +51,27 @@ module.exports.getRecentUsers = function() {
 //searchUsers
 module.exports.searchUsers = function(val) {
     return db.query(
-        `SELECT id, first_name, last_name, profile_pic FROM users
+        `SELECT id, first_name, last_name, profile_pic,bio FROM users
         WHERE first_name ILIKE '${val}%'
         OR last_name ILIKE '${val}%'`
     );
 };
 
+//get the list of friend suggestions
+module.exports.getSuggestedFriends = function(current_user, viewed_user) {
+    return db.query(
+        `SELECT users.id, first_name, last_name, bio, profile_pic,accepted
+     FROM friendships
+     JOIN users
+     ON (((accepted = true AND receiver_id = ${viewed_user} AND sender_id = users.id)
+     OR (accepted = true AND sender_id = ${viewed_user} AND receiver_id = users.id))
+      AND users.id != ${current_user})`
+    );
+};
+
 //showFriendship
 module.exports.showFriendship = function(sender, receiver) {
-    return db.query(`SELECT * FROM friendships
+    return db.query(`SELECT  ${receiver} as id, accepted,sender_id FROM friendships
         WHERE sender_id = ${sender} AND receiver_id = ${receiver}
         OR sender_id = ${receiver} AND receiver_id = ${sender}`);
 };
@@ -69,7 +81,7 @@ module.exports.makeFriendship = function(sender, receiver) {
     return db.query(
         `INSERT INTO friendships(sender_id, receiver_id, accepted)
         VALUES (${sender}, ${receiver}, ${false})
-        RETURNING *`
+        RETURNING ${receiver} as id, accepted, sender_id`
     );
 };
 
@@ -84,7 +96,7 @@ module.exports.cancelFriendship = function(sender, receiver) {
 module.exports.acceptFriendship = function(sender, receiver) {
     return db.query(
         `UPDATE friendships SET accepted=true WHERE sender_id = ${sender}
-        AND receiver_id = ${receiver} RETURNING *`
+        AND receiver_id = ${receiver}`
     );
 };
 
@@ -99,12 +111,10 @@ module.exports.endFriendship = function(sender, receiver) {
 //get the list of friends and wannabes
 module.exports.getFriendsAndWannabes = function(sender) {
     return db.query(
-        `SELECT users.id, first_name, last_name, profile_pic, accepted
+        `SELECT users.id, first_name, last_name, bio, profile_pic, accepted,sender_id
      FROM friendships
      JOIN users
      ON (receiver_id = ${sender} AND sender_id = users.id)
-     OR (accepted = true AND sender_id =${sender} AND receiver_id = users.id)`
+     OR (sender_id =${sender} AND receiver_id = users.id)`
     );
 };
-
-//route for making a wannabe a friend (you probably already have a perfectly usable one)

@@ -1,6 +1,6 @@
 //function component
 import React from "react";
-import { HashRouter, Route, Link, Switch } from "react-router-dom";
+import { HashRouter, Route, Switch } from "react-router-dom";
 import Registration from "./registration";
 import SignInInfo from "./signin-info";
 import SignUpInfo from "./signup-info";

@@ -1,6 +1,11 @@
 const express = require("express");
 const app = express();
 const compression = require("compression");
+const server = require("http").Server(app);
+const io = require("socket.io")(server, {
+    origins: "localhost:8080 mapme.herokuapp.com:*"
+});
+
 const cookieSession = require("cookie-session");
 const csurf = require("csurf");
 
@@ -95,10 +100,8 @@ app.get("/user", async (req, res) => {
 
 //Part 5 + Part 7
 app.get("/api/user/:id", async (req, res) => {
-    console.log("req.params: ", req.params);
     try {
         const { id } = req.params;
-        console.log("ID: ", id);
         const user = await db.getUserById(id);
         if (!user.profile_pic) {
             user.profile_pic = "/images/default.png";
@@ -107,10 +110,23 @@ app.get("/api/user/:id", async (req, res) => {
             req.session.userId,
             id
         );
+        let userInfo = user.rows[0];
+        if (
+            friendshipStatus &&
+            friendshipStatus.rowCount > 0 &&
+            friendshipStatus.rows[0].accepted
+        ) {
+            let suggestions = await db.getSuggestedFriends(
+                req.session.userId,
+                id
+            );
+            userInfo.suggestions = suggestions.rows;
+        }
+
         res.json({
-            user: user.rows[0],
+            user: userInfo,
             sameUser: req.session.userId == id,
-            friendshipStatus: friendshipStatus.rows[0]
+            friendshipStatus: friendshipStatus.rows
         });
     } catch (err) {
         console.log("Error Message: ", err);
@@ -120,7 +136,6 @@ app.get("/api/user/:id", async (req, res) => {
 
 // Part 7
 app.post("/api/user/:id", async (req, res) => {
-    console.log("req.params: ", req.params);
     try {
         let friendshipStatus;
         const { id } = req.params;
@@ -219,19 +234,18 @@ app.post("/login", (req, res) => {
         .then(matched => {
             if (matched) {
                 req.session.userId = userInfo.id;
-                res.json({ success: true });
+                res.json(userInfo);
             } else {
                 return Promise.reject();
             }
         }, userInfo)
         .catch(err => {
             console.log("Error in POST /login: ", err);
-            res.json({ success: false });
+            res.status(500).json();
         });
 });
 
 app.post("/bio", (req, res) => {
-    console.log("req.body: ", req.body);
     const bio = req.body.bio;
     db.addBio(bio, req.session.userId)
         .then(val => {
@@ -272,7 +286,34 @@ app.get("*", function(req, res) {
 });
 
 if (require.main == module) {
-    app.listen(process.env.PORT || 8080, () =>
+    server.listen(process.env.PORT || 8080, () =>
         console.log("Server is Running at localhost:8080")
     );
 }
+
+/************************ socketio usage *******************************/
+io.on("connection", socket => {
+    let mySocketId;
+    console.log(`A socket with the id ${socket.id} just connected.`);
+
+    console.log(socket.request.headers);
+
+    socket.emit("greeting", {
+        message: "Welome. It is nice to see you"
+    });
+
+    io.emit("newPlayer", {});
+
+    if (mySocketId) {
+        io.sockets.sockets[mySocketId].emit("targetedMessage");
+    }
+
+    mySocketId = socket.id;
+
+    socket.on("niceToBeHere", payload => console.log(payload));
+
+    socket.on("disconnect", () => {
+        console.log(`A socket with the id ${socket.id} just disconnected.`);
+    });
+});
+/************************ socketio usage *******************************/
