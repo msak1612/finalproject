@@ -13,18 +13,21 @@ export default function Profile() {
         <div className="display-rowwise">
             <div
                 className="display-colwise"
-                style={{ maxWidth: "35vh", width: "35vh" }}
+                id="main-pic"
+                style={{ maxWidth: "45vh", width: "45vh" }}
             >
                 <ProfilePic upload="true" />
                 <div className="profile-info">
                     <span className="profile-name">
                         {user.first_name}&nbsp;{user.last_name}
+                        <hr id="line"></hr>
                     </span>
+
                     <BioEditor bio={user.bio} />
                     {showUploader && <Uploader />}
                 </div>
             </div>
-            <Posts id={user.id} />
+            <Posts className="post" id={user.id} />
         </div>
     );
 } //closes Profile

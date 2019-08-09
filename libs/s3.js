@@ -1,5 +1,6 @@
 const aws = require("aws-sdk");
 const fs = require("fs");
+const path = require("path");
 
 let secrets;
 if (process.env.NODE_ENV == "production") {
@@ -40,4 +41,21 @@ exports.upload = (req, res, next) => {
             res.sendStatus(500);
         })
         .then(() => fs.unlink(path, () => {}));
+};
+
+exports.delete = file => {
+    console.log("S3 delete: ", file);
+
+    var filename = path.basename(file);
+    s3.deleteObject({
+        Bucket: "spicedling",
+        Key: filename
+    })
+        .promise()
+        .then(data => {
+            console.log("Delete Success", data);
+        })
+        .catch(err => {
+            console.log(err);
+        });
 };

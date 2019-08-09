@@ -48,7 +48,7 @@ function useFriendButtonSubmit(props) {
 export default function FriendButton(props) {
     const id = props.id;
     const friendship = useSelector(state =>
-        state.friends.find(friend => friend.id == id)
+        state.friends.friends.find(friend => friend.id == id)
     );
     let button;
     if (!friendship) {

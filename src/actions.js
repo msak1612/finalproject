@@ -2,6 +2,14 @@ export function setUser(user) {
     return { type: "SET_USER", user: user };
 }
 
+export function setOnlineUsers(users) {
+    return { type: "SET_ONLINE_USERS", users: users };
+}
+
+export function friendRequestCount(count) {
+    return { type: "SET_FRIEND_REQUEST_COUNT", count: count };
+}
+
 export function showBio(visible) {
     return { type: "SHOW_BIO", visible: visible };
 }
@@ -22,8 +30,28 @@ export function fileToUpload(file) {
     return { type: "FILE_TO_UPLOAD", file: file };
 }
 
+export function saveProfilePic(file) {
+    return { type: "SAVE_PROFILE_PIC", pic: file };
+}
+
 export function setOtherUser(user) {
     return { type: "SET_OTHER_USER", user: user };
+}
+
+export function setPosts(posts) {
+    return { type: "SET_POSTS", posts: posts };
+}
+
+export function setReplies(id, replies) {
+    return { type: "SET_REPLY_POSTS", id: id, replies: replies };
+}
+
+export function draftPost(post) {
+    return { type: "DRAFT_POST", post: post };
+}
+
+export function setReplyPost(id) {
+    return { type: "REPLY_POST", id: id };
 }
 
 export function setFriends(friends) {
@@ -40,4 +68,12 @@ export function endFriendship(id) {
 
 export function cancelFriendship(id) {
     return { type: "CANCEL_FRIENDSHIP", id: id };
+}
+
+export function newChatMessage(msg) {
+    return { type: "NEW_CHAT_MESSAGE", message: msg };
+}
+
+export function chatMessages(msgs) {
+    return { type: "CHAT_MESSAGES", messages: msgs };
 }

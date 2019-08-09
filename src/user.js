@@ -6,10 +6,18 @@ export function User(props) {
     return (
         <div className={props.mini == "true" ? "mini-profile" : "profile"}>
             <img
-                src={user.profile_pic}
-                className={props.mini == "true" ? "mini-pic" : "profile-pic"}
+                src={
+                    user.profile_pic ? user.profile_pic : "/images/default.png"
+                }
+                className={props.mini == "true" ? "mini-pic" : "other-pic"}
             />
-            <div className="profile-info">
+            <div
+                className={
+                    props.mini == "true"
+                        ? "mini-profile-info"
+                        : "other-profile-info"
+                }
+            >
                 {props.mini ? (
                     <Link to={"/user/" + user.id} className="profile-name">
                         {props.user.first_name} &nbsp;
@@ -20,7 +28,7 @@ export function User(props) {
                         {user.first_name}&nbsp;{user.last_name}
                     </span>
                 )}
-                <span>{user.bio}</span>
+                {props.showbio && <span>{user.bio}</span>}
                 {props.options && (
                     <props.options.type {...props.options.props} id={user.id} />
                 )}
@@ -37,7 +45,7 @@ export function UserList(props) {
     return (
         <div className="userlist">
             {props.title && <h4>{props.title}</h4>}
-            <div className={`${props.liststyle}`}>
+            <div className="display-rowwise">
                 {props.list.map(user => (
                     <User
                         key={user.id}

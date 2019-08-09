@@ -1,15 +1,29 @@
 import * as io from "socket.io-client";
+import store from "./start";
+import {
+    chatMessages,
+    chatMessage,
+    setOnlineUsers,
+    friendRequestCount
+} from "./actions";
+// onlineUsers, userJoined, userLeft, newChatMsg,
 
-const socket = io.connect();
+export let socket;
 
-socket.on("welcome", function() {
-    "greeting";
-    payload => {
-        console.log(payload);
-        socket.emit("niceToBeHere", {
-            chicken: "funky"
+export const init = () => {
+    if (!socket) {
+        socket = io.connect();
+        socket.on("onlineusers", users => {
+            let id = store.getState().user.id;
+            const result = users.filter(user => user.id != id);
+            store.dispatch(setOnlineUsers(result));
         });
-    };
-});
 
-socket.on("newPlayer", () => console.log("NEW PLAYER"));
+        socket.on("chatMessages", msgs => store.dispatch(chatMessages(msgs)));
+        socket.on("friendrequest", request_count => {
+            console.log(request_count);
+            store.dispatch(friendRequestCount(request_count.count));
+        });
+        socket.on("newMessage", msg => store.dispatch(chatMessage(msg)));
+    }
+};

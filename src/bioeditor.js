@@ -11,17 +11,21 @@ export default function BioEditor() {
     const dispatch = useDispatch();
     if (bio) {
         button = (
-            <div id="biocontainer">
-                <span>
-                    <i>{bio}</i>
-                </span>
+            <div>
+                <div id="biocontainer">
+                    <span>
+                        <i>{bio}</i>
+                    </span>
+                </div>
                 <button onClick={() => dispatch(showBio(false))}>Edit</button>
             </div>
         );
     } else {
         button = (
-            <div id="biocontainer">
-                <span>Add a short bio to tell more about yourself.</span>
+            <div>
+                <div id="biocontainer">
+                    <span>Add a short bio to tell more about yourself.</span>
+                </div>
                 <button onClick={() => dispatch(showBio(false))}>
                     Add Bio
                 </button>

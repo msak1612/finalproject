@@ -1,6 +1,5 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import * as socket from "./socket";
 
 import { Provider } from "react-redux";
 import { createStore, applyMiddleware } from "redux";
@@ -13,19 +12,21 @@ import Welcome from "./welcome";
 
 let elem;
 
+const store = createStore(
+    reducer,
+    composeWithDevTools(applyMiddleware(reduxPromise))
+);
+
 if (location.pathname == "/welcome") {
     elem = <Welcome />;
 } else {
-    const store = createStore(
-        reducer,
-        composeWithDevTools(applyMiddleware(reduxPromise))
-    );
-
     elem = (
         <Provider store={store}>
             <App />
         </Provider>
     );
 }
+
+export default store;
 
 ReactDOM.render(elem, document.querySelector("main"));

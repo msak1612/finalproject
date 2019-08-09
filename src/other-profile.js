@@ -11,7 +11,7 @@ export default function OtherProfile(props) {
     const dispatch = useDispatch();
     const otherUser = useSelector(state => state.otherUser);
     const friendship = useSelector(state =>
-        state.friends.find(friend => friend.id == id)
+        state.friends.friends.find(friend => friend.id == id)
     );
     var friend = false;
     const url = "/api/user/" + id;
@@ -42,17 +42,20 @@ export default function OtherProfile(props) {
     return (
         <div className="display-rowwise">
             {otherUser && (
-                <div className="display-colwise">
+                <div className="display-colwise" id="other-profile-pic">
                     <User
                         user={otherUser}
                         userstyle="profile"
-                        mini={friend ? "true" : "false"}
+                        showbio="true"
                         options=<FriendButton id={otherUser.id} />
                     />
-                    <UserList
-                        list={otherUser.suggestions}
-                        title="Like to see related people"
-                    />
+                    <div id="suggestion">
+                        <UserList
+                            className="suggestion"
+                            list={otherUser.suggestions}
+                            title="Like to see related people"
+                        />
+                    </div>
                 </div>
             )}
             {friend && <Posts id={id} />}

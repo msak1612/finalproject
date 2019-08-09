@@ -3,7 +3,7 @@ const app = express();
 const compression = require("compression");
 const server = require("http").Server(app);
 const io = require("socket.io")(server, {
-    origins: "localhost:8080 mapme.herokuapp.com:*"
+    origins: "localhost:8080 madhuri-socialnetwork.herokuapp.com:*"
 });
 
 const cookieSession = require("cookie-session");
@@ -18,20 +18,27 @@ var uidSafe = require("uid-safe");
 var path = require("path");
 var config = require("./config");
 
+const fs = require("fs");
+const http = require("http");
+
 app.use(express.static("./public"));
 
 app.use(require("body-parser").json());
 
-app.use(
-    cookieSession({
-        secret: `I'm always angry.`,
-        maxAge: 1000 * 60 * 60 * 24 * 14
-    })
-);
+const onlineUsers = new Map();
+
+const cookieSessionMiddleware = cookieSession({
+    secret: `I'm always angry.`,
+    maxAge: 1000 * 60 * 60 * 24 * 90
+});
+
+app.use(cookieSessionMiddleware);
+io.use(function(socket, next) {
+    cookieSessionMiddleware(socket.request, socket.request.res, next);
+});
 
 app.use(csurf());
 
-//axios can read the cookie
 app.use(function(req, res, next) {
     res.cookie("mytoken", req.csrfToken());
     next();
@@ -68,9 +75,42 @@ var uploader = multer({
     }
 });
 
+var download = (req, res, next) => {
+    if (req.body.imageurl) {
+        var name = req.body.imageurl.substring(
+            req.body.imageurl.lastIndexOf("/") + 1
+        );
+        var path = __dirname + "/uploads/" + name;
+        const file = fs.createWriteStream(path);
+        http.get(req.body.imageurl, function(response) {
+            response
+                .on("data", function(data) {
+                    file.write(data);
+                })
+                .on("end", function() {
+                    req.file = {
+                        path: path,
+                        size: response.headers["content-length"],
+                        mimetype: response.headers["content-type"],
+                        filename: name
+                    };
+                    file.end();
+                    next();
+                });
+        });
+    } else {
+        next();
+    }
+};
 app.post("/upload", uploader.single("file"), s3.upload, function(req, res) {
     if (req.file) {
         const imageUrl = config.s3Url + req.file.filename;
+        db.getUserById(req.session.userId).then(data => {
+            console.log(data.rows[0].profile_pic);
+            if (data.rows[0].profile_pic) {
+                s3.delete(data.rows[0].profile_pic);
+            }
+        });
         db.addProfilePic(imageUrl, req.session.userId)
             .then(vals => {
                 res.json({ image: vals.rows[0].profile_pic });
@@ -83,6 +123,64 @@ app.post("/upload", uploader.single("file"), s3.upload, function(req, res) {
         console.log("Error in upload: ");
         res.status(500).json();
     }
+});
+
+app.post("/image-post", download, s3.upload, function(req, res) {
+    if (req.file && req.body.receiver_id && req.session.userId) {
+        const url = config.s3Url + req.file.filename;
+        db.postImage(
+            req.session.userId,
+            req.body.receiver_id,
+            req.body.parent_post_id,
+            url
+        )
+            .then(vals => {
+                res.json(vals.rows[0]);
+            })
+            .catch(err => {
+                console.log("Error in posting image: ", err);
+                res.status(500).json();
+            });
+    } else {
+        console.log("Error in posting image: ");
+        res.status(500).json();
+    }
+});
+
+app.post("/comment-post", async (req, res) => {
+    if (req.body.comment && req.body.receiver_id && req.session.userId) {
+        let parent_post_id = req.body.parent_post_id
+            ? req.body.parent_post_id
+            : 0;
+        db.postText(
+            req.session.userId,
+            req.body.receiver_id,
+            parent_post_id,
+            req.body.comment
+        )
+            .then(vals => {
+                res.json(vals.rows[0]);
+            })
+            .catch(err => {
+                console.log("Error in posting comments: ", err);
+                res.status(500).json();
+            });
+    } else {
+        console.log("Error in posting comments: ");
+        res.status(500).json();
+    }
+});
+
+app.post("/deletepost", (req, res) => {
+    db.deletePost(req.body.id)
+        .then(() => {
+            console.log("delete post");
+            res.status(200).json();
+        })
+        .catch(err => {
+            console.log("Error in deleting post ", err);
+            res.status(500).json();
+        });
 });
 
 app.get("/user", async (req, res) => {
@@ -134,6 +232,19 @@ app.get("/api/user/:id", async (req, res) => {
     }
 }); //url should be different than in BR
 
+app.get("/api/posts/:id", async (req, res) => {
+    try {
+        const { id } = req.params;
+        let posts = await db.getPosts(id, req.query.parent_post_id);
+        res.json({
+            posts: posts.rows
+        });
+    } catch (err) {
+        console.log("Error Message: ", err);
+        res.status(500).json();
+    }
+});
+
 // Part 7
 app.post("/api/user/:id", async (req, res) => {
     try {
@@ -142,21 +253,42 @@ app.post("/api/user/:id", async (req, res) => {
         let action = req.body.action;
         let receiver_id = id;
         let sender_id = req.session.userId;
+        let invitationChange = false;
         if (action == "send") {
             friendshipStatus = await db.makeFriendship(sender_id, receiver_id);
+            invitationChange = true;
         } else if (action == "cancel") {
             friendshipStatus = await db.cancelFriendship(
                 sender_id,
                 receiver_id
             );
+            invitationChange = true;
         } else if (action == "accept") {
             friendshipStatus = await db.acceptFriendship(
                 receiver_id,
                 sender_id
             );
+            invitationChange = true;
         } else if (action == "end") {
             friendshipStatus = await db.endFriendship(sender_id, receiver_id);
         }
+
+        //Friend Request Notifications
+        if (invitationChange) {
+            let notify_id = action == "accept" ? sender_id : receiver_id;
+            let request_count = await db.getFriendRequestCount(notify_id);
+
+            for (let [key, value] of Object.entries(onlineUsers)) {
+                if (value == parseInt(notify_id)) {
+                    console.log(request_count.rows[0]);
+                    io.to(`${key}`).emit(
+                        "friendrequest",
+                        request_count.rows[0]
+                    );
+                }
+            }
+        }
+
         res.json({
             friendshipStatus: friendshipStatus.rows[0]
         });
@@ -187,9 +319,13 @@ app.get("/welcome", (req, res) => {
 // POST /register with async
 app.post("/register", async (req, res) => {
     var alphanum = /^[0-9a-zA-Z]+$/;
-    var email = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/;
+    var email = /^\w+@[a-z0-9A-Z_]+?\.[a-z0-9A-Z]{2,3}$/;
     var first = req.body.first ? req.body.first : "";
     var last = req.body.last ? req.body.last : "";
+    console.log(alphanum.test(String(first.value).toLowerCase()));
+    console.log(alphanum.test(String(last.value).toLowerCase()));
+    console.log(email.test(String(req.body.email).toLowerCase()));
+    console.log(req.body.pwd);
     if (
         ((first && alphanum.test(String(first.value).toLowerCase())) ||
             (last && alphanum.test(String(last.value).toLowerCase()))) &&
@@ -273,8 +409,33 @@ app.get("/api/users", (req, res) => {
 });
 
 app.get("/logout", (req, res) => {
+    for (let [key, value] of Object.entries(onlineUsers)) {
+        if (value == req.session.userId) {
+            console.log(key, "  ", value);
+            delete onlineUsers[key];
+        }
+    }
     req.session = null;
     res.redirect("/");
+});
+
+app.get("/delete", (req, res) => {
+    db.getUserById(req.session.userId).then(data => {
+        console.log(data.rows[0].profile_pic);
+        if (data.rows[0].profile_pic) {
+            s3.delete(data.rows[0].profile_pic);
+        }
+        db.deleteUser(req.session.userId)
+            .then(() => {
+                req.session = null;
+                res.redirect("/");
+            })
+            .catch(err => {
+                console.log("Error in deleting user ", err);
+                req.session = null;
+                res.redirect("/");
+            });
+    });
 });
 
 app.get("*", function(req, res) {
@@ -291,29 +452,80 @@ if (require.main == module) {
     );
 }
 
-/************************ socketio usage *******************************/
 io.on("connection", socket => {
-    let mySocketId;
     console.log(`A socket with the id ${socket.id} just connected.`);
 
-    console.log(socket.request.headers);
-
-    socket.emit("greeting", {
-        message: "Welome. It is nice to see you"
-    });
-
-    io.emit("newPlayer", {});
-
-    if (mySocketId) {
-        io.sockets.sockets[mySocketId].emit("targetedMessage");
+    if (!socket.request.session.userId) {
+        return socket.disconnect(true);
     }
 
-    mySocketId = socket.id;
+    let userId = socket.request.session.userId;
+    onlineUsers[socket.id] = userId;
 
-    socket.on("niceToBeHere", payload => console.log(payload));
+    console.log(onlineUsers);
+    db.getUsersById(Object.values(onlineUsers))
+        .then(users => {
+            io.emit("onlineusers", users.rows);
+        })
+        .catch(err => {
+            console.log("Error in getting user. ", err);
+        });
+
+    db.getFriendRequestCount(userId)
+        .then(data => {
+            socket.emit("friendrequest", data.rows[0]);
+        })
+        .catch(err => {
+            console.log("Error in getting friend request count. ", err);
+        });
+
+    // //part1: is getting the recent 10 messages.
+    db.getRecentChatMessages()
+        .then(data => {
+            socket.emit("chatMessages", data.rows);
+        })
+        .catch(err => {
+            console.log("Error in getting chat messages. ", err);
+        });
+    //part-2: dealing with a new chat message
+    socket.on("message", function(newMessage) {
+        console.log("This is the new chat message", newMessage);
+        //figure out who sent message.
+        //then make a db query to get info about that user.
+        db.getUserById(userId)
+            .then(message => {
+                //then -> create a new message Object that matches the objects in the last 10 chat messages.
+                //const newMsg = { ...message, newMessage };
+                //emit that there is a new chat and pass the object.
+                //add this chat message to our Database.
+                db.addChatMessage(userId, newMessage).then(() => {
+                    db.getRecentChatMessages()
+                        .then(data => {
+                            socket.emit("chatMessages", data.rows);
+                        })
+                        .catch(err => {
+                            console.log(
+                                "Error in getting chat messages. ",
+                                err
+                            );
+                        });
+                });
+            })
+            .catch(err => {
+                console.log("Error in saving chat message. ", err);
+            });
+    });
 
     socket.on("disconnect", () => {
+        onlineUsers.delete(socket.id);
+        db.getUsersById(Object.values(onlineUsers))
+            .then(users => {
+                io.emit("onlineusers", users.rows);
+            })
+            .catch(err => {
+                console.log("Error in getting user. ", err);
+            });
+
         console.log(`A socket with the id ${socket.id} just disconnected.`);
     });
 });
-/************************ socketio usage *******************************/

@@ -12,18 +12,23 @@ function createReducer(initialState, handlers) {
 }
 
 function onSetFriends(state, action) {
-    return action.friends;
+    return { ...state, friends: action.friends };
+}
+
+function onSetFriendRequestCount(state, action) {
+    return { ...state, request_count: action.count };
 }
 
 function onAcceptFriend(state, action) {
-    let newFriends = state;
+    let newFriends = state.friends;
     let index = newFriends.findIndex(item => item.id == action.id);
     newFriends[index].accepted = true;
-    return newFriends;
+    return { ...state, friends: newFriends };
 }
 
 function onEndFriendship(state, action) {
-    return state.filter(friend => friend.id != action.id);
+    let newFriends = state.friends.filter(friend => friend.id != action.id);
+    return { ...state, friends: newFriends };
 }
 
 function onShowUploader(state, action) {
@@ -66,12 +71,52 @@ function onSetOtherUser(state, action) {
     return action.user;
 }
 
-const friendsReducer = createReducer([], {
-    SET_FRIENDS: onSetFriends,
-    ACCEPT_FRIEND: onAcceptFriend,
-    END_FRIENDSHIP: onEndFriendship,
-    CANCEL_FRIENDSHIP: onEndFriendship
-});
+function onSetPosts(state, action) {
+    return { ...state, posts: action.posts };
+}
+
+function onSetReplies(state, action) {
+    let newPosts = state.posts;
+    let index = newPosts.findIndex(item => item.id == action.id);
+    newPosts[index].replies = action.replies;
+    return { ...state, posts: newPosts };
+}
+
+function onDraftPost(state, action) {
+    return { ...state, draftPost: action.post };
+}
+
+function onReplyPost(state, action) {
+    return { ...state, replyPost: action.id };
+}
+
+function onSetChat(state, action) {
+    const newMsgs = state;
+    newMsgs.append(action.message);
+    if (newMsgs.length > 10) {
+        newMsgs.unshift();
+    }
+    return newMsgs;
+}
+
+function onGetChats(state, action) {
+    return action.messages;
+}
+
+function onSetOnlineUsers(state, action) {
+    return action.users;
+}
+
+const friendsReducer = createReducer(
+    { friends: [], request_count: 0 },
+    {
+        SET_FRIENDS: onSetFriends,
+        ACCEPT_FRIEND: onAcceptFriend,
+        END_FRIENDSHIP: onEndFriendship,
+        CANCEL_FRIENDSHIP: onEndFriendship,
+        SET_FRIEND_REQUEST_COUNT: onSetFriendRequestCount
+    }
+);
 
 const initialEditState = {
     showUploader: false,
@@ -103,9 +148,34 @@ const otherUserReducer = createReducer(
     }
 );
 
+const postReducer = createReducer(
+    { posts: [], draftPost: "", replyPost: 0 },
+    {
+        SET_POSTS: onSetPosts,
+        SET_REPLY_POSTS: onSetReplies,
+        DRAFT_POST: onDraftPost,
+        REPLY_POST: onReplyPost
+    }
+);
+
+const chatReducer = createReducer([], {
+    NEW_CHAT_MESSAGE: onSetChat,
+    CHAT_MESSAGES: onGetChats
+});
+
+const onlineUsersReducer = createReducer(
+    {},
+    {
+        SET_ONLINE_USERS: onSetOnlineUsers
+    }
+);
+
 export const reducer = combineReducers({
     friends: friendsReducer,
     edit: editReducer,
     user: userReducer,
-    otherUser: otherUserReducer
+    posts: postReducer,
+    otherUser: otherUserReducer,
+    chat: chatReducer,
+    onlineUsers: onlineUsersReducer
 });

@@ -6,7 +6,6 @@ import { useDispatch, useSelector } from "react-redux";
 export default function Uploader() {
     const dispatch = useDispatch();
     const file = useSelector(state => state.edit.fileToUpload);
-
     function handleChange(event) {
         dispatch(fileToUpload(event.target.files[0]));
     } //handleChange
@@ -31,21 +30,26 @@ export default function Uploader() {
     } //handleUploadClick
 
     return (
-        <div className="display-colwise">
+        <div className="modal-container">
             <label>
-                Upload file
+                Update Profile Picture <hr id="line"></hr>
                 <input
                     type="file"
                     name="file"
                     onChange={e => handleChange(e)}
                 />
             </label>
-            <button type="upload" onClick={e => handleUploadClick(e)}>
-                Upload
-            </button>
-            <button type="cancel" onClick={() => dispatch(showUploader(false))}>
-                Cancel
-            </button>
+            <div>
+                <button type="upload" onClick={e => handleUploadClick(e)}>
+                    Upload
+                </button>
+                <button
+                    type="cancel"
+                    onClick={() => dispatch(showUploader(false))}
+                >
+                    Cancel
+                </button>
+            </div>
         </div>
     );
 } //closes Uploader
