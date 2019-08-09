@@ -181,7 +181,7 @@ hr {
     height: 85vh;
     width: 85vw;
     border-radius: 0.5rem;
-    background-image: linear-gradient(90deg, gainsboro 30%, silver 70%);
+    background-image: linear-gradient(90deg, white 30%, silver 70%);
 }
 
 .modal-container label {
