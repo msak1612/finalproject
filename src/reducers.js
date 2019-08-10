@@ -124,6 +124,12 @@ function onSetSolution(state, action) {
     return { ...state, challenge: challenge };
 }
 
+function onSetResult(state, action) {
+    let challenge = state.challenge;
+    challenge.result = action.result;
+    return { ...state, challenge: challenge };
+}
+
 function onSetLevel(state, action) {
     return { ...state, level: action.level };
 }
@@ -195,13 +201,17 @@ const challengeReducer = createReducer(
     {
         challenges: [],
         level: -1,
-        challenge: { description: "", solution: "" }
+        challenge: {
+            description: "",
+            solution: ""
+        }
     },
     {
         SET_CHALLENGES: onSetChallenges,
         SET_LEVEL: onSetLevel,
         SET_CHALLENGE: onSetChallenge,
-        SET_SOLUTION: onSetSolution
+        SET_SOLUTION: onSetSolution,
+        SET_RESULT: onSetResult
     }
 );
 

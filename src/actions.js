@@ -93,3 +93,7 @@ export function setChallenge(challenge) {
 export function setSolution(solution) {
     return { type: "SET_SOLUTION", solution: solution };
 }
+
+export function setResult(result) {
+    return { type: "SET_RESULT", result: result };
+}

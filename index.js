@@ -513,22 +513,24 @@ app.post("/api/challenge", (req, res) => {
                                     "**/uploads/" +
                                         req.session.userId +
                                         "/verify.test.js"
-                                ],
-                                silent: true
+                                ]
                             };
 
                             jest.runCLI(options, options.projects)
                                 .then(status => {
-                                    console.log(
-                                        "Number of failed result : ",
-                                        status
-                                    );
                                     if (status.results.numFailedTests == 0) {
-                                        res.status(200).json();
-                                    } else {
-                                        res.status(500).json();
+                                        // Add to score and store solution
                                     }
 
+                                    res.status(200).json({
+                                        testResults:
+                                            status.results.testResults[0]
+                                                .testResults,
+                                        numFailedTests:
+                                            status.results.numFailedTests,
+                                        numPassedTests:
+                                            status.results.numPassedTests
+                                    });
                                     fs.unlink(test_target, () => {});
                                     fs.unlink(solution_file, () => {});
                                     fs.rmdir(solution_path, () => {});
@@ -546,7 +548,7 @@ app.post("/api/challenge", (req, res) => {
             });
         })
         .catch(err => {
-            console.log("Error in fetching challenge ", err);
+            console.log("Error in executing challenge ", err);
             res.status(500).json();
         });
 });

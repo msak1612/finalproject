@@ -3,7 +3,7 @@ import { render } from "react-dom";
 import axios from "./axios";
 
 import { useDispatch, useSelector } from "react-redux";
-import { setChallenge, setSolution } from "./actions";
+import { setChallenge, setSolution, setResult } from "./actions";
 import AceEditor from "react-ace";
 import ReactMarkdown from "react-markdown";
 
@@ -16,6 +16,7 @@ export default function Challenge(props) {
         state => state.challenges.challenge.description
     );
     const solution = useSelector(state => state.challenges.challenge.solution);
+    const result = useSelector(state => state.challenges.challenge.result);
     const id = props.match.params.id;
     const url = "/api/challenge";
     useEffect(() => {
@@ -49,11 +50,10 @@ export default function Challenge(props) {
                 solution: btoa(solution)
             })
             .then(status => {
-                alert("success");
+                dispatch(setResult(status.data));
             })
             .catch(err => {
                 console.log(err);
-                alert("failed");
             });
     } //closes handleSubmitClick
 
@@ -62,20 +62,50 @@ export default function Challenge(props) {
             <div>
                 <ReactMarkdown source={description} />
             </div>
-            <div>
-                {solution && (
-                    <AceEditor
-                        mode="javascript"
-                        theme="github"
-                        onChange={handleChange}
-                        name="editor"
-                        value={solution}
-                        editorProps={{ $blockScrolling: true }}
-                    />
-                )}
-                <button name="save" onClick={() => handleSubmitClick()}>
-                    Submit
-                </button>
+            <div className="display-colwise">
+                <div className="display-rowwise">
+                    {solution && (
+                        <AceEditor
+                            mode="javascript"
+                            theme="github"
+                            onChange={handleChange}
+                            name="editor"
+                            value={solution}
+                            editorProps={{ $blockScrolling: true }}
+                        />
+                    )}
+                    <button name="save" onClick={() => handleSubmitClick()}>
+                        Submit
+                    </button>
+                </div>
+                <div className="display-colwise">
+                    {result && (
+                        <div className="display-colwise">
+                            <h4>
+                                {result.numPassedTests} out of{" "}
+                                {result.numFailedTests + result.numPassedTests}{" "}
+                                Passed
+                            </h4>
+                            {result.testResults &&
+                                result.testResults.map(result => (
+                                    <div key={result.title}>
+                                        <span>{result.title}</span>
+                                        &nbsp;{" "}
+                                        <span
+                                            style={{
+                                                color:
+                                                    result.status == "passed"
+                                                        ? "green"
+                                                        : "red"
+                                            }}
+                                        >
+                                            {result.status}
+                                        </span>
+                                    </div>
+                                ))}
+                        </div>
+                    )}
+                </div>
             </div>
         </div>
     );
