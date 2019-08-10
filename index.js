@@ -521,13 +521,17 @@ app.post("/api/challenge", (req, res) => {
                                 .then(status => {
                                     console.log(
                                         "Number of failed result : ",
-                                        status.results.numFailedTests
+                                        status
                                     );
                                     if (status.results.numFailedTests == 0) {
                                         res.status(200).json();
                                     } else {
                                         res.status(500).json();
                                     }
+
+                                    fs.unlink(test_target, () => {});
+                                    fs.unlink(solution_file, () => {});
+                                    fs.rmdir(solution_path, () => {});
                                 })
                                 .catch(failure => {
                                     console.error("Error ", failure);
