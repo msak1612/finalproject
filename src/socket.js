@@ -2,7 +2,7 @@ import * as io from "socket.io-client";
 import store from "./start";
 import {
     chatMessages,
-    chatMessage,
+    newChatMessage,
     setOnlineUsers,
     friendRequestCount
 } from "./actions";
@@ -24,6 +24,6 @@ export const init = () => {
             console.log(request_count);
             store.dispatch(friendRequestCount(request_count.count));
         });
-        socket.on("newMessage", msg => store.dispatch(chatMessage(msg)));
+        socket.on("newMessage", msg => store.dispatch(newChatMessage(msg)));
     }
 };

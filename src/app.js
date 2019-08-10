@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { Route, BrowserRouter, Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 
+import Aceeditor from "./ace-editor";
 import ProfilePic from "./profilepic";
 import Profile from "./profile";
 import OtherProfile from "./other-profile";
@@ -72,6 +73,9 @@ export default function App() {
                         <Link className="center" to="/chatroom">
                             Chat
                         </Link>
+                        <Link className="center" to="/challenges">
+                            Challenges
+                        </Link>
                         <Link
                             className="center"
                             to="/delete"
@@ -96,6 +100,7 @@ export default function App() {
                         <Route path="/users" component={FindPeople} />
                         <Route path="/friends" component={Friends} />
                         <Route path="/chatroom" component={Chatroom} />
+                        <Route path="/aceeditor" component={Aceeditor} />
                     </div>
                 </div>
             )}
