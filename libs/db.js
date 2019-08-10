@@ -195,3 +195,20 @@ exports.getRecentChatMessages = function() {
 module.exports.deleteUser = function(id) {
     return db.query(`DELETE FROM users WHERE id = ${id}`);
 };
+
+//list all challenges
+module.exports.getAllChallenges = function() {
+    return db.query(`SELECT id, name, level from challenges`);
+};
+
+//list all challenges by level
+module.exports.getChallengesByLevel = function(level) {
+    return db.query(
+        `SELECT id, name, level from challenges WHERE level=${level}`
+    );
+};
+
+//get challenge by id
+module.exports.getChallengeById = function(id) {
+    return db.query(`SELECT * from challenges WHERE id=${id}`);
+};

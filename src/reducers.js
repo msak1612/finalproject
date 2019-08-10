@@ -107,6 +107,27 @@ function onSetOnlineUsers(state, action) {
     return action.users;
 }
 
+function onSetChallenges(state, action) {
+    return { ...state, challenges: action.challenges };
+}
+
+function onSetChallenge(state, action) {
+    return {
+        ...state,
+        challenge: action.challenge
+    };
+}
+
+function onSetSolution(state, action) {
+    let challenge = state.challenge;
+    challenge.solution = action.solution;
+    return { ...state, challenge: challenge };
+}
+
+function onSetLevel(state, action) {
+    return { ...state, level: action.level };
+}
+
 const friendsReducer = createReducer(
     { friends: [], request_count: 0 },
     {
@@ -170,6 +191,20 @@ const onlineUsersReducer = createReducer(
     }
 );
 
+const challengeReducer = createReducer(
+    {
+        challenges: [],
+        level: -1,
+        challenge: { description: "", solution: "" }
+    },
+    {
+        SET_CHALLENGES: onSetChallenges,
+        SET_LEVEL: onSetLevel,
+        SET_CHALLENGE: onSetChallenge,
+        SET_SOLUTION: onSetSolution
+    }
+);
+
 export const reducer = combineReducers({
     friends: friendsReducer,
     edit: editReducer,
@@ -177,5 +212,6 @@ export const reducer = combineReducers({
     posts: postReducer,
     otherUser: otherUserReducer,
     chat: chatReducer,
-    onlineUsers: onlineUsersReducer
+    onlineUsers: onlineUsersReducer,
+    challenges: challengeReducer
 });

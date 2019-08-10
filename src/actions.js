@@ -77,3 +77,19 @@ export function newChatMessage(msg) {
 export function chatMessages(msgs) {
     return { type: "CHAT_MESSAGES", messages: msgs };
 }
+
+export function setChallenges(challenges) {
+    return { type: "SET_CHALLENGES", challenges: challenges };
+}
+
+export function setLevel(level) {
+    return { type: "SET_LEVEL", level: level };
+}
+
+export function setChallenge(challenge) {
+    return { type: "SET_CHALLENGE", challenge: challenge };
+}
+
+export function setSolution(solution) {
+    return { type: "SET_SOLUTION", solution: solution };
+}

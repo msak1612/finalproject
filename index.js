@@ -20,6 +20,7 @@ var config = require("./config");
 
 const fs = require("fs");
 const http = require("http");
+const jest = require("jest");
 
 app.use(express.static("./public"));
 
@@ -436,6 +437,114 @@ app.get("/delete", (req, res) => {
                 res.redirect("/");
             });
     });
+});
+
+app.get("/api/challenges", (req, res) => {
+    let promise;
+    if (req.query.level != -1) {
+        promise = db.getChallengesByLevel(req.query.level);
+    } else {
+        promise = db.getAllChallenges();
+    }
+    promise
+        .then(data => {
+            res.json(data.rows);
+        })
+        .catch(err => {
+            console.log("Error in listing challenges ", err);
+            res.status(500).json();
+        });
+});
+
+app.get("/api/challenge", (req, res) => {
+    const id = req.query.id;
+    db.getChallengeById(id)
+        .then(data => {
+            let challenge = data.rows[0];
+            if (challenge) {
+                let dir = "./challenges/" + challenge.dirname + "/";
+                let description = fs.readFileSync(
+                    dir + "description.md",
+                    "utf8"
+                );
+                let template = fs.readFileSync(dir + "template.js");
+                res.json({
+                    description: Buffer.from(description).toString("base64"),
+                    template: Buffer.from(template).toString("base64")
+                });
+            } else {
+                res.status(500).json();
+            }
+        })
+        .catch(err => {
+            console.log("Error in fetching challenge ", err);
+            res.status(500).json();
+        });
+});
+
+app.post("/api/challenge", (req, res) => {
+    db.getChallengeById(req.body.id)
+        .then(data => {
+            let challenge = data.rows[0];
+            let dir = "./challenges/" + challenge.dirname;
+            let solution = Buffer.from(req.body.solution, "base64").toString(
+                "utf8"
+            );
+            let solution_path = "./uploads/" + req.session.userId;
+            let solution_file = solution_path + "/template.js";
+            fs.mkdir(solution_path, function(e) {
+                if (!e || (e && e.code === "EEXIST")) {
+                    fs.writeFile(solution_file, solution, function(err) {
+                        if (err) {
+                            res.status(500).json();
+                            return console.error(err);
+                        }
+
+                        const source = dir + "/template.test.js";
+                        const test_target = solution_path + "/verify.test.js";
+                        fs.copyFile(source, test_target, e => {
+                            if (e && e.code != "EEXIST") {
+                                res.status(500).json();
+                                return console.error(err);
+                            }
+                            const options = {
+                                projects: [solution_path],
+                                testMatch: [
+                                    "**/uploads/" +
+                                        req.session.userId +
+                                        "/verify.test.js"
+                                ],
+                                silent: true
+                            };
+
+                            jest.runCLI(options, options.projects)
+                                .then(status => {
+                                    console.log(
+                                        "Number of failed result : ",
+                                        status.results.numFailedTests
+                                    );
+                                    if (status.results.numFailedTests == 0) {
+                                        res.status(200).json();
+                                    } else {
+                                        res.status(500).json();
+                                    }
+                                })
+                                .catch(failure => {
+                                    console.error("Error ", failure);
+                                    res.status(500).json();
+                                });
+                        });
+                    });
+                } else {
+                    res.status(500).json();
+                    return console.log(e);
+                }
+            });
+        })
+        .catch(err => {
+            console.log("Error in fetching challenge ", err);
+            res.status(500).json();
+        });
 });
 
 app.get("*", function(req, res) {

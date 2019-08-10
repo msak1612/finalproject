@@ -8,6 +8,8 @@ import Profile from "./profile";
 import OtherProfile from "./other-profile";
 import FindPeople from "./findpeople";
 import Friends from "./friends";
+import Challenge from "./challenge";
+import Challenges from "./challenges";
 import Chatroom from "./chatroom";
 import axios from "./axios";
 import { setUser } from "./actions";
@@ -99,6 +101,8 @@ export default function App() {
                         <Route path="/user/:id" component={OtherProfile} />
                         <Route path="/users" component={FindPeople} />
                         <Route path="/friends" component={Friends} />
+                        <Route path="/challenges" component={Challenges} />
+                        <Route path="/challenge/:id" component={Challenge} />
                         <Route path="/chatroom" component={Chatroom} />
                         <Route path="/aceeditor" component={Aceeditor} />
                     </div>
