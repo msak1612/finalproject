@@ -21,6 +21,7 @@ var config = require("./config");
 const fs = require("fs");
 const http = require("http");
 const jest = require("jest");
+const YAML = require("yaml");
 
 app.use(express.static("./public"));
 
@@ -65,47 +66,27 @@ function load_challenges() {
             return console.log("Unable to scan directory: " + err);
         }
 
-        files.forEach(function(dir) {
-            const level_dir = path.join(root_dir, dir);
-            let level = parseInt(dir);
-            fs.readdir(level_dir, function(err, files) {
-                if (err) {
-                    return console.log("Unable to scan directory: " + err);
-                }
-                files.forEach(function(challenge_dir) {
-                    const challenge_path = path.join(level_dir, challenge_dir);
-                    let description = fs.readFileSync(
-                        challenge_path + "/description.md",
-                        "utf8"
-                    );
-                    let template = fs.readFileSync(
-                        challenge_path + "/template.js",
-                        "utf8"
-                    );
-                    let test = fs.readFileSync(
-                        challenge_path + "/template.test.js",
-                        "utf8"
-                    );
-                    let solution = fs.readFileSync(
-                        challenge_path + "/solution.md",
-                        "utf8"
-                    );
-
-                    description = Buffer.from(description).toString("base64");
-                    template = Buffer.from(template).toString("base64");
-                    test = Buffer.from(test).toString("base64");
-                    solution = Buffer.from(solution).toString("base64");
-                    db.addChallenge(
-                        challenge_dir,
-                        description,
-                        template,
-                        test,
-                        solution,
-                        level
-                    );
-                });
-            });
+        let challenges = [];
+        files.forEach(function(file) {
+            const challenge_path = path.join(root_dir, file);
+            const contents = fs.readFileSync(challenge_path, "utf8");
+            const info = YAML.parse(contents);
+            const description = Buffer.from(info.description).toString(
+                "base64"
+            );
+            const template = Buffer.from(info.template).toString("base64");
+            const test = Buffer.from(info.test).toString("base64");
+            const solution = Buffer.from(info.solution).toString("base64");
+            challenges.push([
+                info.name,
+                description,
+                template,
+                test,
+                solution,
+                info.level
+            ]);
         });
+        db.addChallenges(challenges);
     });
 }
 

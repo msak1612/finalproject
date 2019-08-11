@@ -50,7 +50,8 @@
         "uglifyjs-webpack-plugin": "^2.1.2",
         "uid-safe": "^2.1.4",
         "webpack": "^4.29.6",
-        "webpack-dev-middleware": "^1.8.4"
+        "webpack-dev-middleware": "^1.8.4",
+        "yaml": "^1.6.0"
     },
     "jest": {
         "setupFiles": [

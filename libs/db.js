@@ -220,17 +220,20 @@ module.exports.getChallengeById = function(id) {
 };
 
 // add challenge to the table
-module.exports.addChallenge = function(
-    name,
-    description,
-    template,
-    test,
-    solution,
-    level
-) {
+module.exports.addChallenges = function(challenges) {
+    let formatted_text = challenges
+        .map(
+            d =>
+                "(" +
+                d
+                    .map(a => (Number.isInteger(a) ? a : "'" + a + "'"))
+                    .join(",") +
+                ")"
+        )
+        .join(",");
     return db.query(
         `INSERT INTO challenges(name,description,template,test,solution,level)
-         VALUES('${name}','${description}','${template}','${test}','${solution}',${level})
+         VALUES ${formatted_text}
          ON CONFLICT(name) DO UPDATE SET description=EXCLUDED.description,
          template=EXCLUDED.template, test=EXCLUDED.test, level=EXCLUDED.level,
          solution=EXCLUDED.solution`
