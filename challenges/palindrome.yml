@@ -1,5 +1,8 @@
 name: "Palindrome"
 level: 1
+tags:
+    - STRING
+    - FUNDAMENTALS
 description: |
     ## Palindrome or Not?
 

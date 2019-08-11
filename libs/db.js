@@ -204,13 +204,15 @@ module.exports.deleteUser = function(id) {
 
 //list all challenges
 module.exports.getAllChallenges = function() {
-    return db.query(`SELECT id, name, level from challenges`);
+    return db.query(`SELECT id, name, level, array_agg(tag) AS tags FROM
+    challenges LEFT JOIN tags ON challenge_id = id GROUP BY id`);
 };
 
 //list all challenges by level
 module.exports.getChallengesByLevel = function(level) {
     return db.query(
-        `SELECT id, name, level from challenges WHERE level=${level}`
+        `SELECT id, name, level, array_agg(tag) AS tags FROM challenges
+         LEFT JOIN tags ON challenge_id = id WHERE challenges.level=${level} GROUP BY id`
     );
 };
 
@@ -219,9 +221,8 @@ module.exports.getChallengeById = function(id) {
     return db.query(`SELECT * from challenges WHERE id=${id}`);
 };
 
-// add challenge to the table
-module.exports.addChallenges = function(challenges) {
-    let formatted_text = challenges
+function format(array) {
+    return array
         .map(
             d =>
                 "(" +
@@ -231,11 +232,33 @@ module.exports.addChallenges = function(challenges) {
                 ")"
         )
         .join(",");
+}
+
+// add challenge to the table
+module.exports.addChallenges = function(challenges) {
     return db.query(
         `INSERT INTO challenges(name,description,template,test,solution,level)
-         VALUES ${formatted_text}
+         VALUES ${format(challenges)}
          ON CONFLICT(name) DO UPDATE SET description=EXCLUDED.description,
          template=EXCLUDED.template, test=EXCLUDED.test, level=EXCLUDED.level,
-         solution=EXCLUDED.solution`
+         solution=EXCLUDED.solution RETURNING id`
+    );
+};
+
+// add tags for challenges
+module.exports.addTags = function(tags) {
+    return db.query(
+        `INSERT INTO tags(tag,challenge_id) VALUES ${format(
+            tags
+        )} ON CONFLICT DO NOTHING`
+    );
+};
+
+// search challenges by tags
+module.exports.getChallengesByTag = function(tag) {
+    return db.query(
+        `SELECT id, name, level, array_agg(tag) as tags from challenges
+         LEFT JOIN tags ON challenge_id = id WHERE id IN
+         (SELECT challenge_id from tags WHERE tag='${tag}') GROUP BY id`
     );
 };

@@ -59,35 +59,38 @@ if (process.env.NODE_ENV != "production") {
     app.use("/bundle.js", (req, res) => res.sendFile(`${__dirname}/bundle.js`));
 }
 
-function load_challenges() {
+async function load_challenges() {
     const root_dir = path.join(__dirname, "challenges");
-    fs.readdir(root_dir, function(err, files) {
-        if (err) {
-            return console.log("Unable to scan directory: " + err);
-        }
+    const files = fs.readdirSync(root_dir);
 
-        let challenges = [];
-        files.forEach(function(file) {
-            const challenge_path = path.join(root_dir, file);
-            const contents = fs.readFileSync(challenge_path, "utf8");
-            const info = YAML.parse(contents);
-            const description = Buffer.from(info.description).toString(
-                "base64"
-            );
-            const template = Buffer.from(info.template).toString("base64");
-            const test = Buffer.from(info.test).toString("base64");
-            const solution = Buffer.from(info.solution).toString("base64");
-            challenges.push([
-                info.name,
-                description,
-                template,
-                test,
-                solution,
-                info.level
-            ]);
-        });
-        db.addChallenges(challenges);
+    let tags = [];
+    let challenges = [];
+    files.forEach(function(file) {
+        const challenge_path = path.join(root_dir, file);
+        const contents = fs.readFileSync(challenge_path, "utf8");
+        const info = YAML.parse(contents);
+        const description = Buffer.from(info.description).toString("base64");
+        const template = Buffer.from(info.template).toString("base64");
+        const test = Buffer.from(info.test).toString("base64");
+        const solution = Buffer.from(info.solution).toString("base64");
+        challenges.push([
+            info.name,
+            description,
+            template,
+            test,
+            solution,
+            info.level
+        ]);
+        tags.push(info.tags);
     });
+    const result = await db.addChallenges(challenges);
+    let tags_to_save = [];
+    result.rows.forEach((row, index) => {
+        tags[index].forEach(tag => {
+            tags_to_save.push([tag, row.id]);
+        });
+    });
+    db.addTags(tags_to_save);
 }
 
 load_challenges();
@@ -481,6 +484,8 @@ app.get("/api/challenges", (req, res) => {
     let promise;
     if (req.query.level != -1) {
         promise = db.getChallengesByLevel(req.query.level);
+    } else if (req.query.tag != null && req.query.tag.length > 0) {
+        promise = db.getChallengesByTag(req.query.tag);
     } else {
         promise = db.getAllChallenges();
     }

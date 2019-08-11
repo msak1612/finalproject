@@ -131,7 +131,11 @@ function onSetResult(state, action) {
 }
 
 function onSetLevel(state, action) {
-    return { ...state, level: action.level };
+    return { ...state, level: action.level, tag: "" };
+}
+
+function onSetTag(state, action) {
+    return { ...state, tag: action.tag, level: -1 };
 }
 
 const friendsReducer = createReducer(
@@ -201,6 +205,7 @@ const challengeReducer = createReducer(
     {
         challenges: [],
         level: -1,
+        tag: "",
         challenge: {
             description: "",
             solution: ""
@@ -209,6 +214,7 @@ const challengeReducer = createReducer(
     {
         SET_CHALLENGES: onSetChallenges,
         SET_LEVEL: onSetLevel,
+        SET_TAG: onSetTag,
         SET_CHALLENGE: onSetChallenge,
         SET_SOLUTION: onSetSolution,
         SET_RESULT: onSetResult

@@ -5,19 +5,21 @@ import { Link } from "react-router-dom";
 import axios from "./axios";
 
 import { useDispatch, useSelector } from "react-redux";
-import { setChallenges, setLevel } from "./actions";
+import { setChallenges, setLevel, setTag } from "./actions";
 import { Challenge } from "./challenge";
 
 export default function Challenges() {
     const dispatch = useDispatch();
     const challenges = useSelector(state => state.challenges.challenges);
     const level = useSelector(state => state.challenges.level);
+    const tag = useSelector(state => state.challenges.tag);
     useEffect(() => {
         console.log(level);
         axios
             .get("/api/challenges", {
                 params: {
-                    level: level
+                    level: level,
+                    tag: tag
                 }
             })
             .then(({ data }) => {
@@ -26,7 +28,7 @@ export default function Challenges() {
             .catch(err => {
                 console.log(err);
             });
-    }, [level]); //closes useEffect
+    }, [level, tag]); //closes useEffect
 
     function Level(props) {
         let level;
@@ -49,6 +51,11 @@ export default function Challenges() {
         );
     }
 
+    function handleTagClick(e) {
+        e.preventDefault();
+        dispatch(setTag(e.target.getAttribute("tag")));
+    } //closes handleTagClick
+
     function handleLevelClick(e) {
         e.preventDefault();
         dispatch(setLevel(e.target.getAttribute("level")));
@@ -63,6 +70,17 @@ export default function Challenges() {
                     </Link>
                     &nbsp;
                     <Level level={challenge.level} />
+                    {challenge.tags.map(tag => (
+                        <div className="display-rowwise">
+                            <Link
+                                to="/challenges"
+                                tag={tag}
+                                onClick={e => handleTagClick(e)}
+                            >
+                                {tag}
+                            </Link>
+                        </div>
+                    ))}
                 </div>
             ))}
         </div>

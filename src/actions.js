@@ -86,6 +86,10 @@ export function setLevel(level) {
     return { type: "SET_LEVEL", level: level };
 }
 
+export function setTag(tag) {
+    return { type: "SET_TAG", tag: tag };
+}
+
 export function setChallenge(challenge) {
     return { type: "SET_CHALLENGE", challenge: challenge };
 }

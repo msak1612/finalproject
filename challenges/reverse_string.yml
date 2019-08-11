@@ -1,5 +1,9 @@
 name: "Reverse String"
 level: 0
+tags:
+    - STRING
+    - FUNDAMENTALS
+    - RECURSION
 description: |
     ## Reverse String
 
