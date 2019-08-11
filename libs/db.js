@@ -132,46 +132,52 @@ module.exports.getFriendRequestCount = function(receiver) {
     );
 };
 
-// post a comment on the user
-module.exports.postText = function(sender, receiver, parent_post_id, text) {
+// post a comment on the challenge
+module.exports.postText = function(sender, challenge_id, parent_post_id, text) {
     return db.query(
-        `INSERT INTO posts(sender_id, receiver_id, parent_post_id, post)
-        VALUES (${sender}, ${receiver}, ${parent_post_id}, '${text}')
+        `INSERT INTO posts(sender_id, challenge_id, parent_post_id, post)
+        VALUES (${sender}, ${challenge_id}, ${parent_post_id}, '${text}')
         RETURNING *`
     );
 };
 
 //delete post
 module.exports.deletePost = function(id) {
-    return db.query(`DELETE FROM posts WHERE id = ${id}`);
+    return db.query(
+        `DELETE FROM posts WHERE id = ${id} OR parent_post_id = ${id}`
+    );
 };
 
-// post a image comment on the user
-module.exports.postImage = function(sender, receiver, parent_post_id, image) {
+// post a image comment on the challenge
+module.exports.postImage = function(
+    sender,
+    challenge_id,
+    parent_post_id,
+    image
+) {
     return db.query(
-        `INSERT INTO posts(sender_id, receiver_id, parent_post_id, image)
-        VALUES (${sender}, ${receiver}, ${parent_post_id}, '${image}')
+        `INSERT INTO posts(sender_id, challenge_id, parent_post_id, image)
+        VALUES (${sender}, ${challenge_id}, ${parent_post_id}, '${image}')
         RETURNING *`
     );
 };
 
-// Get comments on user's post
-module.exports.getPosts = function(receiver_id, parent_post_id) {
-    return db.query(
-        `SELECT A.id, A.sender_id, A.post, A.image, A.days, A.hours,
-         A.minutes, U.first_name, U.last_name,A.parent_post_id,
-	    (SELECT count(id) FROM posts B WHERE
-        A.id = B.parent_post_id ) as replycount FROM
-        (SELECT *,
-        EXTRACT(day FROM now() - created_at) as days,
-        EXTRACT(hour FROM now() - created_at) as hours,
-        EXTRACT(minute FROM now() - created_at) as minutes
-        FROM posts where receiver_id=${receiver_id} AND
-        parent_post_id=${parent_post_id}
-        ORDER BY case when parent_post_id!=0
-        then created_at end ASC, case when parent_post_id=0
-        then created_at end DESC) A JOIN users U ON A.sender_id=U.id`
-    );
+// Get comments on a challenge
+module.exports.getPosts = function(challenge_id, parent_post_id) {
+    let comparator = challenge_id ? "=" : "IS";
+    return db.query(`SELECT A.id, A.sender_id, A.post, A.image, A.days, A.hours,
+     A.minutes, U.first_name, U.last_name,A.parent_post_id,
+  (SELECT count(id) FROM posts B WHERE
+    A.id = B.parent_post_id ) as replycount FROM
+    (SELECT *,
+    EXTRACT(day FROM now() - created_at) as days,
+    EXTRACT(hour FROM now() - created_at) as hours,
+    EXTRACT(minute FROM now() - created_at) as minutes
+    FROM posts WHERE challenge_id ${comparator} ${challenge_id} AND
+    parent_post_id=${parent_post_id}
+    ORDER BY case when parent_post_id!=0
+    then created_at end ASC, case when parent_post_id=0
+    then created_at end DESC) A JOIN users U ON A.sender_id=U.id`);
 };
 
 //Add new chat message
@@ -215,19 +221,18 @@ module.exports.getChallengeById = function(id) {
 
 // add challenge to the table
 module.exports.addChallenge = function(
-    id,
     name,
     description,
     template,
     test,
+    solution,
     level
 ) {
     return db.query(
-        `INSERT INTO challenges VALUES(${id},'${name}','${description}','${template}','${test}',${level})`
+        `INSERT INTO challenges(name,description,template,test,solution,level)
+         VALUES('${name}','${description}','${template}','${test}','${solution}',${level})
+         ON CONFLICT(name) DO UPDATE SET description=EXCLUDED.description,
+         template=EXCLUDED.template, test=EXCLUDED.test, level=EXCLUDED.level,
+         solution=EXCLUDED.solution`
     );
-};
-
-// delete all challenges
-module.exports.deleteAllChallenges = function() {
-    return db.query(`DELETE FROM challenges`);
 };

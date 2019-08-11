@@ -1,4 +1,4 @@
-## Reverse My String
+## Reverse String
 
 Reverse the input string. Return the reversed string.
 

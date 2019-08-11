@@ -60,8 +60,6 @@ if (process.env.NODE_ENV != "production") {
 
 function load_challenges() {
     const root_dir = path.join(__dirname, "challenges");
-    db.deleteAllChallenges();
-    let id = 1;
     fs.readdir(root_dir, function(err, files) {
         if (err) {
             return console.log("Unable to scan directory: " + err);
@@ -88,19 +86,23 @@ function load_challenges() {
                         challenge_path + "/template.test.js",
                         "utf8"
                     );
+                    let solution = fs.readFileSync(
+                        challenge_path + "/solution.md",
+                        "utf8"
+                    );
 
                     description = Buffer.from(description).toString("base64");
                     template = Buffer.from(template).toString("base64");
                     test = Buffer.from(test).toString("base64");
+                    solution = Buffer.from(solution).toString("base64");
                     db.addChallenge(
-                        id,
                         challenge_dir,
                         description,
                         template,
                         test,
+                        solution,
                         level
                     );
-                    ++id;
                 });
             });
         });
@@ -179,11 +181,11 @@ app.post("/upload", uploader.single("file"), s3.upload, function(req, res) {
 });
 
 app.post("/image-post", download, s3.upload, function(req, res) {
-    if (req.file && req.body.receiver_id && req.session.userId) {
+    if (req.file && req.session.userId) {
         const url = config.s3Url + req.file.filename;
         db.postImage(
             req.session.userId,
-            req.body.receiver_id,
+            req.body.challenge_id ? req.body.challenge_id : null,
             req.body.parent_post_id,
             url
         )
@@ -201,13 +203,13 @@ app.post("/image-post", download, s3.upload, function(req, res) {
 });
 
 app.post("/comment-post", async (req, res) => {
-    if (req.body.comment && req.body.receiver_id && req.session.userId) {
+    if (req.body.comment && req.session.userId) {
         let parent_post_id = req.body.parent_post_id
             ? req.body.parent_post_id
             : 0;
         db.postText(
             req.session.userId,
-            req.body.receiver_id,
+            req.body.challenge_id ? req.body.challenge_id : null,
             parent_post_id,
             req.body.comment
         )
@@ -288,7 +290,10 @@ app.get("/api/user/:id", async (req, res) => {
 app.get("/api/posts/:id", async (req, res) => {
     try {
         const { id } = req.params;
-        let posts = await db.getPosts(id, req.query.parent_post_id);
+        let posts = await db.getPosts(
+            id != 0 ? id : null,
+            req.query.parent_post_id
+        );
         res.json({
             posts: posts.rows
         });
@@ -554,7 +559,8 @@ app.post("/api/challenge", (req, res) => {
                                     "**/uploads/" +
                                         req.session.userId +
                                         "/verify.test.js"
-                                ]
+                                ],
+                                silent: true
                             };
 
                             jest.runCLI(options, options.projects)

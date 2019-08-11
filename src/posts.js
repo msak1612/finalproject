@@ -60,7 +60,7 @@ export function Posts(props) {
             .post(url, {
                 comment: comment,
                 imageurl: image,
-                receiver_id: id,
+                challenge_id: id,
                 parent_post_id: replyPost
             })
             .then(() => {

@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setChallenge, setSolution, setResult } from "./actions";
 import AceEditor from "react-ace";
 import ReactMarkdown from "react-markdown";
+import { Posts } from "./posts";
 
 import "brace/mode/javascript";
 import "brace/theme/github";
@@ -78,34 +79,33 @@ export default function Challenge(props) {
                         Submit
                     </button>
                 </div>
-                <div className="display-colwise">
-                    {result && (
-                        <div className="display-colwise">
-                            <h4>
-                                {result.numPassedTests} out of{" "}
-                                {result.numFailedTests + result.numPassedTests}{" "}
-                                Passed
-                            </h4>
-                            {result.testResults &&
-                                result.testResults.map(result => (
-                                    <div key={result.title}>
-                                        <span>{result.title}</span>
-                                        &nbsp;{" "}
-                                        <span
-                                            style={{
-                                                color:
-                                                    result.status == "passed"
-                                                        ? "green"
-                                                        : "red"
-                                            }}
-                                        >
-                                            {result.status}
-                                        </span>
-                                    </div>
-                                ))}
-                        </div>
-                    )}
-                </div>
+                {result && (
+                    <div className="display-colwise">
+                        <h4>
+                            {result.numPassedTests} out of{" "}
+                            {result.numFailedTests + result.numPassedTests}{" "}
+                            Passed
+                        </h4>
+                        {result.testResults &&
+                            result.testResults.map(result => (
+                                <div key={result.title}>
+                                    <span>{result.title}</span>
+                                    &nbsp;{" "}
+                                    <span
+                                        style={{
+                                            color:
+                                                result.status == "passed"
+                                                    ? "green"
+                                                    : "red"
+                                        }}
+                                    >
+                                        {result.status}
+                                    </span>
+                                </div>
+                            ))}
+                    </div>
+                )}
+                <Posts id={id} />
             </div>
         </div>
     );
