@@ -212,3 +212,22 @@ module.exports.getChallengesByLevel = function(level) {
 module.exports.getChallengeById = function(id) {
     return db.query(`SELECT * from challenges WHERE id=${id}`);
 };
+
+// add challenge to the table
+module.exports.addChallenge = function(
+    id,
+    name,
+    description,
+    template,
+    test,
+    level
+) {
+    return db.query(
+        `INSERT INTO challenges VALUES(${id},'${name}','${description}','${template}','${test}',${level})`
+    );
+};
+
+// delete all challenges
+module.exports.deleteAllChallenges = function() {
+    return db.query(`DELETE FROM challenges`);
+};

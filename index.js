@@ -58,6 +58,57 @@ if (process.env.NODE_ENV != "production") {
     app.use("/bundle.js", (req, res) => res.sendFile(`${__dirname}/bundle.js`));
 }
 
+function load_challenges() {
+    const root_dir = path.join(__dirname, "challenges");
+    db.deleteAllChallenges();
+    let id = 1;
+    fs.readdir(root_dir, function(err, files) {
+        if (err) {
+            return console.log("Unable to scan directory: " + err);
+        }
+
+        files.forEach(function(dir) {
+            const level_dir = path.join(root_dir, dir);
+            let level = parseInt(dir);
+            fs.readdir(level_dir, function(err, files) {
+                if (err) {
+                    return console.log("Unable to scan directory: " + err);
+                }
+                files.forEach(function(challenge_dir) {
+                    const challenge_path = path.join(level_dir, challenge_dir);
+                    let description = fs.readFileSync(
+                        challenge_path + "/description.md",
+                        "utf8"
+                    );
+                    let template = fs.readFileSync(
+                        challenge_path + "/template.js",
+                        "utf8"
+                    );
+                    let test = fs.readFileSync(
+                        challenge_path + "/template.test.js",
+                        "utf8"
+                    );
+
+                    description = Buffer.from(description).toString("base64");
+                    template = Buffer.from(template).toString("base64");
+                    test = Buffer.from(test).toString("base64");
+                    db.addChallenge(
+                        id,
+                        challenge_dir,
+                        description,
+                        template,
+                        test,
+                        level
+                    );
+                    ++id;
+                });
+            });
+        });
+    });
+}
+
+load_challenges();
+
 var diskStorage = multer.diskStorage({
     destination: function(req, file, callback) {
         callback(null, __dirname + "/uploads");
@@ -103,6 +154,7 @@ var download = (req, res, next) => {
         next();
     }
 };
+
 app.post("/upload", uploader.single("file"), s3.upload, function(req, res) {
     if (req.file) {
         const imageUrl = config.s3Url + req.file.filename;
@@ -460,21 +512,7 @@ app.get("/api/challenge", (req, res) => {
     const id = req.query.id;
     db.getChallengeById(id)
         .then(data => {
-            let challenge = data.rows[0];
-            if (challenge) {
-                let dir = "./challenges/" + challenge.dirname + "/";
-                let description = fs.readFileSync(
-                    dir + "description.md",
-                    "utf8"
-                );
-                let template = fs.readFileSync(dir + "template.js");
-                res.json({
-                    description: Buffer.from(description).toString("base64"),
-                    template: Buffer.from(template).toString("base64")
-                });
-            } else {
-                res.status(500).json();
-            }
+            res.json(data.rows[0]);
         })
         .catch(err => {
             console.log("Error in fetching challenge ", err);
@@ -486,7 +524,6 @@ app.post("/api/challenge", (req, res) => {
     db.getChallengeById(req.body.id)
         .then(data => {
             let challenge = data.rows[0];
-            let dir = "./challenges/" + challenge.dirname;
             let solution = Buffer.from(req.body.solution, "base64").toString(
                 "utf8"
             );
@@ -500,13 +537,17 @@ app.post("/api/challenge", (req, res) => {
                             return console.error(err);
                         }
 
-                        const source = dir + "/template.test.js";
                         const test_target = solution_path + "/verify.test.js";
-                        fs.copyFile(source, test_target, e => {
-                            if (e && e.code != "EEXIST") {
+                        const test = Buffer.from(
+                            challenge.test,
+                            "base64"
+                        ).toString("utf8");
+                        fs.writeFile(test_target, test, err => {
+                            if (err) {
                                 res.status(500).json();
                                 return console.error(err);
                             }
+
                             const options = {
                                 projects: [solution_path],
                                 testMatch: [
