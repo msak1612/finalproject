@@ -7,6 +7,7 @@ CREATE TABLE users(
     email VARCHAR(255) UNIQUE NOT NULL,
     pwd VARCHAR(255) NOT NULL,
     bio VARCHAR(1000),
+    score INTEGER DEFAULT 0,
     profile_pic VARCHAR(1000),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
