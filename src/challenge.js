@@ -2,11 +2,11 @@ import React, { useEffect } from "react";
 import axios from "./axios";
 
 import { useDispatch, useSelector } from "react-redux";
-import { setChallenge, setSolution, setResult } from "./actions";
+import { setChallenge, setDraftSolution, setResult } from "./actions";
 import AceEditor from "react-ace";
 import ReactMarkdown from "react-markdown";
 import { Posts } from "./posts";
-
+import { Solutions } from "./solutions";
 import "brace/mode/javascript";
 import "brace/theme/github";
 import "brace/theme/monokai";
@@ -16,7 +16,9 @@ export default function Challenge(props) {
     const description = useSelector(
         state => state.challenges.challenge.description
     );
-    const solution = useSelector(state => state.challenges.challenge.solution);
+    const solution = useSelector(
+        state => state.challenges.challenge.draftSolution
+    );
     const result = useSelector(state => state.challenges.challenge.result);
     const name = useSelector(state => state.challenges.challenge.name);
     const id = props.match.params.id;
@@ -33,7 +35,7 @@ export default function Challenge(props) {
                     setChallenge({
                         name: data.name,
                         description: atob(data.description),
-                        solution: atob(data.template)
+                        draftSolution: atob(data.template)
                     })
                 );
             })
@@ -43,7 +45,7 @@ export default function Challenge(props) {
     }, [url]); //closes useEffect
 
     function handleChange(value) {
-        dispatch(setSolution(value));
+        dispatch(setDraftSolution(value));
     } //closes handleChange
 
     function handleSubmitClick() {
@@ -115,6 +117,7 @@ export default function Challenge(props) {
                     </div>
                 )}
                 <Posts id={id} />
+                <Solutions challenge_id={id} />
             </div>
         </div>
     );

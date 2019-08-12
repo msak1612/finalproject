@@ -4,11 +4,11 @@ import ProfilePic from "./profilepic";
 import Uploader from "./uploader";
 import { useSelector } from "react-redux";
 import { Posts } from "./posts";
+import { Solutions } from "./solutions";
 
 export default function Profile() {
     const user = useSelector(state => state.user);
     const showUploader = useSelector(state => state.edit.showUploader);
-
     return (
         <div className="display-rowwise">
             <div
@@ -28,6 +28,7 @@ export default function Profile() {
                 </div>
             </div>
             <Posts className="post" id={user.id} />
+            <Solutions user_id={user.id} />
         </div>
     );
 } //closes Profile

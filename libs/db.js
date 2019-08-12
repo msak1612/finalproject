@@ -293,29 +293,61 @@ module.exports.deleteFromCollection = function(collection_id, challenge_id) {
 // get all collections along with their challenges
 module.exports.getAllCollections = function() {
     return db.query(
-        `WITH Collection AS (SELECT C.*,json_agg(json_strip_nulls(json_build_object('id',X.id,
+        `WITH Collection AS (SELECT C.id, C.name,C.description,C.creator,U.first_name,U.last_name,
+          json_agg(json_strip_nulls(json_build_object('id',X.id,
          'name',X.name, 'preview', X.preview, 'level', X.level, 'tags',X.tags)))
          as challenges from collections C LEFT JOIN collectionitems I ON I.collection_id=C.id
-         LEFT JOIN challenges X ON X.id=I.challenge_id GROUP BY C.id) SELECT * FROM Collection`
+         LEFT JOIN challenges X ON X.id=I.challenge_id LEFT JOIN users U ON U.id=C.creator
+          GROUP BY C.id,U.first_name,U.last_name) SELECT * FROM Collection`
     );
 };
 
 // get collections created by the user along with their challenges
 module.exports.getCollectionsByCreator = function(creator) {
     return db.query(
-        `WITH Collection AS (SELECT C.*,json_agg(json_strip_nulls(json_build_object('id',X.name,
+        `WITH Collection AS (SELECT C.id, C.name,C.description,C.creator,U.first_name,U.last_name,
+          json_agg(json_strip_nulls(json_build_object('id',X.id,
          'name',X.name, 'preview', X.preview, 'level', X.level, 'tags',X.tags)))
          as challenges from collections C LEFT JOIN collectionitems I ON I.collection_id=C.id
-         LEFT JOIN challenges X ON X.id=I.challenge_id  WHERE C.creator=${creator} GROUP BY C.id) SELECT * FROM Collection`
+         LEFT JOIN challenges X ON X.id=I.challenge_id LEFT JOIN users U ON U.id=C.creator
+         WHERE C.creator=${creator} GROUP BY C.id,U.first_name,U.last_name) SELECT * FROM Collection`
     );
 };
 
 // get collection information
 module.exports.getCollectionById = function(id) {
     return db.query(
-        `WITH Collection AS (SELECT C.*,json_agg(json_strip_nulls(json_build_object('id',X.name,
-        'name',X.name, 'preview', X.preview, 'level', X.level, 'tags',X.tags)))
+        `WITH Collection AS (SELECT C.id, C.name,C.description,C.creator,U.first_name,U.last_name,
+          json_agg(json_strip_nulls(json_build_object('id',X.id,
+         'name',X.name, 'preview', X.preview, 'level', X.level, 'tags',X.tags)))
          as challenges from collections C LEFT JOIN collectionitems I ON I.collection_id=C.id
-         LEFT JOIN challenges X ON X.id=I.challenge_id  WHERE C.id=${id} GROUP BY C.id) SELECT * FROM Collection`
+         LEFT JOIN challenges X ON X.id=I.challenge_id LEFT JOIN users U ON U.id=C.creator
+         WHERE C.id=${id} GROUP BY C.id,U.first_name,U.last_name) SELECT * FROM Collection`
     );
+};
+
+// add user solution to the challenge
+module.exports.addSolution = function(solver, challenge, solution) {
+    return db.query(`INSERT INTO solutions(solver,challenge,solution)
+        VALUES (${solver},${challenge},'${solution}') RETURNING *`);
+};
+
+// get solutions from user
+module.exports.getSolutionsByUser = function(solver) {
+    return db.query(`SELECT S.solution, U.first_name, U.last_name, S.created_at,
+       json_strip_nulls(json_build_object('id',X.id, 'name',X.name,
+       'preview', X.preview, 'level', X.level, 'tags',X.tags)) as challenge
+       FROM solutions S LEFT JOIN users U ON U.id=S.solver LEFT JOIN challenges X
+       ON X.id=S.challenge  WHERE S.solver=${solver} GROUP BY S.solution,
+       U.first_name,U.last_name,S.created_at,X.id`);
+};
+
+// get solutions for challenge
+module.exports.getSolutionsForChallenge = function(challenge) {
+    return db.query(`SELECT S.solution, U.first_name, U.last_name, S.created_at,
+       json_strip_nulls(json_build_object('id',X.id, 'name',X.name,
+       'preview', X.preview, 'level', X.level, 'tags',X.tags)) as challenge
+       FROM solutions S LEFT JOIN users U ON U.id=S.solver LEFT JOIN challenges X
+       ON X.id=S.challenge  WHERE S.challenge=${challenge} GROUP BY S.solution,
+       U.first_name,U.last_name,S.created_at,X.id`);
 };

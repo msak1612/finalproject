@@ -14,7 +14,6 @@ export default function Challenges() {
     const level = useSelector(state => state.challenges.level);
     const tag = useSelector(state => state.challenges.tag);
     useEffect(() => {
-        console.log(level);
         axios
             .get("/api/challenges", {
                 params: {

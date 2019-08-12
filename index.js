@@ -594,6 +594,26 @@ app.get("/api/collection", (req, res) => {
         });
 });
 
+app.get("/api/solutions", (req, res) => {
+    let promise;
+    if (req.query.creator_id > 0) {
+        promise = db.getSolutionsByUser(req.query.creator_id);
+    } else if (req.query.challenge_id > 0) {
+        promise = db.getSolutionsForChallenge(req.query.challenge_id);
+    } else {
+        return res.status(500).json();
+    }
+
+    promise
+        .then(data => {
+            res.json(data.rows);
+        })
+        .catch(err => {
+            console.log("Error in listing challenges ", err);
+            res.status(500).json();
+        });
+});
+
 app.get("/api/challenge", (req, res) => {
     const id = req.query.id;
     db.getChallengeById(id)
@@ -647,7 +667,14 @@ app.post("/api/challenge", (req, res) => {
                             jest.runCLI(options, options.projects)
                                 .then(status => {
                                     if (status.results.numFailedTests == 0) {
-                                        // Add to score and store solution
+                                        db.addSolution(
+                                            req.session.userId,
+                                            req.body.id,
+                                            req.body.solution
+                                        );
+
+                                        // Add score to the user if it's a fresh
+                                        // entry
                                     }
 
                                     res.status(200).json({

@@ -171,9 +171,9 @@ function onSetChallenge(state, action) {
     };
 }
 
-function onSetSolution(state, action) {
+function onSetDraftSolution(state, action) {
     let challenge = state.challenge;
-    challenge.solution = action.solution;
+    challenge.draftSolution = action.solution;
     return { ...state, challenge: challenge };
 }
 
@@ -189,6 +189,10 @@ function onSetLevel(state, action) {
 
 function onSetTag(state, action) {
     return { ...state, tag: action.tag, level: -1 };
+}
+
+function onSetCompletedSolutions(state, action) {
+    return { ...state, solutions: action.solutions };
 }
 
 const friendsReducer = createReducer(
@@ -268,15 +272,16 @@ const challengeReducer = createReducer(
         tag: "",
         challenge: {
             description: "",
-            solution: ""
-        }
+            draftSolution: ""
+        },
+        solutions: []
     },
     {
         SET_CHALLENGES: onSetChallenges,
         SET_LEVEL: onSetLevel,
         SET_TAG: onSetTag,
         SET_CHALLENGE: onSetChallenge,
-        SET_SOLUTION: onSetSolution,
+        SET_DRAFT_SOLUTION: onSetDraftSolution,
         SET_RESULT: onSetResult,
         SET_COLLECTIONS: onSetCollections,
         ADD_COLLECTION: onAddCollection,
@@ -284,7 +289,8 @@ const challengeReducer = createReducer(
         REMOVE_CHALLENGE: onRemoveChallenge,
         REMOVE_COLLECTION: onRemoveCollection,
         DRAFT_COLLECTION_NAME: onDraftCollectionName,
-        DRAFT_COLLECTION_DESCRIPTION: onDraftCollectionDescription
+        DRAFT_COLLECTION_DESCRIPTION: onDraftCollectionDescription,
+        SET_COMPLETED_SOLUTIONS: onSetCompletedSolutions
     }
 );
 

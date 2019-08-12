@@ -6,6 +6,10 @@ export function setOnlineUsers(users) {
     return { type: "SET_ONLINE_USERS", users: users };
 }
 
+export function setCompletedSolutions(solutions) {
+    return { type: "SET_COMPLETED_SOLUTIONS", solutions: solutions };
+}
+
 export function friendRequestCount(count) {
     return { type: "SET_FRIEND_REQUEST_COUNT", count: count };
 }
@@ -90,6 +94,10 @@ export function removeCollection(collection) {
     return { type: "REMOVE_COLLECTION", collection: collection };
 }
 
+export function addChallenge(challenge) {
+    return { type: "ADD_CHALLENGE", challenge: challenge };
+}
+
 export function removeChallenge(challenge, collection) {
     return {
         type: "REMOVE_CHALLENGE",
@@ -104,10 +112,6 @@ export function draftCollectionDescription(description) {
 
 export function draftCollectionName(name) {
     return { type: "DRAFT_COLLECTION_NAME", name: name };
-}
-
-export function addChallenge(challenge) {
-    return { type: "ADD_CHALLENGE", challenge: challenge };
 }
 
 export function setChallenges(challenges) {
@@ -126,8 +130,8 @@ export function setChallenge(challenge) {
     return { type: "SET_CHALLENGE", challenge: challenge };
 }
 
-export function setSolution(solution) {
-    return { type: "SET_SOLUTION", solution: solution };
+export function setDraftSolution(solution) {
+    return { type: "SET_DRAFT_SOLUTION", solution: solution };
 }
 
 export function setResult(result) {
