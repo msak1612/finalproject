@@ -11,6 +11,7 @@ import Friends from "./friends";
 import Challenge from "./challenge";
 import Challenges from "./challenges";
 import Chatroom from "./chatroom";
+import Collections from "./collections";
 import axios from "./axios";
 import { setUser } from "./actions";
 import { init } from "./socket";
@@ -78,6 +79,9 @@ export default function App() {
                         <Link className="center" to="/challenges">
                             Challenges
                         </Link>
+                        <Link className="center" to="/collections">
+                            Collections
+                        </Link>
                         <Link
                             className="center"
                             to="/delete"
@@ -101,6 +105,7 @@ export default function App() {
                         <Route path="/user/:id" component={OtherProfile} />
                         <Route path="/users" component={FindPeople} />
                         <Route path="/friends" component={Friends} />
+                        <Route path="/collections" component={Collections} />
                         <Route path="/challenges" component={Challenges} />
                         <Route path="/challenge/:id" component={Challenge} />
                         <Route path="/chatroom" component={Chatroom} />

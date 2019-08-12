@@ -524,19 +524,28 @@ app.get("/api/collections", (req, res) => {
 });
 
 app.post("/api/collections", (req, res) => {
-    if (req.body.challenge_id != 0 && req.body.collection_id != 0) {
+    if (req.body.challenge_id != null && req.body.collection_id != null) {
         db.getCollectionById(req.body.collection_id)
             .then(data => {
-                if (
-                    data.rowLength != 0 ||
-                    data.rows[0].creator != req.session.UserId
-                ) {
-                    return res.json(500).json();
+                let promise;
+                if (req.body.action === "delete") {
+                    if (
+                        data.rowCount != 1 ||
+                        data.rows[0].creator != req.session.userId
+                    ) {
+                        return res.json(500).json();
+                    }
+                    promise = db.deleteFromCollection(
+                        req.body.collection_id,
+                        req.body.challenge_id
+                    );
+                } else {
+                    promise = db.addToCollection(
+                        req.body.collection_id,
+                        req.body.challenge_id
+                    );
                 }
-                db.addToCollection(
-                    req.body.collection_id,
-                    req.body.challenge_id
-                )
+                promise
                     .then(data => {
                         res.json(data.rows);
                     })
@@ -550,11 +559,19 @@ app.post("/api/collections", (req, res) => {
                 res.status(500).json();
             });
     } else {
-        db.addCollection(
-            req.body.name,
-            req.session.UserId,
-            req.body.description
-        )
+        let promise;
+
+        if (req.body.action === "delete") {
+            promise = db.deleteCollection(req.body.collection_id);
+        } else {
+            promise = db.addCollection(
+                req.body.name,
+                req.session.userId,
+                req.body.description
+            );
+        }
+
+        promise
             .then(data => {
                 res.json(data.rows);
             })

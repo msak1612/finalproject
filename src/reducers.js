@@ -111,6 +111,64 @@ function onSetChallenges(state, action) {
     return { ...state, challenges: action.challenges };
 }
 
+function onSetCollections(state, action) {
+    let collections = action.collections;
+    collections.forEach(function(collection) {
+        collection.challenges = collection.challenges.filter(
+            value => Object.keys(value).length !== 0
+        );
+    });
+    return { ...state, collections: collections };
+}
+
+function onAddCollection(state, action) {
+    let collection = state.collection;
+    collection.addedCollection = action.collection;
+    collection.addedChallenge = -1;
+    collection.removedCollection = -1;
+    collection.removedChallenge = -1;
+    return { ...state, collection: collection };
+}
+
+function onAddChallenge(state, action) {
+    let collection = state.collection;
+    collection.addedChallenge = action.challenge;
+    collection.addedCollection = -1;
+    collection.removedCollection = -1;
+    collection.removedChallenge = -1;
+    return { ...state, collection: collection };
+}
+
+function onRemoveCollection(state, action) {
+    let collection = state.collection;
+    collection.removedCollection = action.collection;
+    collection.removedChallenge = -1;
+    collection.addedChallenge = -1;
+    collection.addedCollection = -1;
+    return { ...state, collection: collection };
+}
+
+function onRemoveChallenge(state, action) {
+    let collection = state.collection;
+    collection.removedCollection = action.collection;
+    collection.addedChallenge = -1;
+    collection.removedChallenge = action.challenge;
+    collection.addedCollection = -1;
+    return { ...state, collection: collection };
+}
+
+function onDraftCollectionName(state, action) {
+    let collection = state.collection;
+    collection.draftName = action.name;
+    return { ...state, collection: collection };
+}
+
+function onDraftCollectionDescription(state, action) {
+    let collection = state.collection;
+    collection.draftDescription = action.description;
+    return { ...state, collection: collection };
+}
+
 function onSetChallenge(state, action) {
     return {
         ...state,
@@ -204,6 +262,15 @@ const onlineUsersReducer = createReducer(
 const challengeReducer = createReducer(
     {
         challenges: [],
+        collections: [],
+        collection: {
+            addedCollection: -1,
+            addedChallenge: -1,
+            removedChallenge: -1,
+            removedCollection: -1,
+            draftName: "",
+            draftDescription: ""
+        },
         level: -1,
         tag: "",
         challenge: {
@@ -217,7 +284,14 @@ const challengeReducer = createReducer(
         SET_TAG: onSetTag,
         SET_CHALLENGE: onSetChallenge,
         SET_SOLUTION: onSetSolution,
-        SET_RESULT: onSetResult
+        SET_RESULT: onSetResult,
+        SET_COLLECTIONS: onSetCollections,
+        ADD_COLLECTION: onAddCollection,
+        ADD_CHALLENGE: onAddChallenge,
+        REMOVE_CHALLENGE: onRemoveChallenge,
+        REMOVE_COLLECTION: onRemoveCollection,
+        DRAFT_COLLECTION_NAME: onDraftCollectionName,
+        DRAFT_COLLECTION_DESCRIPTION: onDraftCollectionDescription
     }
 );
 

@@ -277,32 +277,45 @@ module.exports.addToCollection = function(collection_id, challenge_id) {
     );
 };
 
+// delete collection
+module.exports.deleteCollection = function(collection_id) {
+    return db.query(`DELETE FROM collections WHERE id=${collection_id}`);
+};
+
+// delete challenge from a collection
+module.exports.deleteFromCollection = function(collection_id, challenge_id) {
+    return db.query(
+        `DELETE FROM collectionitems WHERE collection_id=${collection_id}
+         AND challenge_id=${challenge_id}`
+    );
+};
+
 // get all collections along with their challenges
 module.exports.getAllCollections = function() {
     return db.query(
-        `WITH Collection AS (SELECT C.*,json_agg(json_build_object('id',X.name,
-         'name',X.name, 'preview', X.preview, 'level', X.level, 'tags',X.tags))
-         as challenges from collections C JOIN collectionitems I ON I.collection_id=C.id
-         JOIN challenges X ON X.id=I.challenge_id GROUP BY C.id) SELECT * FROM Collection`
+        `WITH Collection AS (SELECT C.*,json_agg(json_strip_nulls(json_build_object('id',X.id,
+         'name',X.name, 'preview', X.preview, 'level', X.level, 'tags',X.tags)))
+         as challenges from collections C LEFT JOIN collectionitems I ON I.collection_id=C.id
+         LEFT JOIN challenges X ON X.id=I.challenge_id GROUP BY C.id) SELECT * FROM Collection`
     );
 };
 
 // get collections created by the user along with their challenges
 module.exports.getCollectionsByCreator = function(creator) {
     return db.query(
-        `WITH Collection AS (SELECT C.*,json_agg(json_build_object('id',X.name,
-         'name',X.name, 'preview', X.preview, 'level', X.level, 'tags',X.tags))
-         as challenges from collections C JOIN collectionitems I ON I.collection_id=C.id
-        JOIN challenges X ON X.id=I.challenge_id  WHERE C.creator=${creator} GROUP BY C.id) SELECT * FROM Collection`
+        `WITH Collection AS (SELECT C.*,json_agg(json_strip_nulls(json_build_object('id',X.name,
+         'name',X.name, 'preview', X.preview, 'level', X.level, 'tags',X.tags)))
+         as challenges from collections C LEFT JOIN collectionitems I ON I.collection_id=C.id
+         LEFT JOIN challenges X ON X.id=I.challenge_id  WHERE C.creator=${creator} GROUP BY C.id) SELECT * FROM Collection`
     );
 };
 
 // get collection information
 module.exports.getCollectionById = function(id) {
     return db.query(
-        `WITH Collection AS (SELECT C.*,json_agg(json_build_object('id',X.name,
-        'name',X.name, 'preview', X.preview, 'level', X.level, 'tags',X.tags))
-         as challenges from collections C JOIN collectionitems I ON I.collection_id=C.id
-         JOIN challenges X ON X.id=I.challenge_id  WHERE C.id=${id} GROUP BY C.id) SELECT * FROM Collection`
+        `WITH Collection AS (SELECT C.*,json_agg(json_strip_nulls(json_build_object('id',X.name,
+        'name',X.name, 'preview', X.preview, 'level', X.level, 'tags',X.tags)))
+         as challenges from collections C LEFT JOIN collectionitems I ON I.collection_id=C.id
+         LEFT JOIN challenges X ON X.id=I.challenge_id  WHERE C.id=${id} GROUP BY C.id) SELECT * FROM Collection`
     );
 };

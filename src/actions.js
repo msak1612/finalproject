@@ -78,6 +78,38 @@ export function chatMessages(msgs) {
     return { type: "CHAT_MESSAGES", messages: msgs };
 }
 
+export function setCollections(collections) {
+    return { type: "SET_COLLECTIONS", collections: collections };
+}
+
+export function addCollection(collection) {
+    return { type: "ADD_COLLECTION", collection: collection };
+}
+
+export function removeCollection(collection) {
+    return { type: "REMOVE_COLLECTION", collection: collection };
+}
+
+export function removeChallenge(challenge, collection) {
+    return {
+        type: "REMOVE_CHALLENGE",
+        challenge: challenge,
+        collection: collection
+    };
+}
+
+export function draftCollectionDescription(description) {
+    return { type: "DRAFT_COLLECTION_DESCRIPTION", description: description };
+}
+
+export function draftCollectionName(name) {
+    return { type: "DRAFT_COLLECTION_NAME", name: name };
+}
+
+export function addChallenge(challenge) {
+    return { type: "ADD_CHALLENGE", challenge: challenge };
+}
+
 export function setChallenges(challenges) {
     return { type: "SET_CHALLENGES", challenges: challenges };
 }
