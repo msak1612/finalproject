@@ -64,7 +64,6 @@ async function load_challenges() {
     const root_dir = path.join(__dirname, "challenges");
     const files = fs.readdirSync(root_dir);
 
-    let tags = [];
     let challenges = [];
     files.forEach(function(file) {
         const challenge_path = path.join(root_dir, file);
@@ -87,18 +86,12 @@ async function load_challenges() {
             template,
             test,
             solution,
-            info.level
+            info.level,
+            info.tags
         ]);
-        tags.push(info.tags);
     });
     const result = await db.addChallenges(challenges);
-    let tags_to_save = [];
-    result.rows.forEach((row, index) => {
-        tags[index].forEach(tag => {
-            tags_to_save.push([tag, row.id]);
-        });
-    });
-    db.addTags(tags_to_save);
+    console.log("Have " + result.rowCount + " Challenges");
 }
 
 load_challenges();

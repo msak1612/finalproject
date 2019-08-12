@@ -211,15 +211,13 @@ module.exports.deleteUser = function(id) {
 
 //list all challenges
 module.exports.getAllChallenges = function() {
-    return db.query(`SELECT id, name, preview, level, array_agg(tag) AS tags FROM
-    challenges LEFT JOIN tags ON challenge_id = id GROUP BY id`);
+    return db.query(`SELECT id, name, preview, level, tags FROM challenges`);
 };
 
 //list all challenges by level
 module.exports.getChallengesByLevel = function(level) {
     return db.query(
-        `SELECT id, name, preview, level, array_agg(tag) AS tags FROM challenges
-         LEFT JOIN tags ON challenge_id = id WHERE challenges.level=${level} GROUP BY id`
+        `SELECT id, name, preview, level, tags FROM challenges WHERE level=${level}`
     );
 };
 
@@ -234,7 +232,13 @@ function format(array) {
             d =>
                 "(" +
                 d
-                    .map(a => (Number.isInteger(a) ? a : "'" + a + "'"))
+                    .map(a =>
+                        Number.isInteger(a)
+                            ? a
+                            : Array.isArray(a)
+                                ? "'{" + a.map(x => '"' + x + '"') + "}'"
+                                : "'" + a + "'"
+                    )
                     .join(",") +
                 ")"
         )
@@ -244,28 +248,17 @@ function format(array) {
 // add challenge to the table
 module.exports.addChallenges = function(challenges) {
     return db.query(
-        `INSERT INTO challenges(name,preview,description,template,test,solution,level)
+        `INSERT INTO challenges(name,preview,description,template,test,solution,level,tags)
          VALUES ${format(challenges)}
          ON CONFLICT(name) DO UPDATE SET preview=EXCLUDED.preview, description=EXCLUDED.description,
          template=EXCLUDED.template, test=EXCLUDED.test, level=EXCLUDED.level,
-         solution=EXCLUDED.solution RETURNING id`
-    );
-};
-
-// add tags for challenges
-module.exports.addTags = function(tags) {
-    return db.query(
-        `INSERT INTO tags(tag,challenge_id) VALUES ${format(
-            tags
-        )} ON CONFLICT DO NOTHING`
+         solution=EXCLUDED.solution, tags=EXCLUDED.tags`
     );
 };
 
 // search challenges by tags
 module.exports.getChallengesByTag = function(tag) {
     return db.query(
-        `SELECT id, name, preview, level, array_agg(tag) as tags from challenges
-         LEFT JOIN tags ON challenge_id = id WHERE id IN
-         (SELECT challenge_id from tags WHERE tag='${tag}') GROUP BY id`
+        `SELECT id, name, preview, level,tags from challenges WHERE '${tag}'=ANY(tags)`
     );
 };

@@ -71,7 +71,7 @@ export default function Challenges() {
                     <p>{challenge.preview}</p>
                     <Level level={challenge.level} />
                     {challenge.tags.map(tag => (
-                        <div className="display-rowwise">
+                        <div key={tag} className="display-rowwise">
                             <Link
                                 to="/challenges"
                                 tag={tag}
