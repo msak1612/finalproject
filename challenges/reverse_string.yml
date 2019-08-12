@@ -10,34 +10,34 @@ description: |
 
     ### Examples
     ```javascript
-      reverse_string("Hello") -> "olleH"
+      reverseString("Hello") -> "olleH"
     ```
 
 solution: |
     ```javascript
-    export default function reverse_string(input) {
+    export default function reverseString(input) {
         if (input === "" || input === null) {
             return "";
         }
-        return reverse_string(input.substr(1)) + input.charAt(0);
+        return reverseString(input.substr(1)) + input.charAt(0);
     }
     ```
 template: |
-    export default function reverse_string(input) {
+    export default function reverseString(input) {
         // Your Playground !!!
         return "";
     }
 test: |
-    import reverse_string from "./template";
+    import reverseString from "./template";
 
     test('reverse "Hello!" to "!olleH"', () => {
-        expect(reverse_string("Hello!")).toBe("!olleH");
+        expect(reverseString("Hello!")).toBe("!olleH");
     });
 
     test('reverse "" does not break', () => {
-        expect(reverse_string("")).toBe("");
+        expect(reverseString("")).toBe("");
     });
 
     test('reverse "null" does not break', () => {
-        expect(reverse_string(null)).toBe("");
+        expect(reverseString(null)).toBe("");
     });

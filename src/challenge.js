@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-import { render } from "react-dom";
 import axios from "./axios";
 
 import { useDispatch, useSelector } from "react-redux";
@@ -10,6 +9,7 @@ import { Posts } from "./posts";
 
 import "brace/mode/javascript";
 import "brace/theme/github";
+import "brace/theme/monokai";
 
 export default function Challenge(props) {
     const dispatch = useDispatch();
@@ -71,7 +71,13 @@ export default function Challenge(props) {
                     {solution && (
                         <AceEditor
                             mode="javascript"
-                            theme="github"
+                            theme="monokai"
+                            enableBasicAutocompletion={true}
+                            enableLiveAutocompletion={true}
+                            showGutter={true}
+                            showPrintMargin={true}
+                            highlightActiveLine={true}
+                            wrapEnabled={true}
                             onChange={handleChange}
                             name="editor"
                             value={solution}
