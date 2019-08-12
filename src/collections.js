@@ -24,17 +24,11 @@ export default function Collections() {
     const draftDescription = useSelector(
         state => state.challenges.collection.draftDescription
     );
-    const addedCollection = useSelector(
-        state => state.challenges.collection.addedCollection
+    const editedCollection = useSelector(
+        state => state.challenges.collection.editedCollection
     );
-    const removedCollection = useSelector(
-        state => state.challenges.collection.removedCollection
-    );
-    const removedChallenge = useSelector(
-        state => state.challenges.collection.removedChallenge
-    );
-    const addedChallenge = useSelector(
-        state => state.challenges.collection.addedChallenge
+    const editedChallenge = useSelector(
+        state => state.challenges.collection.editedChallenge
     );
     const url = "/api/collections";
     useEffect(() => {
@@ -46,13 +40,7 @@ export default function Collections() {
             .catch(err => {
                 console.log(err);
             });
-    }, [
-        url,
-        removedCollection,
-        removedChallenge,
-        addedCollection,
-        addedChallenge
-    ]); //closes useEffect
+    }, [url, editedCollection, editedChallenge]); //closes useEffect
 
     function handleRemoveClick(e) {
         e.preventDefault();

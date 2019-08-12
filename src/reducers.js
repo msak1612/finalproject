@@ -118,42 +118,37 @@ function onSetCollections(state, action) {
             value => Object.keys(value).length !== 0
         );
     });
-    return { ...state, collections: collections };
+    let collection = state.collection;
+    collection.editedChallenge = -1;
+    collection.editedCollection = -1;
+    return { ...state, collections: collections, collection: collection };
 }
 
 function onAddCollection(state, action) {
     let collection = state.collection;
-    collection.addedCollection = action.collection;
-    collection.addedChallenge = -1;
-    collection.removedCollection = -1;
-    collection.removedChallenge = -1;
+    collection.editedCollection = action.collection;
+    collection.editedChallenge = -1;
     return { ...state, collection: collection };
 }
 
 function onAddChallenge(state, action) {
     let collection = state.collection;
-    collection.addedChallenge = action.challenge;
-    collection.addedCollection = -1;
-    collection.removedCollection = -1;
-    collection.removedChallenge = -1;
+    collection.editedChallenge = action.challenge;
+    collection.editedCollection = -1;
     return { ...state, collection: collection };
 }
 
 function onRemoveCollection(state, action) {
     let collection = state.collection;
-    collection.removedCollection = action.collection;
-    collection.removedChallenge = -1;
-    collection.addedChallenge = -1;
-    collection.addedCollection = -1;
+    collection.editedCollection = action.collection;
+    collection.editedChallenge = -1;
     return { ...state, collection: collection };
 }
 
 function onRemoveChallenge(state, action) {
     let collection = state.collection;
-    collection.removedCollection = action.collection;
-    collection.addedChallenge = -1;
-    collection.removedChallenge = action.challenge;
-    collection.addedCollection = -1;
+    collection.editedCollection = action.collection;
+    collection.editedChallenge = action.challenge;
     return { ...state, collection: collection };
 }
 
@@ -264,10 +259,8 @@ const challengeReducer = createReducer(
         challenges: [],
         collections: [],
         collection: {
-            addedCollection: -1,
-            addedChallenge: -1,
-            removedChallenge: -1,
-            removedCollection: -1,
+            editedCollection: -1,
+            editedChallenge: -1,
             draftName: "",
             draftDescription: ""
         },
