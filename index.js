@@ -506,6 +506,77 @@ app.get("/api/challenges", (req, res) => {
         });
 });
 
+app.get("/api/collections", (req, res) => {
+    let promise;
+    if (req.query.creator_id > 0) {
+        promise = db.getCollectionsByCreator(req.query.creator_id);
+    } else {
+        promise = db.getAllCollections();
+    }
+    promise
+        .then(data => {
+            res.json(data.rows);
+        })
+        .catch(err => {
+            console.log("Error in listing challenges ", err);
+            res.status(500).json();
+        });
+});
+
+app.post("/api/collections", (req, res) => {
+    if (req.body.challenge_id != 0 && req.body.collection_id != 0) {
+        db.getCollectionById(req.body.collection_id)
+            .then(data => {
+                if (
+                    data.rowLength != 0 ||
+                    data.rows[0].creator != req.session.UserId
+                ) {
+                    return res.json(500).json();
+                }
+                db.addToCollection(
+                    req.body.collection_id,
+                    req.body.challenge_id
+                )
+                    .then(data => {
+                        res.json(data.rows);
+                    })
+                    .catch(err => {
+                        console.log("Error in listing challenges ", err);
+                        res.status(500).json();
+                    });
+            })
+            .catch(err => {
+                console.log("Error in fetching collection ", err);
+                res.status(500).json();
+            });
+    } else {
+        db.addCollection(
+            req.body.name,
+            req.session.UserId,
+            req.body.description
+        )
+            .then(data => {
+                res.json(data.rows);
+            })
+            .catch(err => {
+                console.log("Error in listing challenges ", err);
+                res.status(500).json();
+            });
+    }
+});
+
+app.get("/api/collection", (req, res) => {
+    const id = req.query.id;
+    db.getCollectionById(id)
+        .then(data => {
+            res.json(data.rows[0]);
+        })
+        .catch(err => {
+            console.log("Error in fetching collection ", err);
+            res.status(500).json();
+        });
+});
+
 app.get("/api/challenge", (req, res) => {
     const id = req.query.id;
     db.getChallengeById(id)
