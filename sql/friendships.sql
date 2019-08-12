@@ -1,4 +1,4 @@
-DROP TABLE if EXISTS friendships;
+DROP TABLE if EXISTS friendships CASCADE;
 
 CREATE TABLE friendships(
     id SERIAL PRIMARY key,

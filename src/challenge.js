@@ -18,6 +18,7 @@ export default function Challenge(props) {
     );
     const solution = useSelector(state => state.challenges.challenge.solution);
     const result = useSelector(state => state.challenges.challenge.result);
+    const name = useSelector(state => state.challenges.challenge.name);
     const id = props.match.params.id;
     const url = "/api/challenge";
     useEffect(() => {
@@ -30,6 +31,7 @@ export default function Challenge(props) {
             .then(({ data }) => {
                 dispatch(
                     setChallenge({
+                        name: data.name,
                         description: atob(data.description),
                         solution: atob(data.template)
                     })
@@ -61,6 +63,7 @@ export default function Challenge(props) {
     return (
         <div className="display-rowwise">
             <div>
+                <h2>{name}</h2>
                 <ReactMarkdown source={description} />
             </div>
             <div className="display-colwise">

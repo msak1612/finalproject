@@ -22,6 +22,7 @@ const fs = require("fs");
 const http = require("http");
 const jest = require("jest");
 const YAML = require("yaml");
+const removeMd = require("remove-markdown");
 
 app.use(express.static("./public"));
 
@@ -73,8 +74,15 @@ async function load_challenges() {
         const template = Buffer.from(info.template).toString("base64");
         const test = Buffer.from(info.test).toString("base64");
         const solution = Buffer.from(info.solution).toString("base64");
+        let preview = removeMd(info.description);
+        preview = preview.replace(/(\r\n|\n|\r|\'|\"|`)/gm, " ");
+        const preview_len = 200;
+        if (preview.length > preview_len) {
+            preview = preview.substr(0, preview_len - 3) + "...";
+        }
         challenges.push([
             info.name,
+            preview,
             description,
             template,
             test,
@@ -165,13 +173,14 @@ app.post("/upload", uploader.single("file"), s3.upload, function(req, res) {
 });
 
 app.post("/image-post", download, s3.upload, function(req, res) {
-    if (req.file && req.session.userId) {
+    if (req.session.userId && req.file && req.body.has_spoilers != null) {
         const url = config.s3Url + req.file.filename;
         db.postImage(
             req.session.userId,
             req.body.challenge_id ? req.body.challenge_id : null,
             req.body.parent_post_id,
-            url
+            url,
+            req.body.has_spoilers
         )
             .then(vals => {
                 res.json(vals.rows[0]);
@@ -187,7 +196,11 @@ app.post("/image-post", download, s3.upload, function(req, res) {
 });
 
 app.post("/comment-post", async (req, res) => {
-    if (req.body.comment && req.session.userId) {
+    if (
+        req.session.userId &&
+        req.body.comment &&
+        req.body.has_spoilers != null
+    ) {
         let parent_post_id = req.body.parent_post_id
             ? req.body.parent_post_id
             : 0;
@@ -195,7 +208,8 @@ app.post("/comment-post", async (req, res) => {
             req.session.userId,
             req.body.challenge_id ? req.body.challenge_id : null,
             parent_post_id,
-            req.body.comment
+            req.body.comment,
+            req.body.has_spoilers
         )
             .then(vals => {
                 res.json(vals.rows[0]);
@@ -571,6 +585,9 @@ app.post("/api/challenge", (req, res) => {
                                 .catch(failure => {
                                     console.error("Error ", failure);
                                     res.status(500).json();
+                                    fs.unlink(test_target, () => {});
+                                    fs.unlink(solution_file, () => {});
+                                    fs.rmdir(solution_path, () => {});
                                 });
                         });
                     });

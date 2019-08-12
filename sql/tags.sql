@@ -1,4 +1,4 @@
-DROP TABLE if EXISTS tags;
+DROP TABLE if EXISTS tags CASCADE;
 
 CREATE TABLE tags(
     tag TEXT,

@@ -2,14 +2,17 @@ name: "Reverse String"
 level: 0
 tags:
     - STRING
-    - FUNDAMENTALS
     - RECURSION
 description: |
-    ## Reverse String
-
     Reverse the input string. Return the reversed string.
 
     You MAY use the temporary Array.
+
+    ### Examples
+    ```javascript
+      reverse_string("Hello") -> "olleH"
+    ```
+
 solution: |
     ```javascript
     export default function reverse_string(input) {

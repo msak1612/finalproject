@@ -133,10 +133,16 @@ module.exports.getFriendRequestCount = function(receiver) {
 };
 
 // post a comment on the challenge
-module.exports.postText = function(sender, challenge_id, parent_post_id, text) {
+module.exports.postText = function(
+    sender,
+    challenge_id,
+    parent_post_id,
+    text,
+    has_spoilers
+) {
     return db.query(
-        `INSERT INTO posts(sender_id, challenge_id, parent_post_id, post)
-        VALUES (${sender}, ${challenge_id}, ${parent_post_id}, '${text}')
+        `INSERT INTO posts(sender_id, challenge_id, parent_post_id, post, has_spoilers)
+        VALUES (${sender}, ${challenge_id}, ${parent_post_id}, '${text}', ${has_spoilers})
         RETURNING *`
     );
 };
@@ -153,11 +159,12 @@ module.exports.postImage = function(
     sender,
     challenge_id,
     parent_post_id,
-    image
+    image,
+    has_spoilers
 ) {
     return db.query(
-        `INSERT INTO posts(sender_id, challenge_id, parent_post_id, image)
-        VALUES (${sender}, ${challenge_id}, ${parent_post_id}, '${image}')
+        `INSERT INTO posts(sender_id, challenge_id, parent_post_id, image, has_spoilers)
+        VALUES (${sender}, ${challenge_id}, ${parent_post_id}, '${image}', ${has_spoilers})
         RETURNING *`
     );
 };
@@ -165,7 +172,7 @@ module.exports.postImage = function(
 // Get comments on a challenge
 module.exports.getPosts = function(challenge_id, parent_post_id) {
     let comparator = challenge_id ? "=" : "IS";
-    return db.query(`SELECT A.id, A.sender_id, A.post, A.image, A.days, A.hours,
+    return db.query(`SELECT A.id, A.sender_id, A.post, A.image, A.has_spoilers, A.days, A.hours,
      A.minutes, U.first_name, U.last_name,A.parent_post_id,
   (SELECT count(id) FROM posts B WHERE
     A.id = B.parent_post_id ) as replycount FROM
@@ -204,14 +211,14 @@ module.exports.deleteUser = function(id) {
 
 //list all challenges
 module.exports.getAllChallenges = function() {
-    return db.query(`SELECT id, name, level, array_agg(tag) AS tags FROM
+    return db.query(`SELECT id, name, preview, level, array_agg(tag) AS tags FROM
     challenges LEFT JOIN tags ON challenge_id = id GROUP BY id`);
 };
 
 //list all challenges by level
 module.exports.getChallengesByLevel = function(level) {
     return db.query(
-        `SELECT id, name, level, array_agg(tag) AS tags FROM challenges
+        `SELECT id, name, preview, level, array_agg(tag) AS tags FROM challenges
          LEFT JOIN tags ON challenge_id = id WHERE challenges.level=${level} GROUP BY id`
     );
 };
@@ -237,9 +244,9 @@ function format(array) {
 // add challenge to the table
 module.exports.addChallenges = function(challenges) {
     return db.query(
-        `INSERT INTO challenges(name,description,template,test,solution,level)
+        `INSERT INTO challenges(name,preview,description,template,test,solution,level)
          VALUES ${format(challenges)}
-         ON CONFLICT(name) DO UPDATE SET description=EXCLUDED.description,
+         ON CONFLICT(name) DO UPDATE SET preview=EXCLUDED.preview, description=EXCLUDED.description,
          template=EXCLUDED.template, test=EXCLUDED.test, level=EXCLUDED.level,
          solution=EXCLUDED.solution RETURNING id`
     );
@@ -257,7 +264,7 @@ module.exports.addTags = function(tags) {
 // search challenges by tags
 module.exports.getChallengesByTag = function(tag) {
     return db.query(
-        `SELECT id, name, level, array_agg(tag) as tags from challenges
+        `SELECT id, name, preview, level, array_agg(tag) as tags from challenges
          LEFT JOIN tags ON challenge_id = id WHERE id IN
          (SELECT challenge_id from tags WHERE tag='${tag}') GROUP BY id`
     );

@@ -68,7 +68,7 @@ export default function Challenges() {
                     <Link to={"/challenge/" + challenge.id}>
                         {challenge.name}
                     </Link>
-                    &nbsp;
+                    <p>{challenge.preview}</p>
                     <Level level={challenge.level} />
                     {challenge.tags.map(tag => (
                         <div className="display-rowwise">
