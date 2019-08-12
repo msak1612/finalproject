@@ -1,8 +1,8 @@
 import React, { useEffect } from "react";
 import { Route, BrowserRouter, Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
+import { slide as Menu } from "react-burger-menu";
 
-import Aceeditor from "./ace-editor";
 import ProfilePic from "./profilepic";
 import Profile from "./profile";
 import OtherProfile from "./other-profile";
@@ -54,6 +54,8 @@ export default function App() {
             });
     } //closes handleDeleteClick
 
+    function displayMenu() {}
+
     return (
         <BrowserRouter>
             {user.id && (
@@ -96,6 +98,42 @@ export default function App() {
                     </header>
 
                     <div>
+                        <Menu right>
+                            <Link id="home" className="menu-item" to="/">
+                                Home
+                            </Link>
+                            <Link
+                                id="profile"
+                                className="menu-item"
+                                to="/profile"
+                            >
+                                Your Profile
+                            </Link>
+                            <Link
+                                id="friends"
+                                className="menu-item"
+                                to="/friends"
+                            >
+                                Friends
+                            </Link>
+                            <Link
+                                id="settings"
+                                className="menu-item"
+                                to="/settings"
+                            >
+                                Settings
+                            </Link>
+                            <Link
+                                id="logout"
+                                className="menu-item"
+                                to="/logout"
+                            >
+                                Logout
+                            </Link>
+                        </Menu>
+                    </div>
+
+                    <div>
                         <hr></hr>
                         <Route exact path="/" component={Profile} />
                         <Route path="/user/:id" component={OtherProfile} />
@@ -104,7 +142,6 @@ export default function App() {
                         <Route path="/challenges" component={Challenges} />
                         <Route path="/challenge/:id" component={Challenge} />
                         <Route path="/chatroom" component={Chatroom} />
-                        <Route path="/aceeditor" component={Aceeditor} />
                     </div>
                 </div>
             )}

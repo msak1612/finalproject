@@ -1,0 +1,39 @@
+name: "Sum of two numbers"
+level: 0
+tags:
+    - FUNDAMENTALS
+
+description: |
+    Add the input numbers. Return the addition of numbers.
+
+    ### Examples
+    ```javascript
+      sum(2, 3) -> 5
+      sum(-3, -2) -> -5
+    ```
+
+solution: |
+    ```javascript
+    export default function sum(a, b) {
+        return (a + b);
+    }
+    ```
+template: |
+    export default function sum(a, b) {
+        // Your Playground !!!
+        return ;
+    }
+test: |
+    import sum from "./template";
+
+    test('adds 2 + 3 to equal 3', () => {
+        expect(sum(2, 3)).toBe(5);
+    });
+
+    test('adds -2 + (-3) to equal -5', () => {
+        expect(sum(-2, -3)).toBe(-5);
+    });
+
+    test('adds 0 + 0 to equal 0', () => {
+        expect(sum(0, 0)).toBe(0);
+    });

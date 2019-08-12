@@ -251,8 +251,8 @@ module.exports.addChallenges = function(challenges) {
         `INSERT INTO challenges(name,preview,description,template,test,solution,level,tags)
          VALUES ${format(challenges)}
          ON CONFLICT(name) DO UPDATE SET preview=EXCLUDED.preview, description=EXCLUDED.description,
-         template=EXCLUDED.template, test=EXCLUDED.test, level=EXCLUDED.level,
-         solution=EXCLUDED.solution, tags=EXCLUDED.tags`
+         template=EXCLUDED.template, test=EXCLUDED.test, solution=EXCLUDED.solution, level=EXCLUDED.level,
+        tags=EXCLUDED.tags`
     );
 };
 
