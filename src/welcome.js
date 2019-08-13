@@ -11,7 +11,7 @@ export default function Welcome() {
             <div>
                 <h1>
                     <img id="logo" src="/images/logo.png" alt="logo" />
-                    Playgrounds begins with interactive coding
+                    Code Grounds
                 </h1>
 
                 <div id="auth-container">

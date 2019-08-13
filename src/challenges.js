@@ -76,7 +76,9 @@ export default function Challenges() {
         <section className="challenges-container">
             <div className="display-colwise" id="left-half">
                 <h3>Levels</h3>
+
                 <Level level={-1} />
+
                 {levels.length > 0 &&
                     levels.map(mlevel => <Level level={mlevel} key={mlevel} />)}
                 <h3>Tags</h3>

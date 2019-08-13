@@ -53,10 +53,6 @@ export default function App() {
                         <Link className="center" to="/forum">
                             Forum
                         </Link>
-
-                        <Link className="center" to="/users">
-                            Find People
-                        </Link>
                         <Link className="center" to="/friends">
                             Friends
                             {request_count > 0 && (
