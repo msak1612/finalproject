@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { slide as Menu } from "react-burger-menu";
 import { setSideBarVisibility } from "./actions";
+import axios from "./axios";
 
 export default function SideBar() {
     const dispatch = useDispatch();

@@ -48,13 +48,13 @@ export default function Challenge(props) {
                         draftSolution: data.usersolution
                             ? atob(data.usersolution)
                             : data_unlocked
-                                ? atob(data.solution)
-                                : atob(data.template),
+                            ? atob(data.solution)
+                            : atob(data.template),
                         solvedAlready: data.usersolution
                             ? true
                             : data_unlocked
-                                ? true
-                                : false,
+                            ? true
+                            : false,
                         unlocked: data_unlocked
                     })
                 );
@@ -143,6 +143,7 @@ export default function Challenge(props) {
                             {result.numPassedTests} out of{" "}
                             {result.numFailedTests + result.numPassedTests}{" "}
                             Passed
+                            <div>Score: {result.score}</div>
                         </h4>
                         {result.testResults &&
                             result.testResults.map(result => (

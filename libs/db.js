@@ -241,8 +241,8 @@ function format(array) {
                         Number.isInteger(a)
                             ? a
                             : Array.isArray(a)
-                                ? "'{" + a.map(x => '"' + x + '"') + "}'"
-                                : "'" + a + "'"
+                            ? "'{" + a.map(x => '"' + x + '"') + "}'"
+                            : "'" + a + "'"
                     )
                     .join(",") +
                 ")"
@@ -334,7 +334,7 @@ module.exports.getCollectionById = function(id) {
 // add user solution to the challenge
 module.exports.addSolution = function(solver, challenge, solution) {
     return db.query(`INSERT INTO solutions(solver,challenge,solution)
-        VALUES (${solver},${challenge},'${solution}') RETURNING *`);
+        VALUES (${solver},${challenge},'${solution}') ON CONFLICT DO NOTHING RETURNING *`);
 };
 
 // get solutions from user
@@ -361,4 +361,11 @@ module.exports.getSolutionsForChallenge = function(challenge) {
 module.exports.unlockSolution = function(viewer, challenge) {
     return db.query(`INSERT INTO unlockedsolutions(viewer,challenge)
         VALUES (${viewer},${challenge}) RETURNING *`);
+};
+
+// update score for the current user
+module.exports.incrementScore = function(user, score) {
+    return db.query(
+        `UPDATE users SET score = score + ${score} WHERE id=${user} RETURNING *`
+    );
 };

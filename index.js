@@ -67,8 +67,8 @@ async function load_challenges() {
     let challenge_id = 1;
     files.sort(function(a, b) {
         return (
-            fs.statSync(root_dir + "/" + a).birthtime.getTime() -
-            fs.statSync(root_dir + "/" + b).birthtime.getTime()
+            fs.statSync(root_dir + "/" + b).birthtime.getTime() -
+            fs.statSync(root_dir + "/" + a).birthtime.getTime()
         );
     });
     files.forEach(function(file) {
@@ -646,87 +646,78 @@ app.get("/api/challenge", (req, res) => {
 });
 
 app.post("/api/challenge", (req, res) => {
-    db.getChallengeById(req.body.id)
+    let solution_path = "./uploads/" + req.session.userId;
+    let solution_file = solution_path + "/template.js";
+    let test_target = solution_path + "/verify.test.js";
+    let challenge;
+    let results;
+
+    db.getChallengeById(req.body.id, req.session.userId)
         .then(data => {
-            let challenge = data.rows[0];
-            let solution = Buffer.from(req.body.solution, "base64").toString(
+            challenge = data.rows[0];
+            if (!fs.existsSync(solution_path)) {
+                return fs.promises.mkdir(solution_path);
+            } else {
+                return Promise.resolve();
+            }
+        })
+        .then(data => {
+            const solution = Buffer.from(req.body.solution, "base64").toString(
                 "utf8"
             );
-            let solution_path = "./uploads/" + req.session.userId;
-            let solution_file = solution_path + "/template.js";
-            fs.mkdir(solution_path, function(e) {
-                if (!e || (e && e.code === "EEXIST")) {
-                    fs.writeFile(solution_file, solution, function(err) {
-                        if (err) {
-                            res.status(500).json();
-                            return console.error(err);
-                        }
+            return fs.promises.writeFile(solution_file, solution);
+        })
+        .then(data => {
+            const test = Buffer.from(challenge.test, "base64").toString("utf8");
+            console.log("wirte file");
 
-                        const test_target = solution_path + "/verify.test.js";
-                        const test = Buffer.from(
-                            challenge.test,
-                            "base64"
-                        ).toString("utf8");
-                        fs.writeFile(test_target, test, err => {
-                            if (err) {
-                                res.status(500).json();
-                                return console.error(err);
-                            }
+            return fs.promises.writeFile(test_target, test);
+        })
+        .then(data => {
+            const options = {
+                projects: [solution_path],
+                testMatch: ["**/" + test_target.substr(2)],
+                silent: true
+            };
 
-                            const options = {
-                                projects: [solution_path],
-                                testMatch: [
-                                    "**/uploads/" +
-                                        req.session.userId +
-                                        "/verify.test.js"
-                                ],
-                                silent: true
-                            };
-
-                            jest.runCLI(options, options.projects)
-                                .then(status => {
-                                    if (status.results.numFailedTests == 0) {
-                                        db.addSolution(
-                                            req.session.userId,
-                                            req.body.id,
-                                            req.body.solution
-                                        );
-
-                                        // Add score to the user if it's a fresh
-                                        // entry
-                                    }
-
-                                    res.status(200).json({
-                                        testResults:
-                                            status.results.testResults[0]
-                                                .testResults,
-                                        numFailedTests:
-                                            status.results.numFailedTests,
-                                        numPassedTests:
-                                            status.results.numPassedTests
-                                    });
-                                    fs.unlink(test_target, () => {});
-                                    fs.unlink(solution_file, () => {});
-                                    fs.rmdir(solution_path, () => {});
-                                })
-                                .catch(failure => {
-                                    console.error("Error ", failure);
-                                    res.status(500).json();
-                                    fs.unlink(test_target, () => {});
-                                    fs.unlink(solution_file, () => {});
-                                    fs.rmdir(solution_path, () => {});
-                                });
-                        });
-                    });
-                } else {
-                    res.status(500).json();
-                    return console.log(e);
-                }
+            return jest.runCLI(options, options.projects);
+        })
+        .then(status => {
+            results = status.results;
+            if (!challenge.unlocked && status.results.numFailedTests == 0) {
+                return db.addSolution(
+                    req.session.userId,
+                    req.body.id,
+                    req.body.solution
+                );
+            } else {
+                return Promise.resolve();
+            }
+        })
+        .then(data => {
+            if (data && data.rowCount != 0) {
+                let score = (challenge.level + 1) * 10;
+                return db.incrementScore(req.session.userId, score);
+            } else {
+                return db.getUserById(req.session.userId);
+            }
+        })
+        .then(data => {
+            res.status(200).json({
+                testResults: results.testResults[0].testResults,
+                numFailedTests: results.numFailedTests,
+                numPassedTests: results.numPassedTests,
+                score: data.rows[0].score
             });
         })
-        .catch(err => {
-            console.log("Error in executing challenge ", err);
+        .catch(failure => {
+            console.log("Error: ", failure);
             res.status(500).json();
+        })
+        .finally(() => {
+            fs.unlink(test_target, () => {});
+            fs.unlink(solution_file, () => {});
+            fs.rmdir(solution_path, () => {});
         });
 });
 
@@ -813,7 +804,5 @@ io.on("connection", socket => {
             .catch(err => {
                 console.log("Error in getting user. ", err);
             });
-
-        console.log(`A socket with the id ${socket.id} just disconnected.`);
     });
 });
