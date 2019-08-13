@@ -1,0 +1,67 @@
+name: "Sum of Digits"
+level: 2
+tags:
+    - ARRAY
+description: |
+    Two numbers represented as an array with each item containing the single digit.
+    The digits are stored in reverse order where first digit of the number is at
+    first position of the array.
+
+    Return the sum of digits stored in two array.
+
+      ### Examples
+      ```javascript
+        sumOfDigits([],[1]) -> [1]
+        sumOfDigits(null,[1]) -> [1]
+        sumOfDigits([1,9], [2,1,2]) -> [3,0,3]
+      ```
+solution: |
+    export default function sumOfDigits(a,b) {
+      if (a === null || a.length === 0) {
+          return b;
+      }
+
+      if (b === null || b.length === 0) {
+          return a;
+      }
+
+      let result = [];
+      let carry = 0;
+      let min_length = Math.min(a.length, b.length);
+      for (let i = 0; i < min_length; i++) {
+          let sum = a[i] + b [i] + carry;
+          result[i] = parseInt(sum % 10);
+          carry = sum / 10;
+      }
+
+      let tmp_array = min_length === a.length ? b.slice(min_length) : a.slice(min_length);
+      if (tmp_array.length > 0) {
+          for (let i = 0; i < tmp_array.length; i++) {
+              let sum = tmp_array[i] + carry;
+              result[min_length + i] = parseInt(sum % 10);
+              carry = sum / 10;
+          }
+      }
+      return result;
+    }
+template: |
+    export default function sumOfDigits(a, b) {
+        // Your Playground !!!
+        return [];
+    }
+test: |
+    import sumOfDigits from "./template";
+
+    test('sum of digits work with empty array', () => {
+        expect(sumOfDigits([],[1])).toStrictEqual([1]);
+        expect(sumOfDigits([1],[])).toStrictEqual([1]);
+    });
+
+    test('sum of digits with null array', () => {
+        expect(sumOfDigits(null,[1])).toStrictEqual([1]);
+        expect(sumOfDigits([1], null)).toStrictEqual([1]);
+    });
+
+    test('Sum of [1,9] and [2,1,2] returns [3,0,3]', () => {
+        expect(sumOfDigits([1,9],[2,1,2])).toStrictEqual([3,0,3]);
+    });

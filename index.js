@@ -67,10 +67,11 @@ async function load_challenges() {
     let challenge_id = 1;
     files.sort(function(a, b) {
         return (
-            fs.statSync(root_dir + "/" + b).birthtime.getTime() -
-            fs.statSync(root_dir + "/" + a).birthtime.getTime()
+            fs.statSync(root_dir + "/" + a).birthtime.getTime() -
+            fs.statSync(root_dir + "/" + b).birthtime.getTime()
         );
     });
+    console.log(files);
     files.forEach(function(file) {
         const challenge_path = path.join(root_dir, file);
         const contents = fs.readFileSync(challenge_path, "utf8");
@@ -680,8 +681,6 @@ app.post("/api/challenge", (req, res) => {
         })
         .then(data => {
             const test = Buffer.from(challenge.test, "base64").toString("utf8");
-            console.log("wirte file");
-
             return fs.promises.writeFile(test_target, test);
         })
         .then(data => {
@@ -695,7 +694,10 @@ app.post("/api/challenge", (req, res) => {
         })
         .then(status => {
             results = status.results;
-            if (!challenge.unlocked && status.results.numFailedTests == 0) {
+            if (
+                parseInt(challenge.unlocked) === 0 &&
+                status.results.numFailedTests == 0
+            ) {
                 return db.addSolution(
                     req.session.userId,
                     req.body.id,

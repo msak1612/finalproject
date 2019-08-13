@@ -1,0 +1,58 @@
+name: "Maximum element in sorted and rotated array"
+level: 1
+tags:
+    - ARRAY
+description: |
+
+    Given a sorted array of distinct elements which is rotated at some unknown
+    point, find the maximum element in the array.
+
+      ### Examples
+      ```javascript
+        maxElement([4,5,1,2,3]) -> 5
+        maxElement([1,2,3]) -> 3
+      ```
+solution: |
+    export default function maxElement(a) {
+        function findMax(a,low,high) {
+          if (high < low) {
+            return a[0];
+          }
+
+          if (high === low) {
+            return a[low];
+          }
+
+          let mid = low + (high - low) / 2;
+          if (mid < high && a[mid + 1] < a[mid]) {
+            return a[mid];
+          }
+
+          if (mid > low && a[mid] < a[mid - 1]) {
+            return a[mid - 1];
+          }
+
+          if (a[low] > a[mid]) {
+              return findMax(a, low, mid - 1);
+          } else {
+              return findMax(a, mid + 1, high);
+          }
+        }
+
+        return findMax(a, 0, a.length-1);
+    }
+template: |
+    export default function maxElement(a) {
+        // Your Playground !!!
+        return 0;
+    }
+test: |
+    import maxElement from "./template";
+
+    test('maxElement([4,5,1,2,3]) returns 5', () => {
+        expect(maxElement([4,5,1,2,3])).toBe(5);
+    });
+
+    test('maxElement([1,2,3]) returns 3', () => {
+        expect(maxElement([1,2,3])).toBe(3);
+    });

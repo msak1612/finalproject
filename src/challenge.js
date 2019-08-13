@@ -120,21 +120,16 @@ export default function Challenge(props) {
                             readOnly={solvedAlready}
                         />
                     )}
+                    <button name="save" onClick={() => handleSubmitClick()}>
+                        Submit
+                    </button>
                     {!solvedAlready && (
-                        <div>
-                            <button
-                                name="save"
-                                onClick={() => handleSubmitClick()}
-                            >
-                                Submit
-                            </button>
-                            <button
-                                name="unlock"
-                                onClick={() => handleUnlockClick()}
-                            >
-                                Unlock Solution
-                            </button>
-                        </div>
+                        <button
+                            name="unlock"
+                            onClick={() => handleUnlockClick()}
+                        >
+                            Unlock Solution
+                        </button>
                     )}
                 </div>
                 {result && (

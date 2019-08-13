@@ -1,0 +1,41 @@
+name: "Remove Duplicates"
+level: 1
+tags:
+    - ARRAY
+description: |
+    Remove duplicates from an input a
+    ### Examples
+    ```javascript
+      removeDuplicates([]]) -> []]
+      removeDuplicates(null]) -> []]
+      removeDuplicates([1,2,3,1,2]]) -> [1,2,3]]
+    ```
+
+solution: |
+    export default function removeDuplicates(input) {
+        if (input === null || input.length === 0) {
+            return [];
+        }
+
+        let x = (array) => array.filter((v,i) => array.indexOf(v) === i)
+        return x(input);
+    }
+template: |
+    export default function removeDuplicates(input) {
+        // Your Playground !!!
+        return input;
+    }
+test: |
+    import removeDuplicates from "./template";
+
+    test('empty array does not crash', () => {
+        expect(removeDuplicates([])).toStrictEqual([]);
+    });
+
+    test('null array does not crash', () => {
+        expect(removeDuplicates(null)).toStrictEqual([]);
+    });
+
+    test('[1,2,3,1,2] returns [1,2,3]', () => {
+        expect(removeDuplicates([1,2,3,1,2])).toStrictEqual([1,2,3]);
+    });
