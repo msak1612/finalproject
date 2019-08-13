@@ -50,12 +50,16 @@ export function setReplies(id, replies) {
     return { type: "SET_REPLY_POSTS", id: id, replies: replies };
 }
 
-export function draftPost(post) {
+export function setDraftPost(post) {
     return { type: "DRAFT_POST", post: post };
 }
 
 export function setReplyPost(id) {
     return { type: "REPLY_POST", id: id };
+}
+
+export function setDeletePost(id) {
+    return { type: "DELETE_POST", id: id };
 }
 
 export function setFriends(friends) {

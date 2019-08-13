@@ -1,14 +1,24 @@
 import React, { useEffect } from "react";
 import axios from "./axios";
 import { useDispatch, useSelector } from "react-redux";
-import { draftPost, setReplyPost, setPosts, setReplies } from "./actions";
+import {
+    setDraftPost,
+    setReplyPost,
+    setDeletePost,
+    setPosts,
+    setReplies
+} from "./actions";
 import { Link } from "react-router-dom";
+import ReactMarkdown from "react-markdown";
 
-export function Posts(props) {
-    const id = props.id;
+export default function Posts(props) {
+    const id = props.id ? props.id : 0;
     const dispatch = useDispatch();
     const posts = useSelector(state => state.posts);
     const url = "/api/posts/" + id;
+    const draftPost = useSelector(state => state.posts.draftPost);
+    const replyPost = useSelector(state => state.posts.replyPost);
+    const deletePost = useSelector(state => state.posts.deletePost);
 
     useEffect(() => {
         axios
@@ -23,10 +33,10 @@ export function Posts(props) {
             .catch(err => {
                 console.log(err);
             });
-    }, [url]); //closes useEffect
+    }, [url, draftPost.length != 0, replyPost, deletePost]); //closes useEffect
 
     function handleChange(event) {
-        dispatch(draftPost(event.target.value));
+        dispatch(setDraftPost(event.target.value));
     } //closes handleChange
 
     // from StackOverflow
@@ -47,15 +57,13 @@ export function Posts(props) {
         let url;
         let image = "";
         let comment = "";
-        if (validURL(posts.draftPost)) {
+        if (validURL(draftPost)) {
             url = "/image-post";
-            image = posts.draftPost;
+            image = draftPost;
         } else {
             url = "/comment-post";
-            comment = posts.draftPost;
+            comment = btoa(draftPost);
         }
-
-        let replyPost = posts.replyPost;
         axios
             .post(url, {
                 comment: comment,
@@ -65,13 +73,12 @@ export function Posts(props) {
                 has_spoilers: false
             })
             .then(() => {
-                dispatch(draftPost(""));
+                dispatch(setDraftPost(""));
                 dispatch(setReplyPost(0));
-                window.location.reload();
             })
             .catch(err => {
                 console.log(err);
-                dispatch(draftPost(""));
+                dispatch(setDraftPost(""));
                 dispatch(setReplyPost(0));
             });
     } //closes handlePostClick
@@ -95,18 +102,19 @@ export function Posts(props) {
 
     function handleReplyClick(e) {
         e.preventDefault();
-        dispatch(draftPost(e.target.getAttribute("replyto")));
+        dispatch(setDraftPost(e.target.getAttribute("replyto")));
         dispatch(setReplyPost(e.target.id));
     }
 
     function handleDeleteClick(e) {
+        let id = e.target.id;
         e.preventDefault();
         axios
             .post("/deletepost", {
-                id: e.target.id
+                id: id
             })
             .then(() => {
-                window.location.reload();
+                dispatch(setDeletePost(id));
             })
             .catch(err => {
                 console.log(err);
@@ -115,9 +123,9 @@ export function Posts(props) {
 
     const addPost = (
         <div>
-            <input
+            <textarea
                 className="post-input"
-                defaultValue={posts.draftPost}
+                value={draftPost}
                 onChange={e => handleChange(e)}
                 onPaste={e => handleChange(e)}
                 autoFocus
@@ -140,7 +148,6 @@ export function Posts(props) {
                         <b>
                             {post.first_name}&nbsp;{post.last_name}:{" "}
                         </b>{" "}
-                        {post.post && post.post}
                         {post.image && (
                             <img
                                 src={post.image}
@@ -148,6 +155,8 @@ export function Posts(props) {
                             />
                         )}
                     </p>
+                    {post.post && <ReactMarkdown source={atob(post.post)} />}
+
                     {props.replyPost != post.id && (
                         <div className="post-options">
                             <Link
@@ -211,8 +220,8 @@ export function Posts(props) {
 
     return (
         <div className="display-colwise">
-            {!posts.replyPost && addPost}
-            <PostList posts={posts.posts} replyPost={posts.replyPost} />
+            {!replyPost && addPost}
+            <PostList posts={posts.posts} replyPost={replyPost} />
         </div>
     );
 }

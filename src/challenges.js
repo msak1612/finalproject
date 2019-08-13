@@ -55,6 +55,7 @@ export default function Challenges() {
             <Link
                 to="/challenges"
                 level={props.level}
+                className="classifiers"
                 onClick={e => handleLevelClick(e)}
             >
                 {level}
@@ -82,13 +83,18 @@ export default function Challenges() {
                 {levels.length > 0 &&
                     levels.map(mlevel => <Level level={mlevel} key={mlevel} />)}
                 <h3>Tags</h3>
-                <Link to="/challenges" onClick={e => handleTagClick(e)}>
+                <Link
+                    to="/challenges"
+                    className="classifiers"
+                    onClick={e => handleTagClick(e)}
+                >
                     ALL
                 </Link>
                 {tags.length > 0 &&
                     tags.map(mtag => (
                         <Link
                             to="/challenges"
+                            className="classifiers"
                             tag={mtag}
                             onClick={e => handleTagClick(e)}
                             key={mtag}

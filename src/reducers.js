@@ -90,6 +90,10 @@ function onReplyPost(state, action) {
     return { ...state, replyPost: action.id };
 }
 
+function onDeletePost(state, action) {
+    return { ...state, deletePost: action.id };
+}
+
 function onSetChat(state, action) {
     const newMsgs = state;
     newMsgs.append(action.message);
@@ -253,12 +257,13 @@ const otherUserReducer = createReducer(
 );
 
 const postReducer = createReducer(
-    { posts: [], draftPost: "", replyPost: 0 },
+    { posts: [], draftPost: "", replyPost: 0, deletePost: 0 },
     {
         SET_POSTS: onSetPosts,
         SET_REPLY_POSTS: onSetReplies,
         DRAFT_POST: onDraftPost,
-        REPLY_POST: onReplyPost
+        REPLY_POST: onReplyPost,
+        DELETE_POST: onDeletePost
     }
 );
 

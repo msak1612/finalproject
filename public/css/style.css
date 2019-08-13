@@ -748,7 +748,7 @@ h4 {
     border: 1px solid silver;
     max-height: 32vh;
     overflow-y: hidden;
-    margin-top: 8vh;
+    /* margin-top: 8vh; */
 }
 
 .menu-item:hover {
@@ -757,8 +757,6 @@ h4 {
 }
 
 .menu-item:active {
-    margin-left: 10px;
-    margin-right: 7px;
     background: #ff5722;
     transition: 0.2s ease-in;
 }
@@ -772,7 +770,8 @@ h4 {
     letter-spacing: 1px;
     line-height: 5vh;
     text-decoration: none;
-    margin-left: 2vw;
+    /* margin-left: 2vw; */
+    padding-left: 2vw;
     color: white;
     font-family: sans-serif;
     font-weight: 500;
@@ -787,18 +786,14 @@ h4 {
 
 #notification,
 #search {
-    margin-top: 3px;
+    margin: 10px;
     height: 4vh;
-    width: 5vw;
 }
 
-#search {
-    margin-top: 0.9vh;
-    height: 4.3vh;
-    border: 1.5px solid #1e2022;
-    background: #c9d6df;
-    border: 1px solid silver;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+#notification:hover,
+#search:hover {
+    background-color: white;
+    border-radius: 50%;
 }
 
 input[name="search"] {
@@ -929,6 +924,19 @@ input[name="search"] {
     font-weight: 500;
     font-size: 18px;
     color: #1e2022;
+}
+
+.classifiers {
+    text-decoration: none;
+    color: black;
+    margin-top: 5px;
+}
+
+.classifiers:hover,
+.classifiers:active,
+.classifiers:focus {
+    color: blue;
+    transition: 0.2s ease;
 }
 
 /* The rest copied directly from react-burger-menu docs */

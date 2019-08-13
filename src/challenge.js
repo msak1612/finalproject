@@ -9,9 +9,10 @@ import {
     unlockSolution
 } from "./actions";
 import AceEditor from "react-ace";
-import ReactMarkdown from "react-markdown";
-import { Posts } from "./posts";
+import Posts from "./posts";
 import { Solutions } from "./solutions";
+import ReactMarkdown from "react-markdown";
+
 import "brace/mode/javascript";
 import "brace/theme/github";
 import "brace/theme/monokai";

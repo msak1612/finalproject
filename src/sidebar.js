@@ -8,6 +8,7 @@ import axios from "./axios";
 export default function SideBar() {
     const dispatch = useDispatch();
     const sideBarVisible = useSelector(state => state.sideBar.visible);
+    const request_count = useSelector(state => state.friends.request_count);
     const user = useSelector(state => state.user);
 
     function closeSideBar() {
@@ -43,12 +44,24 @@ export default function SideBar() {
         >
             <hr id="line1"></hr>
             <Link
+                className="center"
+                className="menu-item"
+                to="/collections"
+                onClick={closeSideBar}
+            >
+                Collections
+            </Link>
+            <hr id="line1"></hr>
+            <Link
                 id="friends"
                 className="menu-item"
                 to="/friends"
                 onClick={closeSideBar}
             >
-                Friends
+                Friends{" "}
+                {request_count > 0 && (
+                    <span className="count">{request_count}</span>
+                )}
             </Link>
             <hr id="line1"></hr>
             <Link id="home" className="menu-item" to="/" onClick={closeSideBar}>

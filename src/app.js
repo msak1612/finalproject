@@ -12,6 +12,7 @@ import Challenges from "./challenges";
 import Chatroom from "./chatroom";
 import Collections from "./collections";
 import SideBar from "./sidebar";
+import Posts from "./posts";
 
 import axios from "./axios";
 import { setUser, setSideBarVisibility } from "./actions";
@@ -20,7 +21,6 @@ import { init } from "./socket";
 export default function App() {
     const dispatch = useDispatch();
     const user = useSelector(state => state.user);
-    const request_count = useSelector(state => state.friends.request_count);
 
     useEffect(() => {
         axios
@@ -47,43 +47,18 @@ export default function App() {
                         <Link className="center" to="/challenges">
                             Challenges
                         </Link>
-                        <Link className="center" to="/collections">
-                            Collections
-                        </Link>
                         <Link className="center" to="/forum">
                             Forum
-                        </Link>
-                        <Link className="center" to="/friends">
-                            Friends
-                            {request_count > 0 && (
-                                <span className="count">{request_count}</span>
-                            )}
                         </Link>
                         <Link className="center" to="/chatroom">
                             Chat
                         </Link>
-
-                        <input
-                            name="search"
-                            type="text"
-                            placeholder="Search"
-                            onChange={e => this.handleChange(e)}
-                            required
-                        />
-                        <span>
-                            <img
-                                id="search"
-                                src="/images/search.svg"
-                                alt="search"
-                            />
-                        </span>
-                        <span>
+                        <Link to="/friends">
                             <img
                                 id="notification"
                                 src="/images/notification.svg"
-                                alt="notification"
                             />
-                        </span>
+                        </Link>
                         <ProfilePic />
                         <span className="header-name">
                             {user.first_name}&nbsp;{user.last_name}
@@ -100,6 +75,7 @@ export default function App() {
                         <Route path="/challenges" component={Challenges} />
                         <Route path="/challenge/:id" component={Challenge} />
                         <Route path="/chatroom" component={Chatroom} />
+                        <Route path="/forum" component={Posts} />
                     </div>
                 </div>
             )}
