@@ -73,7 +73,7 @@ export default function Challenges() {
     } //closes handleLevelClick
 
     return (
-        <section className="challenge-container">
+        <section className="challenges-container">
             <div className="display-colwise" id="left-half">
                 <h3>Levels</h3>
                 <Level level={-1} />
