@@ -107,6 +107,12 @@ function onSetOnlineUsers(state, action) {
     return action.users;
 }
 
+function onSetSideBarVisibility(state, action) {
+    let sideBar = state;
+    state.visible = action.visible;
+    return sideBar;
+}
+
 function onSetChallenges(state, action) {
     return { ...state, challenges: action.challenges };
 }
@@ -301,6 +307,13 @@ const challengeReducer = createReducer(
     }
 );
 
+const sideBarVisibilityReducer = createReducer(
+    { visible: false },
+    {
+        SET_SIDEBAR_VISIBLE: onSetSideBarVisibility
+    }
+);
+
 export const reducer = combineReducers({
     friends: friendsReducer,
     edit: editReducer,
@@ -309,5 +322,6 @@ export const reducer = combineReducers({
     otherUser: otherUserReducer,
     chat: chatReducer,
     onlineUsers: onlineUsersReducer,
-    challenges: challengeReducer
+    challenges: challengeReducer,
+    sideBar: sideBarVisibilityReducer
 });

@@ -14,14 +14,12 @@ description: |
     ```
 
 solution: |
-    ```javascript
     export default function sortArray(input) {
         if (input === "") {
             return "";
         }
         return sort(sortArray);
     }
-    ```
 template: |
     export default function sortArray(input) {
         // Your Playground !!!

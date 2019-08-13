@@ -141,3 +141,7 @@ export function setResult(result) {
 export function unlockSolution() {
     return { type: "UNLOCK_SOLUTION" };
 }
+
+export function setSideBarVisibility(visible) {
+    return { type: "SET_SIDEBAR_VISIBLE", visible: visible };
+}

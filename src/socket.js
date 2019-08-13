@@ -21,7 +21,6 @@ export const init = () => {
 
         socket.on("chatMessages", msgs => store.dispatch(chatMessages(msgs)));
         socket.on("friendrequest", request_count => {
-            console.log(request_count);
             store.dispatch(friendRequestCount(request_count.count));
         });
         socket.on("newMessage", msg => store.dispatch(newChatMessage(msg)));

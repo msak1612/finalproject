@@ -812,3 +812,19 @@ input[name="search"] {
     font-size: 18px;
     color: #1e2022;
 }
+
+/* The rest copied directly from react-burger-menu docs */
+
+/* Position and sizing of burger button */
+.bm-burger-button {
+    position: relative;
+    margin-left: 5px;
+    width: 30px;
+    height: 25px;
+    right: 5px;
+}
+
+/* Color/shape of burger icon bars */
+.bm-burger-bars {
+    background: #373a47;
+}

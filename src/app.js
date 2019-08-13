@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import { Route, BrowserRouter, Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { slide as Menu } from "react-burger-menu";
 
 import ProfilePic from "./profilepic";
 import Profile from "./profile";
@@ -13,8 +12,10 @@ import Challenge from "./challenge";
 import Challenges from "./challenges";
 import Chatroom from "./chatroom";
 import Collections from "./collections";
+import SideBar from "./sidebar";
+
 import axios from "./axios";
-import { setUser } from "./actions";
+import { setUser, setSideBarVisibility } from "./actions";
 import { init } from "./socket";
 
 export default function App() {
@@ -34,27 +35,14 @@ export default function App() {
             });
     }, [user.id]); //closes useEffect
 
-    function handleLogoutClick() {
-        axios
-            .get("/logout")
-            .then(() => {
-                location.replace("/welcome");
-            })
-            .catch(err => {
-                console.log(err);
-            });
-    } //closes handleLogoutClick
-
-    function handleSettingsClick() {
-        <Settings />;
+    function closeSideBar() {
+        dispatch(setSideBarVisibility(false));
     }
-
-    function displayMenu() {}
 
     return (
         <BrowserRouter>
             {user.id && (
-                <div id="main-app">
+                <div id="main-app" onClick={closeSideBar}>
                     <img id="logo-s" src="/images/logo.png" alt="logo" />
                     <header>
                         <Link className="center" to="/challenges">
@@ -105,57 +93,8 @@ export default function App() {
                         <span className="header-name">
                             {user.first_name}&nbsp;{user.last_name}
                         </span>
+                        <SideBar outerContainerId={"main-app"} />
                     </header>
-
-                    <div id="outer-container">
-                        <Menu
-                            className="menu"
-                            right
-                            width={"20%"}
-                            isOpen={false}
-                            noOverlay
-                            disableOverlayClick
-                        >
-                            <hr id="line1"></hr>
-                            <Link
-                                id="friends"
-                                className="menu-item"
-                                to="/friends"
-                            >
-                                Friends
-                            </Link>
-                            <hr id="line1"></hr>
-                            <Link id="home" className="menu-item" to="/">
-                                Home
-                            </Link>
-                            <Link
-                                id="profile"
-                                className="menu-item"
-                                to="/profile"
-                            >
-                                Your Profile
-                            </Link>
-                            <Link
-                                id="settings"
-                                className="menu-item"
-                                to="/settings"
-                                onClick={handleSettingsClick}
-                            >
-                                Settings
-                            </Link>
-                            <hr id="line1"></hr>
-                            <Link
-                                id="logout"
-                                className="menu-item"
-                                to="/logout"
-                                onClick={handleLogoutClick}
-                            >
-                                Sign Out
-                            </Link>
-                            <hr id="line1"></hr>
-                        </Menu>
-                    </div>
-
                     <div>
                         <hr></hr>
                         <Route exact path="/" component={Profile} />
