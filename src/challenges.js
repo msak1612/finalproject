@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-import { render } from "react-dom";
 import { Link } from "react-router-dom";
 
 import axios from "./axios";
@@ -13,6 +12,7 @@ export default function Challenges() {
     const challenges = useSelector(state => state.challenges.challenges);
     const level = useSelector(state => state.challenges.level);
     const tag = useSelector(state => state.challenges.tag);
+
     useEffect(() => {
         axios
             .get("/api/challenges", {
@@ -48,7 +48,7 @@ export default function Challenges() {
                 {level}
             </Link>
         );
-    }
+    } //closes Level
 
     function handleTagClick(e) {
         e.preventDefault();
@@ -61,27 +61,43 @@ export default function Challenges() {
     } //closes handleLevelClick
 
     return (
-        <div>
-            {challenges.map(challenge => (
-                <div key={challenge.id}>
-                    <Link to={"/challenge/" + challenge.id}>
-                        {challenge.name}
-                    </Link>
-                    <p>{challenge.preview}</p>
-                    <Level level={challenge.level} />
-                    {challenge.tags.map(tag => (
-                        <div key={tag} className="display-rowwise">
-                            <Link
-                                to="/challenges"
-                                tag={tag}
-                                onClick={e => handleTagClick(e)}
+        <section className="challenge-container">
+            <div className="display-colwise" id="left-half">
+                {challenges.map(challenge => (
+                    <div key={challenge.id}>
+                        <Level level={challenge.level} />
+                        {challenge.tags.map(tag => (
+                            <div
+                                key={tag}
+                                className="display-rowwise"
+                                id="tag-list"
                             >
-                                {tag}
-                            </Link>
-                        </div>
-                    ))}
-                </div>
-            ))}
-        </div>
+                                <Link
+                                    to="/challenges"
+                                    tag={tag}
+                                    onClick={e => handleTagClick(e)}
+                                >
+                                    {tag}
+                                </Link>
+                            </div>
+                        ))}
+                    </div>
+                ))}
+            </div>
+            <div className="display-colwise" id="right-half">
+                {challenges.map(challenge => (
+                    <div key={challenge.id}>
+                        <Link
+                            id="challenge-name"
+                            to={"/challenge/" + challenge.id}
+                        >
+                            {challenge.name}
+                        </Link>
+                        <p>{challenge.preview}</p>
+                        <hr id="line1"></hr>
+                    </div>
+                ))}
+            </div>
+        </section>
     );
-} //Challenges
+} //Closes Challenges

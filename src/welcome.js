@@ -9,8 +9,11 @@ export default function Welcome() {
     return (
         <HashRouter>
             <div>
-                <img id="logo" src="/images/logo.png" alt="logo" />
-                <h1>Learn to code with interactive challenges</h1>
+                <h1>
+                    <img id="logo" src="/images/logo.png" alt="logo" />
+                    Playgrounds begins with interactive coding
+                </h1>
+
                 <div id="auth-container">
                     <Switch>
                         <Route exact path="/" component={Registration} />

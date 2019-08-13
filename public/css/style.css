@@ -5,7 +5,7 @@
 body {
     padding: 0;
     margin: 0;
-    background: #eeeeee;
+    background: #f0f5f9;
     font-size: 16px;
     color: #777;
     font-family: sans-serif;
@@ -44,19 +44,21 @@ header {
     width: 100vw;
     min-height: 8vh;
     height: 7vh;
-    display: flex;
+    display: inline-flex;
     flex-direction: row;
     border: 1px solid silver;
     border-radius: 0.5rem;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
     justify-content: flex-end;
+
+    background: #52616b;
 }
 
 .center {
     line-height: 5vh;
     text-align: center;
     color: white;
-    background-color: #00adb5;
+    background-color: #52616b;
     border: 1px solid;
     text-decoration: none;
     padding: 4px;
@@ -70,7 +72,7 @@ header {
     border-radius: 0.5rem;
     height: 75%;
     max-width: 100%;
-    font-size: 16px;
+    font-size: 14px;
 }
 
 .center:hover,
@@ -82,34 +84,42 @@ header {
 hr {
     margin-top: -9px;
     height: 7px;
-    background-color: #00adb5;
+    background-color: #52616b;
     border: none;
     outline: none;
 }
 
 #line {
-    background-color: #00adb5;
+    background-color: #52616b;
     margin-top: 5px;
     height: 1px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
 }
 
 #logo {
-    height: 100px;
-    width: 110px;
-    margin-left: -50px;
-    margin-bottom: -35px;
+    height: 50px;
+    width: 80px;
+    border-radius: 30%;
+    border: 1px dotted silver;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+    margin-bottom: -20px;
+    margin-left: -10px;
+    margin-right: 5px;
 }
 
 #logo-s {
-    height: 50px;
-    width: 55px;
+    position: absolute;
+    background: white;
+    height: 45px;
+    width: 50px;
     display: flex;
     left: 0px;
     top: 0px;
-    margin-left: 5px;
-    margin-top: 5px;
-    margin-bottom: -45px;
+    margin-left: 3px;
+    margin-top: 3px;
+    border-radius: 50%;
+    border: 1px dotted white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
 }
 
 #main-pic,
@@ -120,10 +130,11 @@ hr {
 
 .profile-pic {
     margin-right: 5px;
-    margin-top: 0;
+    margin-top: 3px;
     height: inherit;
-    border-radius: 1.5rem;
+    border-radius: 1rem;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+    background: white;
 }
 
 #suggestion {
@@ -222,6 +233,14 @@ hr {
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
+    text-align: center;
+}
+
+.header-name {
+    margin-right: 10px;
+    font-weight: 600;
+    text-transform: capitalize;
+    color: white;
     text-align: center;
 }
 
@@ -374,9 +393,21 @@ button {
 }
 
 h1 {
-    margin: 0 0 20px 0;
+    font-family: sans-serif;
     font-weight: 300;
-    font-size: 28px;
+    font-size: 24px;
+    color: #52616b;
+    background: #fff;
+    text-align: center;
+    text-transform: capitalize;
+    border: none;
+    outline: none;
+    border: 1px solid silver;
+    border-radius: 1.5rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+    letter-spacing: 0.75px;
+    padding-bottom: 15px;
+    /* background-color: #52616b; */
 }
 
 h2 {
@@ -425,7 +456,7 @@ button {
     transition: 0.2s ease;
     cursor: pointer;
     border-radius: 1.5rem;
-    background: #00adb5;
+    background: #52616b;
     color: #fff;
     letter-spacing: 1px;
 }
@@ -434,7 +465,7 @@ button[name="register"]:hover,
 button[name="register"]:focus,
 button[name="login"]:hover,
 button[name="login"]:focus {
-    background: #ff5722;
+    background: #00adb5;
     transition: 0.2s ease;
 }
 
@@ -504,8 +535,8 @@ button.ghost {
 }
 
 #overlay {
-    background: #00adb5;
-    background: linear-gradient(to right, #00adc7, #00adb5) no repeat 0 0 /
+    background: #52616b;
+    background: linear-gradient(to right, #00adc7, #52616b) no repeat 0 0 /
         cover;
     color: #fff;
     position: relative;
@@ -547,7 +578,7 @@ button.ghost {
     border: 1px solid silver;
     border-radius: 1.5rem;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
-    background-color: #00adb5;
+    background-color: #52616b;
     height: 75vh;
 }
 .chat-container::-webkit-scrollbar {
@@ -564,7 +595,7 @@ button.ghost {
     border: 1px solid silver;
     border-radius: 1.5rem;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
-    background-color: #00adb5;
+    background-color: #52616b;
     overflow-y: scroll;
     height: 75vh;
 }
@@ -579,7 +610,7 @@ button.ghost {
     background: #eeeeee;
     margin: 5px;
     justify-content: space-around;
-    border: 1px solid #00adb5;
+    border: 1px solid #52616b;
     border-radius: 1rem;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
     background: #eeeeee;
@@ -613,7 +644,7 @@ h4 {
     text-align: center;
 }
 .online-user-name span {
-    color: #00adb5;
+    color: #52616b;
     animation: online-user 5s linear infinite;
     font-weight: 600;
     text-transform: capitalize;
@@ -651,7 +682,7 @@ h4 {
     display: flex;
     flex-direction: row;
     justify-content: space-around;
-    border: 1px solid #00adb5;
+    border: 1px solid #52616b;
     border-radius: 1.5rem;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
     background: #eeeeee;
@@ -684,4 +715,100 @@ h4 {
 .chat-container textarea {
     width: 100%;
     height: 20%;
+}
+
+#outer-container {
+}
+
+.menu {
+    background: #52616b;
+    border: 1px solid silver;
+    max-height: 32vh;
+    overflow-y: hidden;
+}
+
+.menu::-webkit-scrollbar {
+    display: none;
+}
+
+.menu-item {
+    display: inline-block;
+    letter-spacing: 1px;
+    line-height: 5vh;
+    text-decoration: none;
+    margin-left: 2vw;
+    color: white;
+    font-family: sans-serif;
+    font-weight: 500;
+}
+
+#line1 {
+    background-color: silver;
+    margin-top: 5px;
+    height: 2px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+}
+
+#notification,
+#search {
+    margin-top: 3px;
+    height: 4vh;
+    width: 5vw;
+}
+
+#search {
+    margin-top: 0.9vh;
+    height: 4.3vh;
+    border: 1.5px solid #1e2022;
+    background: #c9d6df;
+    border: 1px solid silver;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+}
+
+input[name="search"] {
+    margin-left: 27vw;
+    margin-top: 2.25vh;
+    width: 15vw;
+    background: #f0f5f9;
+}
+
+.challenge-container {
+    display: grid;
+    width: 100vw;
+    height: 100vh;
+}
+
+#left-half {
+    grid-column: 1;
+    padding: 1vw;
+    margin-left: 1vw;
+    margin-bottom: 2vh;
+    width: 25vw;
+    border: 1px solid silver;
+    border-radius: 0.5rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+    overflow-y: hidden;
+}
+
+#right-half {
+    grid-column: 2;
+    border: 1px solid silver;
+    border-radius: 0.5rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+    padding: 1vw;
+    margin-right: 1vw;
+    margin-bottom: 2vh;
+    overflow-y: hidden;
+}
+
+#right-half::-webkit-scrollbar,
+#left-half::-webkit-scrollbar {
+    display: none;
+}
+
+#challenge-name {
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 18px;
+    color: #1e2022;
 }

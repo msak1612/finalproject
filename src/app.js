@@ -8,6 +8,7 @@ import Profile from "./profile";
 import OtherProfile from "./other-profile";
 import FindPeople from "./findpeople";
 import Friends from "./friends";
+import Settings from "./settings";
 import Challenge from "./challenge";
 import Challenges from "./challenges";
 import Chatroom from "./chatroom";
@@ -44,16 +45,9 @@ export default function App() {
             });
     } //closes handleLogoutClick
 
-    function handleDeleteClick() {
-        axios
-            .get("/delete")
-            .then(() => {
-                location.replace("/welcome");
-            })
-            .catch(err => {
-                console.log(err);
-            });
-    } //closes handleDeleteClick
+    function handleSettingsClick() {
+        <Settings />;
+    }
 
     function displayMenu() {}
 
@@ -63,9 +57,16 @@ export default function App() {
                 <div id="main-app">
                     <img id="logo-s" src="/images/logo.png" alt="logo" />
                     <header>
-                        <Link className="center" to="/">
-                            Home
+                        <Link className="center" to="/challenges">
+                            Challenges
                         </Link>
+                        <Link className="center" to="/collections">
+                            Collections
+                        </Link>
+                        <Link className="center" to="/forum">
+                            Forum
+                        </Link>
+
                         <Link className="center" to="/users">
                             Find People
                         </Link>
@@ -78,31 +79,52 @@ export default function App() {
                         <Link className="center" to="/chatroom">
                             Chat
                         </Link>
-                        <Link className="center" to="/challenges">
-                            Challenges
-                        </Link>
-                        <Link className="center" to="/collections">
-                            Collections
-                        </Link>
-                        <Link
-                            className="center"
-                            to="/delete"
-                            onClick={handleDeleteClick}
-                        >
-                            Delete
-                        </Link>
-                        <Link
-                            className="center"
-                            to="/logout"
-                            onClick={handleLogoutClick}
-                        >
-                            Logout
-                        </Link>
+
+                        <input
+                            name="search"
+                            type="text"
+                            placeholder="Search Friend"
+                            onChange={e => this.handleChange(e)}
+                            required
+                        />
+                        <span>
+                            <img
+                                id="search"
+                                src="/images/search.svg"
+                                alt="search"
+                            />
+                        </span>
+                        <span>
+                            <img
+                                id="notification"
+                                src="/images/notification.svg"
+                                alt="notification"
+                            />
+                        </span>
                         <ProfilePic />
+                        <span className="header-name">
+                            {user.first_name}&nbsp;{user.last_name}
+                        </span>
                     </header>
 
-                    <div>
-                        <Menu right>
+                    <div id="outer-container">
+                        <Menu
+                            className="menu"
+                            right
+                            width={"20%"}
+                            isOpen={false}
+                            noOverlay
+                            disableOverlayClick
+                        >
+                            <hr id="line1"></hr>
+                            <Link
+                                id="friends"
+                                className="menu-item"
+                                to="/friends"
+                            >
+                                Friends
+                            </Link>
+                            <hr id="line1"></hr>
                             <Link id="home" className="menu-item" to="/">
                                 Home
                             </Link>
@@ -114,26 +136,23 @@ export default function App() {
                                 Your Profile
                             </Link>
                             <Link
-                                id="friends"
-                                className="menu-item"
-                                to="/friends"
-                            >
-                                Friends
-                            </Link>
-                            <Link
                                 id="settings"
                                 className="menu-item"
                                 to="/settings"
+                                onClick={handleSettingsClick}
                             >
                                 Settings
                             </Link>
+                            <hr id="line1"></hr>
                             <Link
                                 id="logout"
                                 className="menu-item"
                                 to="/logout"
+                                onClick={handleLogoutClick}
                             >
-                                Logout
+                                Sign Out
                             </Link>
+                            <hr id="line1"></hr>
                         </Menu>
                     </div>
 

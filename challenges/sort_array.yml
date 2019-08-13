@@ -1,0 +1,43 @@
+name: "Sort Array"
+level: 0
+tags:
+    - STRING
+    - RECURSION
+description: |
+    Sort the items of an array.. Return the sorted array.
+
+    You MAY use the temporary Array.
+
+    ### Examples
+    ```javascript
+      sort([5, -3, 6, 8, 9, 0, -1]) ->  -3, -1, 0, 5, 6, 8, 9
+    ```
+
+solution: |
+    ```javascript
+    export default function sortArray(input) {
+        if (input === "") {
+            return "";
+        }
+        return sort(sortArray);
+    }
+    ```
+template: |
+    export default function sortArray(input) {
+        // Your Playground !!!
+        return "";
+    }
+test: |
+    import sort from "./template";
+
+    test('sort [4, 1, 0, -3, 7, -5] to [-5, -3, 0, 1, 4, 7]', () => {
+        expect(sortArray([4, 1, 0, -3, 7, -5])).toBe([-5, -3, 0, 1, 4, 7]);
+    });
+
+    test('sort [0, 1, 2, 3, 4] to [0, 1, 2, 3, 4]', () => {
+        expect(sortArray([0, 1, 2, 3, 4])).toBe([0, 1, 2, 3, 4]);
+    });
+
+    test('sort [] to []', () => {
+        expect(sortArray([])).toBe([]);
+    });
