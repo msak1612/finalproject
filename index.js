@@ -63,8 +63,14 @@ if (process.env.NODE_ENV != "production") {
 async function load_challenges() {
     const root_dir = path.join(__dirname, "challenges");
     const files = fs.readdirSync(root_dir);
-
     let challenges = [];
+    let challenge_id = 1;
+    files.sort(function(a, b) {
+        return (
+            fs.statSync(root_dir + "/" + a).birthtime.getTime() -
+            fs.statSync(root_dir + "/" + b).birthtime.getTime()
+        );
+    });
     files.forEach(function(file) {
         const challenge_path = path.join(root_dir, file);
         const contents = fs.readFileSync(challenge_path, "utf8");
@@ -80,6 +86,7 @@ async function load_challenges() {
             preview = preview.substr(0, preview_len - 3) + "...";
         }
         challenges.push([
+            challenge_id,
             info.name,
             preview,
             description,
@@ -89,6 +96,7 @@ async function load_challenges() {
             info.level,
             info.tags
         ]);
+        challenge_id++;
     });
     const result = await db.addChallenges(challenges);
     console.log("Have " + result.rowCount + " Challenges");
@@ -616,7 +624,7 @@ app.get("/api/solutions", (req, res) => {
 
 app.get("/api/challenge", (req, res) => {
     const id = req.query.id;
-    db.getChallengeById(id)
+    db.getChallengeById(id, req.session.userId)
         .then(data => {
             res.json(data.rows[0]);
         })

@@ -1,7 +1,7 @@
 DROP TABLE IF EXISTS challenges CASCADE;
 
 CREATE TABLE challenges (
-    id SERIAL PRIMARY KEY,
+    id INTEGER PRIMARY KEY,
     name TEXT UNIQUE,
     preview TEXT NOT NULL,
     description TEXT NOT NULL,

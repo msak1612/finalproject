@@ -211,19 +211,22 @@ module.exports.deleteUser = function(id) {
 
 //list all challenges
 module.exports.getAllChallenges = function() {
-    return db.query(`SELECT id, name, preview, level, tags FROM challenges`);
+    return db.query(
+        `SELECT id, name, preview, level, tags FROM challenges ORDER BY id`
+    );
 };
 
 //list all challenges by level
 module.exports.getChallengesByLevel = function(level) {
     return db.query(
-        `SELECT id, name, preview, level, tags FROM challenges WHERE level=${level}`
+        `SELECT id, name, preview, level, tags FROM challenges WHERE level=${level} ORDER BY id`
     );
 };
 
 //get challenge by id
-module.exports.getChallengeById = function(id) {
-    return db.query(`SELECT * from challenges WHERE id=${id}`);
+module.exports.getChallengeById = function(id, userId) {
+    return db.query(`SELECT C.*, (SELECT solution as usersolution FROM solutions S
+       WHERE S.solver=${userId} AND S.challenge=C.id) FROM challenges C WHERE C.id=${id}`);
 };
 
 function format(array) {
@@ -248,7 +251,7 @@ function format(array) {
 // add challenge to the table
 module.exports.addChallenges = function(challenges) {
     return db.query(
-        `INSERT INTO challenges(name,preview,description,template,test,solution,level,tags)
+        `INSERT INTO challenges(id,name,preview,description,template,test,solution,level,tags)
          VALUES ${format(challenges)}
          ON CONFLICT(name) DO UPDATE SET preview=EXCLUDED.preview, description=EXCLUDED.description,
          template=EXCLUDED.template, test=EXCLUDED.test, solution=EXCLUDED.solution, level=EXCLUDED.level,
@@ -259,7 +262,7 @@ module.exports.addChallenges = function(challenges) {
 // search challenges by tags
 module.exports.getChallengesByTag = function(tag) {
     return db.query(
-        `SELECT id, name, preview, level,tags from challenges WHERE '${tag}'=ANY(tags)`
+        `SELECT id, name, preview, level,tags from challenges WHERE '${tag}'=ANY(tags) ORDER BY id`
     );
 };
 

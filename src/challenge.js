@@ -19,6 +19,9 @@ export default function Challenge(props) {
     const solution = useSelector(
         state => state.challenges.challenge.draftSolution
     );
+    const solvedAlready = useSelector(
+        state => state.challenges.challenge.solvedAlready
+    );
     const result = useSelector(state => state.challenges.challenge.result);
     const name = useSelector(state => state.challenges.challenge.name);
     const id = props.match.params.id;
@@ -35,7 +38,10 @@ export default function Challenge(props) {
                     setChallenge({
                         name: data.name,
                         description: atob(data.description),
-                        draftSolution: atob(data.template)
+                        draftSolution: data.usersolution
+                            ? atob(data.usersolution)
+                            : atob(data.template),
+                        solvedAlready: data.usersolution ? true : false
                     })
                 );
             })
@@ -84,11 +90,14 @@ export default function Challenge(props) {
                             name="editor"
                             value={solution}
                             editorProps={{ $blockScrolling: true }}
+                            readOnly={solvedAlready}
                         />
                     )}
-                    <button name="save" onClick={() => handleSubmitClick()}>
-                        Submit
-                    </button>
+                    {!solvedAlready && (
+                        <button name="save" onClick={() => handleSubmitClick()}>
+                            Submit
+                        </button>
+                    )}
                 </div>
                 {result && (
                     <div className="display-colwise">
