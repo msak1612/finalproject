@@ -1,0 +1,39 @@
+name: "Replace Vowels"
+level: 1
+tags:
+    - STRING
+    - REGEX
+description: |
+    Replace the vowels from the input string with the specified character.
+
+    English vowels are:  a,e,i,o,u
+
+    ### Examples
+    ```javascript
+      replaceVowels("Apple", "$") -> "$ppl$"
+      replaceVowels("Banana","#") -> "B#n#n#"
+      replaceVowels("I like pine-apple", "@") -> "@ l@k@ p@n@-@ppl@"
+    ```
+solution: |
+    export default function replaceVowels(a,b) {
+        return a.replace(/[a,e,i,o,u]/ig, b);
+    }
+template: |
+    export default function replaceVowels(a,b) {
+        // Your Playground !!!
+        return "";
+    }
+test: |
+    import replaceVowels from "./template";
+
+    test('replaceVowels("Apple","$") returns "$ppl$"', () => {
+        expect(replaceVowels("Apple","$")).toBe("$ppl$");
+    });
+
+    test('replaceVowels("I like pine-apple","@") returns "@ l@k@ p@n@-@ppl@"', () => {
+        expect(replaceVowels("I like pine-apple","@")).toBe("@ l@k@ p@n@-@ppl@");
+    });
+
+    test('replaceVowels("Banana","#") returns "B#n#n#"', () => {
+        expect(replaceVowels("Banana","#")).toBe("B#n#n#");
+    });

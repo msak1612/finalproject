@@ -1,0 +1,27 @@
+name: "Convert object to Query string"
+level: 0
+tags:
+    - FUNDAMENTALS
+description: |
+    Given an object convert it into the query string and return the query string.
+
+    ### Examples
+    ```javascript
+      toQueryString({user: "a", location: "b", group: "c"}) -> "user=a&location=b&group=c"
+    ```
+solution: |
+    export default function toQueryString(a) {
+      return Object.entries(a).map(kv => encodeURIComponent(kv[0]) + '=' +
+              encodeURIComponent(kv[1])).join('&');
+    }
+template: |
+    export default function toQueryString(a) {
+        // Your Playground !!!
+        return "";
+    }
+test: |
+    import toQueryString from "./template";
+
+    test('toQueryString({user: "a", location: "b", group: "c"}) returns "user=a&location=b&group=c"', () => {
+        expect(toQueryString({user: "a", location: "b", group: "c"})).toBe("user=a&location=b&group=c");
+    });

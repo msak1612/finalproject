@@ -5,7 +5,6 @@ tags:
     - STRING
     - ALGORITHM
 description: |
-
     Find the domain name from the input URL string.
 
     Example: "http://google.com/about" -> google
