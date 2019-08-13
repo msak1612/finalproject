@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import axios from "./axios";
 
 import { useDispatch, useSelector } from "react-redux";
-import { setChallenges, setLevel, setTag } from "./actions";
+import { setChallenges, setClassifiers, setLevel, setTag } from "./actions";
 import { Challenge } from "./challenge";
 
 export default function Challenges() {
@@ -12,6 +12,8 @@ export default function Challenges() {
     const challenges = useSelector(state => state.challenges.challenges);
     const level = useSelector(state => state.challenges.level);
     const tag = useSelector(state => state.challenges.tag);
+    const tags = useSelector(state => state.challenges.classifiers.tags);
+    const levels = useSelector(state => state.challenges.classifiers.levels);
 
     useEffect(() => {
         axios
@@ -27,6 +29,14 @@ export default function Challenges() {
             .catch(err => {
                 console.log(err);
             });
+        axios
+            .get("/api/challenges/classifiers")
+            .then(({ data }) => {
+                dispatch(setClassifiers(data));
+            })
+            .catch(err => {
+                console.log(err);
+            });
     }, [level, tag]); //closes useEffect
 
     function Level(props) {
@@ -35,6 +45,8 @@ export default function Challenges() {
             level = "EASY";
         } else if (props.level == 1) {
             level = "MEDIUM";
+        } else if (props.level < 0) {
+            level = "ALL";
         } else {
             level = "HARD";
         }
@@ -63,26 +75,25 @@ export default function Challenges() {
     return (
         <section className="challenge-container">
             <div className="display-colwise" id="left-half">
-                {challenges.map(challenge => (
-                    <div key={challenge.id}>
-                        <Level level={challenge.level} />
-                        {challenge.tags.map(tag => (
-                            <div
-                                key={tag}
-                                className="display-rowwise"
-                                id="tag-list"
-                            >
-                                <Link
-                                    to="/challenges"
-                                    tag={tag}
-                                    onClick={e => handleTagClick(e)}
-                                >
-                                    {tag}
-                                </Link>
-                            </div>
-                        ))}
-                    </div>
-                ))}
+                <h3>Levels</h3>
+                <Level level={-1} />
+                {levels.length > 0 &&
+                    levels.map(mlevel => <Level level={mlevel} key={mlevel} />)}
+                <h3>Tags</h3>
+                <Link to="/challenges" onClick={e => handleTagClick(e)}>
+                    ALL
+                </Link>
+                {tags.length > 0 &&
+                    tags.map(mtag => (
+                        <Link
+                            to="/challenges"
+                            tag={mtag}
+                            onClick={e => handleTagClick(e)}
+                            key={mtag}
+                        >
+                            {mtag}
+                        </Link>
+                    ))}
             </div>
             <div className="display-colwise" id="right-half">
                 {challenges.map(challenge => (

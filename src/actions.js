@@ -130,6 +130,10 @@ export function setChallenge(challenge) {
     return { type: "SET_CHALLENGE", challenge: challenge };
 }
 
+export function setClassifiers(classifiers) {
+    return { type: "SET_CLASSIFIERS", classifiers: classifiers };
+}
+
 export function setDraftSolution(solution) {
     return { type: "SET_DRAFT_SOLUTION", solution: solution };
 }

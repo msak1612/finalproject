@@ -231,6 +231,13 @@ module.exports.getChallengeById = function(id, userId) {
        FROM challenges C WHERE C.id=${id}`);
 };
 
+// get challenge classifications
+module.exports.getChallengeClassifiers = function() {
+    return db.query(`SELECT json_agg(DISTINCT level) AS levels,
+     json_agg(DISTINCT A.tag) AS tags FROM (SELECT level, unnest(tags)
+     AS tag FROM challenges) A`);
+};
+
 function format(array) {
     return array
         .map(

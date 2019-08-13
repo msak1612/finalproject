@@ -117,6 +117,10 @@ function onSetChallenges(state, action) {
     return { ...state, challenges: action.challenges };
 }
 
+function onSetClassifiers(state, action) {
+    return { ...state, classifiers: action.classifiers };
+}
+
 function onSetCollections(state, action) {
     let collections = action.collections;
     collections.forEach(function(collection) {
@@ -273,6 +277,7 @@ const onlineUsersReducer = createReducer(
 const challengeReducer = createReducer(
     {
         challenges: [],
+        classifiers: { levels: [], tags: [] },
         collections: [],
         collection: {
             editedCollection: -1,
@@ -290,6 +295,7 @@ const challengeReducer = createReducer(
     },
     {
         SET_CHALLENGES: onSetChallenges,
+        SET_CLASSIFIERS: onSetClassifiers,
         SET_LEVEL: onSetLevel,
         SET_TAG: onSetTag,
         SET_CHALLENGE: onSetChallenge,

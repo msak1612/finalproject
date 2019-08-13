@@ -514,6 +514,17 @@ app.get("/api/challenges", (req, res) => {
         });
 });
 
+app.get("/api/challenges/classifiers", (req, res) => {
+    db.getChallengeClassifiers()
+        .then(data => {
+            res.json(data.rows[0]);
+        })
+        .catch(err => {
+            console.log("Error in listing challenges ", err);
+            res.status(500).json();
+        });
+});
+
 app.get("/api/collections", (req, res) => {
     let promise;
     if (req.query.creator_id > 0) {
