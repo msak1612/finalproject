@@ -4,7 +4,6 @@ tags:
     - STRING
     - REGEX
 description: |
-
     Postal code or Zip code consists of 5 numbers. Given an input string
     determine whether the input is valid zip code or not.
 

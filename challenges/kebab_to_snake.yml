@@ -1,0 +1,32 @@
+name: "Kebab case to snake case"
+level: 0
+tags:
+    - STRING
+    - REGEX
+description: |
+    Add the functionality to convert input kebab case string to snake case string.
+
+    ### Examples
+    ```javascript
+      toSnakeCase("kebab-case") -> "kebab_case"
+      toSnakeCase("user-login-count") -> "user_login_count"
+    ```
+solution: |
+    export default function toSnakeCase(a) {
+      return a.replace(/(-)/g, '_');
+    }
+template: |
+    export default function toSnakeCase(a) {
+        // Your Playground !!!
+        return "";
+    }
+test: |
+    import toSnakeCase from "./template";
+
+    test('toSnakeCase("kebab-case") returns "kebab_case"', () => {
+        expect(toSnakeCase("kebab-case")).toBe("kebab_case");
+    });
+
+    test('toSnakeCase("user-login-count") returns "user_login_count"', () => {
+        expect(toSnakeCase("user-login-count")).toBe("user_login_count");
+    });

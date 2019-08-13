@@ -61,7 +61,8 @@ export function Posts(props) {
                 comment: comment,
                 imageurl: image,
                 challenge_id: id,
-                parent_post_id: replyPost
+                parent_post_id: replyPost,
+                has_spoilers: false
             })
             .then(() => {
                 dispatch(draftPost(""));

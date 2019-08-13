@@ -1,0 +1,51 @@
+name: "Anagram or Not?"
+level: 2
+tags:
+    - STRING
+    - REGEX
+description: |
+    Given two strings find whether they are anagrams or not.
+
+    An anagram is a word or phrase formed by rearranging the letters of a different
+    word or phrase, typically using all the original letters exactly once.
+    For example, the word anagram can be rearranged into nag a ram, or the word
+    binary into brainy or the word adobe into abode.
+
+    ### Examples
+    ```javascript
+      isAnagram("rail safety", "fairy tales") -> true
+      isAnagram("eleven plus two", "twelve plus one") -> true
+      isAnagram("match","catch") -> false
+    ```
+solution: |
+    export default function isAnagram(a,b) {
+        if (a === null || b === null) {
+          return false;
+        }
+        a = a.replace(/[a-z]/gi,"").toLowerCase();
+        b = b.replace(/[a-z]/gi,"").toLowerCase();
+
+        if (a.length !== b.length || a.length === 0) {
+          return false;
+        }
+        return a.split("").sort().join("") === b.split("").sort().join("");
+    }
+template: |
+    export default function isAnagram(a,b) {
+        // Your Playground !!!
+        return false;
+    }
+test: |
+    import isAnagram from "./template";
+
+    test('isAnagram("rail safety", "fairy tales") returns true', () => {
+        expect(isAnagram("rail safety", "fairy tales")).toBe(true);
+    });
+
+    test('isAnagram("eleven plus two", "twelve plus one") returns true', () => {
+        expect(isAnagram("eleven plus two", "twelve plus one")).toBe(true);
+    });
+
+    test('isAnagram("match", "catch") returns true', () => {
+        expect(isAnagram("match", "catch")).toBe(false);
+    });
