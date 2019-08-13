@@ -1,0 +1,32 @@
+name: "Camel case to snake case"
+level: 1
+tags:
+    - STRING
+    - REGEX
+description: |
+    Add the functionality to convert input camel case string to the snake case.
+
+    ### Examples
+    ```javascript
+      toSnakeCase("camelCase") -> "camel_case"
+      toSnakeCase("oldHTMLFile") -> "old_h_t_m_l_file"
+    ```
+solution: |
+    export default function toSnakeCase(a) {
+      return a.replace(/([a-zA-Z])(?=[A-Z])/g, '$1_').toLowerCase();
+    }
+template: |
+    export default function toSnakeCase(a) {
+        // Your Playground !!!
+        return "";
+    }
+test: |
+    import toSnakeCase from "./template";
+
+    test('toSnakeCase("camelCase") returns "camel_case"', () => {
+        expect(toSnakeCase("camelCase")).toBe("camel_case");
+    });
+
+    test('toSnakeCase("oldHTMLFile") returns "old_h_t_m_l_file"', () => {
+        expect(toSnakeCase("oldHTMLFile")).toBe("old_h_t_m_l_file");
+    });

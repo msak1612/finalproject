@@ -1,0 +1,45 @@
+name: "Find Minimum and Maximum in the array"
+level: 0
+tags:
+    - FUNDAMENTALS
+    - ARRAY
+description: |
+    Given an input array find the minimum and maximum element and return them
+    in an array in order.
+
+    ### Examples
+    ```javascript
+      minMax([1,2,3,4,5]) -> [1,5]
+      minMax([4,5,1,2,3]) -> [1,5]
+      minMax([2]) -> [2,2]
+    ```
+solution: |
+    export default function minMax(a) {
+      let min = Number.MAX_SAFE_INTEGER;
+      let max = Number.MIN_SAFE_INTEGER;
+      a.forEach(x => {
+        min = Math.min(min,x);
+        max = Math.max(max,x);
+      });
+
+      return [min, max];
+    }
+template: |
+    export default function minMax(a) {
+        // Your Playground !!!
+        return [0,0];
+    }
+test: |
+    import minMax from "./template";
+
+    test('minMax([1,2,3,4,5]) returns [1,5]', () => {
+        expect(minMax([1,2,3,4,5])).toStrictEqual([1,5]);
+    });
+
+    test('minMax([4,5,1,2,3]) returns [1,5]', () => {
+        expect(minMax([4,5,1,2,3])).toStrictEqual([1,5]);
+    });
+
+    test('minMax([2]) returns [2,2]', () => {
+        expect(minMax([2])).toStrictEqual([2,2]);
+    });

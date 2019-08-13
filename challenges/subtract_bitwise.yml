@@ -1,0 +1,41 @@
+name: "Subtract Bitwise"
+level: 2
+tags:
+    - FUNDAMENTALS
+    - BITWISE
+description: |
+    Given two positive integers find the positive difference between these two integers
+    using bitwise operations.
+
+    ### Examples
+    ```javascript
+      subtractBitwise(0,0) -> 0
+      subtractBitwise(5,10) -> 5
+      subtractBitwise(15,10) -> 5
+    ```
+solution: |
+    export default function subtractBitwise(a,b) {
+        if (b === 0)
+            return a;
+        return (a > b) ? subtractBitwise(a ^ b, (~a & b) << 1)
+            : subtractBitwise(b ^ a, (~b & a) << 1);
+    }
+template: |
+    export default function subtractBitwise(a,b) {
+        // Your Playground !!!
+        return 0;
+    }
+test: |
+    import subtractBitwise from "./template";
+
+    test('subtractBitwise(0,0) returns 0', () => {
+        expect(subtractBitwise(0,0)).toBe(0);
+    });
+
+    test('subtractBitwise(5,10) returns 5', () => {
+        expect(subtractBitwise(5,10)).toBe(5);
+    });
+
+    test('subtractBitwise(15,10) returns 5', () => {
+        expect(subtractBitwise(15,10)).toBe(5);
+    });

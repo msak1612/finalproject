@@ -1,0 +1,57 @@
+name: "Valid Paranthesis"
+level: 2
+tags:
+    - ALGORITHM
+    - STRING
+description: |
+    Determine whether the order of the parentheses is valid. The function should
+    return true if the string is valid, and false otherwise.
+
+    ### Examples
+    ```javascript
+      validParanthesis(')()') -> false
+      validParanthesis('()()') -> true
+      validParanthesis('(') -> false
+      validParanthesis('((()())())') -> true
+    ```
+solution: |
+    export default function validParanthesis(a) {
+      let stack=[];
+      let x;
+      for(x of a) {
+        if (x == ')') {
+          if (stack.length === 0 || stack[stack.length - 1] != '(') {
+            return false;
+          } else {
+            stack.pop();
+          }
+        } else {
+          stack.push(x);
+        }
+      }
+
+      return stack.length === 0;
+    }
+template: |
+    export default function validParanthesis(a) {
+        // Your Playground !!!
+        return 0;
+    }
+test: |
+    import validParanthesis from "./template";
+
+    test('validParanthesis(")()") returns false', () => {
+        expect(validParanthesis(")()")).toBe(false);
+    });
+
+    test('validParanthesis("(") returns false', () => {
+        expect(validParanthesis("(")).toBe(false);
+    });
+
+    test('validParanthesis("()()") returns true', () => {
+        expect(validParanthesis("()()")).toBe(true);
+    });
+
+    test('validParanthesis("((()())())") returns true', () => {
+        expect(validParanthesis("((()())())")).toBe(true);
+    });

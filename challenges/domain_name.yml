@@ -1,0 +1,59 @@
+name: "Get Domain Name"
+level: 2
+tags:
+    - PARSING
+    - STRING
+    - ALGORITHM
+description: |
+
+    Find the domain name from the input URL string.
+
+    Example: "http://google.com/about" -> google
+             "https://zalando.de" -> zalando
+             "https://linkedin.com/in/xyz?test=true" -> linkedin
+
+      ### Examples
+      ```javascript
+        domainName("http://google.com/about" ) -> google
+      ```
+solution: |
+    export default function domainName(a) {
+      if(a === null || a.length < 8) {
+          return "";
+      }
+
+      let result;
+      if (a.startsWith("http://")) {
+        result = a.substr("http://".length);
+      } else if (a.startsWith("https://")) {
+        result = a.substr("https://".length);
+      } else {
+        return "";
+      }
+
+      let index = result.indexOf(".");
+      return index === -1 ? result : result.substr(0,index);
+    }
+template: |
+    export default function domainName(a) {
+        // Your Playground !!!
+        return "";
+    }
+test: |
+    import domainName from "./template";
+
+    test('domainName(null) returns ""', () => {
+        expect(domainName(null)).toBe("");
+    });
+
+    test('domainName("http://google.com/about") returns google', () => {
+        expect(domainName("http://google.com/about")).toBe("google");
+    });
+
+    test('domainName("https://zalando.de") returns zalando', () => {
+        expect(domainName("https://zalando.de")).toBe("zalando");
+    });
+
+    test('domainName("https://linkedin.com/in/xyz?test=true") returns linkedin', () => {
+        expect(domainName("https://linkedin.com/in/xyz?test=true")).toBe("linkedin");
+    });

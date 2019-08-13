@@ -125,6 +125,7 @@ export default function Collections() {
             })
             .catch(err => {
                 console.log(err);
+                alert("Add collection failed");
             });
     } //closes handleSubmitClick
 

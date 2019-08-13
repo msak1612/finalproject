@@ -1,0 +1,40 @@
+name: "Sum of Squares"
+level: 0
+tags:
+    - ARRAY
+    - MATHEMATICS
+    - FUNDAMENTALS
+description: |
+
+    Find the sum of squares of each number in the array passed as an input argument.
+
+    Example: For [3,2,4] it should return 29 because 3^2 + 2^2 + 4^2 = 29.
+
+      ### Examples
+      ```javascript
+        squareSum([3,2,4]) -> 29
+      ```
+solution: |
+    export default function squareSum(a) {
+        let result = 0;
+        a.forEach(el => {
+          result += Math.pow(el, 2);
+        });
+
+        return result;
+    }
+template: |
+    export default function squareSum(a) {
+        // Your Playground !!!
+        return 0;
+    }
+test: |
+    import squareSum from "./template";
+
+    test('squareSum([]) returns 0', () => {
+        expect(squareSum([])).toBe(0);
+    });
+
+    test('squareSum([3,2,4]) returns 29', () => {
+        expect(squareSum([3,2,4])).toBe(29);
+    });

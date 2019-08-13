@@ -2,6 +2,7 @@ name: "Sum of Digits"
 level: 2
 tags:
     - ARRAY
+    - ARITHMETIC
 description: |
     Two numbers represented as an array with each item containing the single digit.
     The digits are stored in reverse order where first digit of the number is at

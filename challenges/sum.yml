@@ -2,7 +2,7 @@ name: "Sum of two numbers"
 level: 0
 tags:
     - FUNDAMENTALS
-
+    - ARITHMETIC
 description: |
     Add the input numbers. Return the addition of numbers.
 

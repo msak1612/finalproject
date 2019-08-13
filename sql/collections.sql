@@ -3,7 +3,7 @@ DROP TABLE IF EXISTS collections CASCADE;
 
 CREATE TABLE collections(
     id SERIAL PRIMARY KEY,
-    name TEXT,
+    name TEXT UNIQUE,
     description TEXT,
     creator INTEGER REFERENCES users(id) ON DELETE CASCADE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP

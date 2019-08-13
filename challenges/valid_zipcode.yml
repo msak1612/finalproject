@@ -1,0 +1,50 @@
+name: "Valid Zip Code"
+level: 1
+tags:
+    - STRING
+    - REGEX
+description: |
+
+    Postal code or Zip code consists of 5 numbers. Given an input string
+    determine whether the input is valid zip code or not.
+
+      ### Examples
+      ```javascript
+        validZipCode("1234") -> false
+        validZipCode("123456") -> false
+        validZipCode("1234a5") -> false
+        validZipCode("123 5") -> false
+        validZipCode("12345") -> true
+      ```
+solution: |
+    export default function validZipCode(a) {
+        let result = a.match(/^\d{5,}/g);
+        return (result !== null && result.length === 5);
+    }
+template: |
+    export default function validZipCode(a) {
+        // Your Playground !!!
+        return false;
+    }
+test: |
+    import validZipCode from "./template";
+
+    test('validZipCode("1234") returns false', () => {
+        expect(validZipCode("1234")).toBe(false);
+    });
+
+    test('validZipCode("123456") returns false', () => {
+        expect(validZipCode("123456")).toBe(false);
+    });
+
+    test('validZipCode("1234a5") returns false', () => {
+        expect(validZipCode("1234a5")).toBe(false);
+    });
+
+    test('validZipCode("123 5") returns false', () => {
+        expect(validZipCode("123 5")).toBe(false);
+    });
+
+    test('validZipCode("12345") returns false', () => {
+        expect(validZipCode("12345")).toBe(false);
+    });

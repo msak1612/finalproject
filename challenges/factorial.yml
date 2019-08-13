@@ -2,6 +2,7 @@ name: "Factorial"
 level: 1
 tags:
     - RECURSION
+    - MATHEMATICS
 description: |
 
     In mathematics, the factorial of a positive integer n, denoted by n!, is the

@@ -2,6 +2,7 @@ name: "GCD of two numbers"
 level: 1
 tags:
     - RECURSION
+    - MATHEMATICS
 description: |
 
     The greatest common divisor (GCD) of a set of numbers is the largest positive integer

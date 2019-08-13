@@ -1,0 +1,40 @@
+name: "Remove Vowels"
+level: 1
+tags:
+    - STRING
+    - REGEX
+description: |
+
+    Remove the vowels from the input string and return the result.
+
+    English vowels are:  a,e,i,o,u
+
+    ### Examples
+    ```javascript
+      removeVowels("Apple") -> "ppl"
+      removeVowels("Banana") -> "Bnn"
+      removeVowels("I like pine-apple") -> " lk pn-ppl"
+    ```
+solution: |
+    export default function removeVowels(a) {
+        return a.replace(/[a,e,i,o,u]/ig, "");
+    }
+template: |
+    export default function removeVowels(a) {
+        // Your Playground !!!
+        return "";
+    }
+test: |
+    import removeVowels from "./template";
+
+    test('removeVowels("Apple") returns "ppl"', () => {
+        expect(removeVowels("Apple")).toBe("ppl");
+    });
+
+    test('removeVowels("I like pine-apple") returns " lk pn-ppl"', () => {
+        expect(removeVowels("I like pine-apple")).toBe(" lk pn-ppl");
+    });
+
+    test('removeVowels("Banana") returns "Bnn"', () => {
+        expect(removeVowels("Banana")).toBe("Bnn");
+    });
