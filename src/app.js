@@ -7,7 +7,6 @@ import Profile from "./profile";
 import OtherProfile from "./other-profile";
 import FindPeople from "./findpeople";
 import Friends from "./friends";
-import Settings from "./settings";
 import Challenge from "./challenge";
 import Challenges from "./challenges";
 import Chatroom from "./chatroom";
@@ -71,7 +70,7 @@ export default function App() {
                         <input
                             name="search"
                             type="text"
-                            placeholder="Search Friend"
+                            placeholder="Search"
                             onChange={e => this.handleChange(e)}
                             required
                         />

@@ -8,10 +8,13 @@ import axios from "./axios";
 export default function SideBar() {
     const dispatch = useDispatch();
     const sideBarVisible = useSelector(state => state.sideBar.visible);
+    const user = useSelector(state => state.user);
 
     function closeSideBar() {
         dispatch(setSideBarVisibility(false));
     }
+
+    function handleSettingsClick() {} //closes handleSettingsClick
 
     function handleLogoutClick() {
         axios
@@ -63,7 +66,7 @@ export default function SideBar() {
                 id="settings"
                 className="menu-item"
                 to="/settings"
-                onClick={closeSideBar}
+                onClick={handleSettingsClick}
             >
                 Settings
             </Link>

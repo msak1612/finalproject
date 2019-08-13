@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import axios from "./axios";
+import { Link } from "react-router-dom";
 
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -12,6 +13,7 @@ import AceEditor from "react-ace";
 import ReactMarkdown from "react-markdown";
 import { Posts } from "./posts";
 import { Solutions } from "./solutions";
+import ProfilePic from "./profilepic";
 import "brace/mode/javascript";
 import "brace/theme/github";
 import "brace/theme/monokai";
@@ -48,13 +50,13 @@ export default function Challenge(props) {
                         draftSolution: data.usersolution
                             ? atob(data.usersolution)
                             : data_unlocked
-                            ? atob(data.solution)
-                            : atob(data.template),
+                                ? atob(data.solution)
+                                : atob(data.template),
                         solvedAlready: data.usersolution
                             ? true
                             : data_unlocked
-                            ? true
-                            : false,
+                                ? true
+                                : false,
                         unlocked: data_unlocked
                     })
                 );
@@ -93,16 +95,33 @@ export default function Challenge(props) {
             .catch(err => {
                 console.log(err);
             });
-    }
+    } //closes handleUnlockClick
 
     return (
-        <div className="display-rowwise">
-            <div>
-                <h2>{name}</h2>
-                <ReactMarkdown source={description} />
+        <section className="challenge-container">
+            <div className="leftmost">
+                <ProfilePic id="challenge-pix" />
+                <Link className="center1" to="/challenges">
+                    Challenges
+                </Link>
+                <Link className="center1" to="/collections">
+                    Collections
+                </Link>
+                <Link className="center1" to="/forum">
+                    Forum
+                </Link>
+                <Link className="center1 friends" to="/friends">
+                    Friends
+                </Link>
             </div>
-            <div className="display-colwise">
-                <div className="display-rowwise">
+            <div className="left-part">
+                <div>
+                    <h2>{name}</h2>
+                    <ReactMarkdown source={description} />
+                </div>
+            </div>
+            <div className="right-part">
+                <div id="ace">
                     {draftSolution && (
                         <AceEditor
                             mode="javascript"
@@ -121,7 +140,7 @@ export default function Challenge(props) {
                         />
                     )}
                     {!solvedAlready && (
-                        <div>
+                        <div className="actions">
                             <button
                                 name="save"
                                 onClick={() => handleSubmitClick()}
@@ -138,7 +157,7 @@ export default function Challenge(props) {
                     )}
                 </div>
                 {result && (
-                    <div className="display-colwise">
+                    <div className="tc">
                         <h4>
                             {result.numPassedTests} out of{" "}
                             {result.numFailedTests + result.numPassedTests}{" "}
@@ -167,6 +186,6 @@ export default function Challenge(props) {
                 <Posts id={id} />
                 <Solutions challenge_id={id} />
             </div>
-        </div>
+        </section>
     );
 } //Challenges
