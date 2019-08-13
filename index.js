@@ -622,6 +622,17 @@ app.get("/api/solutions", (req, res) => {
         });
 });
 
+app.post("/api/solution", (req, res) => {
+    db.unlockSolution(req.session.userId, req.body.challenge_id)
+        .then(data => {
+            res.json(data.rows);
+        })
+        .catch(err => {
+            console.log("Error in listing challenges ", err);
+            res.status(500).json();
+        });
+});
+
 app.get("/api/challenge", (req, res) => {
     const id = req.query.id;
     db.getChallengeById(id, req.session.userId)
@@ -734,8 +745,6 @@ if (require.main == module) {
 }
 
 io.on("connection", socket => {
-    console.log(`A socket with the id ${socket.id} just connected.`);
-
     if (!socket.request.session.userId) {
         return socket.disconnect(true);
     }
@@ -743,7 +752,6 @@ io.on("connection", socket => {
     let userId = socket.request.session.userId;
     onlineUsers[socket.id] = userId;
 
-    console.log(onlineUsers);
     db.getUsersById(Object.values(onlineUsers))
         .then(users => {
             io.emit("onlineusers", users.rows);
@@ -770,7 +778,6 @@ io.on("connection", socket => {
         });
     //part-2: dealing with a new chat message
     socket.on("message", function(newMessage) {
-        console.log("This is the new chat message", newMessage);
         //figure out who sent message.
         //then make a db query to get info about that user.
         db.getUserById(userId)

@@ -226,7 +226,9 @@ module.exports.getChallengesByLevel = function(level) {
 //get challenge by id
 module.exports.getChallengeById = function(id, userId) {
     return db.query(`SELECT C.*, (SELECT solution as usersolution FROM solutions S
-       WHERE S.solver=${userId} AND S.challenge=C.id) FROM challenges C WHERE C.id=${id}`);
+       WHERE S.solver=${userId} AND S.challenge=C.id), (SELECT count(*) as
+       unlocked FROM unlockedsolutions U WHERE U.viewer=${userId} AND U.challenge=C.id)
+       FROM challenges C WHERE C.id=${id}`);
 };
 
 function format(array) {
@@ -353,4 +355,10 @@ module.exports.getSolutionsForChallenge = function(challenge) {
        FROM solutions S LEFT JOIN users U ON U.id=S.solver LEFT JOIN challenges X
        ON X.id=S.challenge  WHERE S.challenge=${challenge} GROUP BY S.solution,
        U.first_name,U.last_name,S.created_at,X.id`);
+};
+
+// unlock solution to the challenge
+module.exports.unlockSolution = function(viewer, challenge) {
+    return db.query(`INSERT INTO unlockedsolutions(viewer,challenge)
+        VALUES (${viewer},${challenge}) RETURNING *`);
 };

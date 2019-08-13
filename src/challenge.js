@@ -2,7 +2,12 @@ import React, { useEffect } from "react";
 import axios from "./axios";
 
 import { useDispatch, useSelector } from "react-redux";
-import { setChallenge, setDraftSolution, setResult } from "./actions";
+import {
+    setChallenge,
+    setDraftSolution,
+    setResult,
+    unlockSolution
+} from "./actions";
 import AceEditor from "react-ace";
 import ReactMarkdown from "react-markdown";
 import { Posts } from "./posts";
@@ -16,12 +21,13 @@ export default function Challenge(props) {
     const description = useSelector(
         state => state.challenges.challenge.description
     );
-    const solution = useSelector(
+    const draftSolution = useSelector(
         state => state.challenges.challenge.draftSolution
     );
     const solvedAlready = useSelector(
         state => state.challenges.challenge.solvedAlready
     );
+    const unlocked = useSelector(state => state.challenges.challenge.unlocked);
     const result = useSelector(state => state.challenges.challenge.result);
     const name = useSelector(state => state.challenges.challenge.name);
     const id = props.match.params.id;
@@ -34,21 +40,29 @@ export default function Challenge(props) {
                 }
             })
             .then(({ data }) => {
+                let data_unlocked = parseInt(data.unlocked);
                 dispatch(
                     setChallenge({
                         name: data.name,
                         description: atob(data.description),
                         draftSolution: data.usersolution
                             ? atob(data.usersolution)
-                            : atob(data.template),
-                        solvedAlready: data.usersolution ? true : false
+                            : data_unlocked
+                                ? atob(data.solution)
+                                : atob(data.template),
+                        solvedAlready: data.usersolution
+                            ? true
+                            : data_unlocked
+                                ? true
+                                : false,
+                        unlocked: data_unlocked
                     })
                 );
             })
             .catch(err => {
                 console.log(err);
             });
-    }, [url]); //closes useEffect
+    }, [url, unlocked]); //closes useEffect
 
     function handleChange(value) {
         dispatch(setDraftSolution(value));
@@ -58,7 +72,7 @@ export default function Challenge(props) {
         axios
             .post("/api/challenge", {
                 id: id,
-                solution: btoa(solution)
+                solution: btoa(draftSolution)
             })
             .then(status => {
                 dispatch(setResult(status.data));
@@ -68,6 +82,19 @@ export default function Challenge(props) {
             });
     } //closes handleSubmitClick
 
+    function handleUnlockClick() {
+        axios
+            .post("/api/solution", {
+                challenge_id: id
+            })
+            .then(status => {
+                dispatch(unlockSolution());
+            })
+            .catch(err => {
+                console.log(err);
+            });
+    }
+
     return (
         <div className="display-rowwise">
             <div>
@@ -76,7 +103,7 @@ export default function Challenge(props) {
             </div>
             <div className="display-colwise">
                 <div className="display-rowwise">
-                    {solution && (
+                    {draftSolution && (
                         <AceEditor
                             mode="javascript"
                             theme="monokai"
@@ -88,15 +115,26 @@ export default function Challenge(props) {
                             wrapEnabled={true}
                             onChange={handleChange}
                             name="editor"
-                            value={solution}
+                            value={draftSolution}
                             editorProps={{ $blockScrolling: true }}
                             readOnly={solvedAlready}
                         />
                     )}
                     {!solvedAlready && (
-                        <button name="save" onClick={() => handleSubmitClick()}>
-                            Submit
-                        </button>
+                        <div>
+                            <button
+                                name="save"
+                                onClick={() => handleSubmitClick()}
+                            >
+                                Submit
+                            </button>
+                            <button
+                                name="unlock"
+                                onClick={() => handleUnlockClick()}
+                            >
+                                Unlock Solution
+                            </button>
+                        </div>
                     )}
                 </div>
                 {result && (

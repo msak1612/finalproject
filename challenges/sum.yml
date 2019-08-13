@@ -13,11 +13,9 @@ description: |
     ```
 
 solution: |
-    ```javascript
     export default function sum(a, b) {
         return (a + b);
     }
-    ```
 template: |
     export default function sum(a, b) {
         // Your Playground !!!

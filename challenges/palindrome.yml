@@ -22,7 +22,6 @@ description: |
     ```
 
 solution: |
-    ```javascript
     export default function isPalindrome(input) {
         let testStr = input.toLowerCase().replace(/[^0-9a-z]/gi, "");
         let reverseStr = testStr
@@ -32,7 +31,6 @@ solution: |
 
         return testStr === reverseStr;
     }
-    ```
 template: |
     export default function isPalindrome(input) {
         // Your Playground !!!

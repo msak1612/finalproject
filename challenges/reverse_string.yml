@@ -15,14 +15,12 @@ description: |
     ```
 
 solution: |
-    ```javascript
     export default function reverseString(input) {
         if (input === "" || input === null) {
             return "";
         }
         return reverseString(input.substr(1)) + input.charAt(0);
     }
-    ```
 template: |
     export default function reverseString(input) {
         // Your Playground !!!

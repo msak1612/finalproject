@@ -177,6 +177,12 @@ function onSetDraftSolution(state, action) {
     return { ...state, challenge: challenge };
 }
 
+function onUnlockSolution(state, action) {
+    let challenge = state.challenge;
+    challenge.unlocked = true;
+    return { ...state, challenge: challenge };
+}
+
 function onSetResult(state, action) {
     let challenge = state.challenge;
     challenge.result = action.result;
@@ -282,6 +288,7 @@ const challengeReducer = createReducer(
         SET_TAG: onSetTag,
         SET_CHALLENGE: onSetChallenge,
         SET_DRAFT_SOLUTION: onSetDraftSolution,
+        UNLOCK_SOLUTION: onUnlockSolution,
         SET_RESULT: onSetResult,
         SET_COLLECTIONS: onSetCollections,
         ADD_COLLECTION: onAddCollection,

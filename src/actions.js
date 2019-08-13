@@ -137,3 +137,7 @@ export function setDraftSolution(solution) {
 export function setResult(result) {
     return { type: "SET_RESULT", result: result };
 }
+
+export function unlockSolution() {
+    return { type: "UNLOCK_SOLUTION" };
+}
