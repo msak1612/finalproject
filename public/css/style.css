@@ -824,7 +824,7 @@ input[name="search"] {
     margin: 0px;
     width: 100vw;
     height: 100vh;
-    /* grid-gap: 1px; */
+    grid-gap: 1px;
     background-color: #c9d6df;
     border: 1px solid silver;
     border-radius: 0.5rem;
@@ -836,38 +836,12 @@ input[name="search"] {
     border: 1px solid silver;
     border-radius: 0.5rem;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
-    height: 97%;
-    width: 90%;
+    height: 97vh;
+    width: 47vw;
     background-color: #f0f5f9;
     margin: 10px;
     padding: 10px;
 }
-
-/* .leftmost {
-    grid-area: 1 / 1 / 3 / 2;
-    border: 1px solid silver;
-    border-radius: 0.5rem;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
-    overflow-y: hidden;
-    margin-left: 1vw;
-    margin-bottom: 2vh;
-    height: 100vh;
-    width: 10vw;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    text-align: center;
-    background: #52616b;
-} */
-
-/* .friends {
-    border: 1px solid #f0f5f9;
-    width: 8vw;
-    height: 15vh;
-    margin-left: auto;
-    margin-right: auto;
-    margin-bottom: 7px;
-} */
 
 .right-part {
     display: grid;
@@ -877,20 +851,20 @@ input[name="search"] {
     border: 1px solid silver;
     border-radius: 0.5rem;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
-    margin-left: -40px;
     margin-top: 10px;
     overflow-y: hidden;
-    height: 97%;
-    width: 50vw;
+    height: 97vh;
+    width: 49vw;
     background-color: #f0f5f9;
-
-    /* margin: 10px; */
-    /* padding: 10px; */
 }
 
-#ace {
+.ace {
+    margin-top: 50px;
     grid-area: 1 / 1 / 2 / 4;
     margin: 10px;
+    height: 2vh;
+    width: 50%;
+    margin-left: 60px;
 }
 
 .tc {
@@ -901,20 +875,14 @@ input[name="search"] {
     justify-content: center;
 }
 
-.actions {
+.code-submit {
     grid-area: 2 / 3 / 3 / 4;
-    border: 1px solid silver;
-    border-radius: 0.5rem;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
-    align-items: center;
-    min-width: 20vw;
+    /* border: 1px solid silver; */
+    /* border-radius: 0.5rem; */
+    /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.6); */
+    /* align-items: center;
     display: inline-flex;
-    justify-content: space-around;
-}
-
-.actions button[name="unlock"] {
-    margin-bottom: 2px;
-    margin-right: 5px;
+    justify-content: center; */
 }
 
 #left-half {
@@ -989,4 +957,48 @@ input[name="search"] {
 /* Color/shape of burger icon bars */
 .bm-burger-bars {
     background: #373a47;
+}
+
+/* Style the tab */
+.tab {
+    overflow: hidden;
+    width: 40vw;
+    display: flex;
+    flex-direction: row;
+    background: #f0f5f9;
+    justify-content: center;
+    margin-bottom: 10px;
+}
+
+/* Style the buttons that are used to open the tab content */
+.tab button {
+    background-color: inherit;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 14px 16px;
+    transition: 0.3s;
+    color: #1e2022;
+    letter-spacing: 0.75px;
+    white-space: nowrap;
+    font-size: 13px;
+}
+
+/* Change background color of buttons on hover */
+.tab button:hover {
+    background-color: #ddd;
+    padding: 5px;
+}
+
+/* Create an active/current tablink class */
+.tab button.active {
+    background-color: #ccc;
+}
+
+/* Style the tab content */
+.tabcontent {
+    display: none;
+    padding: 6px 12px;
+    border: 1px solid #ccc;
+    border-top: none;
 }

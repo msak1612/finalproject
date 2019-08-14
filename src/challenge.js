@@ -12,7 +12,6 @@ import AceEditor from "react-ace";
 import Posts from "./posts";
 import { Solutions } from "./solutions";
 import ReactMarkdown from "react-markdown";
-
 import "brace/mode/javascript";
 import "brace/theme/github";
 import "brace/theme/monokai";
@@ -102,8 +101,40 @@ export default function Challenge(props) {
                 <h2>{name}</h2>
                 <ReactMarkdown source={description} />
             </div>
+
             <div className="right-part">
-                <div>
+                <div className="ace">
+                    <div className="tab">
+                        <button
+                            className="tablinks"
+                            onClick="open(e, 'Editor')"
+                        >
+                            Code Editor
+                        </button>
+                        <button
+                            className="tablinks"
+                            onClick="open(e, 'Discussion')"
+                        >
+                            Discussions
+                        </button>
+                        <button
+                            className="tablinks"
+                            onClick="open(e, 'Unlock')"
+                        >
+                            Solutions
+                        </button>
+                    </div>
+                    <div className="ace tabcontent">
+                        <h2>Code Editor</h2>
+                    </div>
+
+                    <div className="tabcontent">
+                        <h2>Discussions</h2>
+                    </div>
+
+                    <div className="tabcontent">
+                        <h2>Solutions</h2>
+                    </div>
                     {draftSolution && (
                         <AceEditor
                             mode="javascript"
@@ -114,6 +145,7 @@ export default function Challenge(props) {
                             showPrintMargin={true}
                             highlightActiveLine={true}
                             wrapEnabled={true}
+                            height="50vh"
                             onChange={handleChange}
                             name="editor"
                             value={draftSolution}
@@ -121,16 +153,16 @@ export default function Challenge(props) {
                             readOnly={solvedAlready}
                         />
                     )}
-                    <div className="actions">
+                    <div className="code-submit">
                         <button name="save" onClick={() => handleSubmitClick()}>
-                            Submit Solution
+                            Submit
                         </button>
                         {!solvedAlready && (
                             <button
                                 name="unlock"
                                 onClick={() => handleUnlockClick()}
                             >
-                                Unlock Solution
+                                Reset
                             </button>
                         )}
                     </div>
