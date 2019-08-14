@@ -1,8 +1,7 @@
 name: "Sort Array"
 level: 0
 tags:
-    - STRING
-    - RECURSION
+    - ARRAY
 description: |
     Sort the items of an array.. Return the sorted array.
 
@@ -15,10 +14,7 @@ description: |
 
 solution: |
     export default function sortArray(input) {
-        if (input === "") {
-            return "";
-        }
-        return sort(sortArray);
+        return input.sort(function(a, b){return a-b});
     }
 template: |
     export default function sortArray(input) {
@@ -26,16 +22,16 @@ template: |
         return "";
     }
 test: |
-    import sort from "./template";
+    import sortArray from "./template";
 
     test('sort [4, 1, 0, -3, 7, -5] to [-5, -3, 0, 1, 4, 7]', () => {
-        expect(sortArray([4, 1, 0, -3, 7, -5])).toBe([-5, -3, 0, 1, 4, 7]);
+        expect(sortArray([4, 1, 0, -3, 7, -5])).toStrictEqual([-5, -3, 0, 1, 4, 7]);
     });
 
     test('sort [0, 1, 2, 3, 4] to [0, 1, 2, 3, 4]', () => {
-        expect(sortArray([0, 1, 2, 3, 4])).toBe([0, 1, 2, 3, 4]);
+        expect(sortArray([0, 1, 2, 3, 4])).toStrictEqual([0, 1, 2, 3, 4]);
     });
 
     test('sort [] to []', () => {
-        expect(sortArray([])).toBe([]);
+        expect(sortArray([])).toStrictEqual([]);
     });

@@ -53,6 +53,9 @@ export default function App() {
                         <Link className="center" to="/chatroom">
                             Chat
                         </Link>
+                        <Link to="/users">
+                            <img id="search" src="/images/search.svg" />
+                        </Link>
                         <Link to="/friends">
                             <img
                                 id="notification"
