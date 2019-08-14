@@ -3,7 +3,7 @@ import BioEditor from "./bioeditor";
 import ProfilePic from "./profilepic";
 import Uploader from "./uploader";
 import { useSelector } from "react-redux";
-import { Posts } from "./posts";
+import Posts from "./posts";
 import { Solutions } from "./solutions";
 
 export default function Profile() {
