@@ -117,6 +117,20 @@ function onSetSideBarVisibility(state, action) {
     return sideBar;
 }
 
+function onAddNotification(state, action) {
+    let notifications = state.notifications;
+    notifications.push(action.notification);
+    return { ...state, notifications: notifications, show: false };
+}
+
+function onShowNotification(state, action) {
+    return { ...state, show: true };
+}
+
+function onClearNotifications(state, action) {
+    return { ...state, notifications: [], show: false };
+}
+
 function onSetChallenges(state, action) {
     return { ...state, challenges: action.challenges };
 }
@@ -325,6 +339,15 @@ const sideBarVisibilityReducer = createReducer(
     }
 );
 
+const notificationReducer = createReducer(
+    { notifications: [], show: false },
+    {
+        ADD_NOTIFICATION: onAddNotification,
+        CLEAR_NOTIFICATIONS: onClearNotifications,
+        SHOW_NOTIFICATION: onShowNotification
+    }
+);
+
 export const reducer = combineReducers({
     friends: friendsReducer,
     edit: editReducer,
@@ -334,5 +357,6 @@ export const reducer = combineReducers({
     chat: chatReducer,
     onlineUsers: onlineUsersReducer,
     challenges: challengeReducer,
-    sideBar: sideBarVisibilityReducer
+    sideBar: sideBarVisibilityReducer,
+    notifications: notificationReducer
 });

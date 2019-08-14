@@ -335,12 +335,10 @@ app.post("/api/user/:id", async (req, res) => {
         if (invitationChange) {
             let notify_id = action == "accept" ? sender_id : receiver_id;
             let request_count = await db.getFriendRequestCount(notify_id);
-
             for (let [key, value] of Object.entries(onlineUsers)) {
                 if (value == parseInt(notify_id)) {
-                    console.log(request_count.rows[0]);
                     io.to(`${key}`).emit(
-                        "friendrequest",
+                        "friendRequest",
                         request_count.rows[0]
                     );
                 }
@@ -716,11 +714,19 @@ app.post("/api/challenge", (req, res) => {
             }
         })
         .then(data => {
+            let score = data.rows[0].score;
+            if (score % 50 === 0) {
+                for (let [key, value] of Object.entries(onlineUsers)) {
+                    if (value == parseInt(req.session.userId)) {
+                        io.to(`${key}`).emit("gainedScore", score);
+                    }
+                }
+            }
             res.status(200).json({
                 testResults: results.testResults[0].testResults,
                 numFailedTests: results.numFailedTests,
                 numPassedTests: results.numPassedTests,
-                score: data.rows[0].score
+                score: score
             });
         })
         .catch(failure => {
@@ -758,15 +764,16 @@ io.on("connection", socket => {
 
     db.getUsersById(Object.values(onlineUsers))
         .then(users => {
-            io.emit("onlineusers", users.rows);
+            io.emit("onlineUsers", users.rows);
         })
         .catch(err => {
             console.log("Error in getting user. ", err);
         });
 
+    console.log(socket.id);
     db.getFriendRequestCount(userId)
         .then(data => {
-            socket.emit("friendrequest", data.rows[0]);
+            socket.emit("friendRequest", data.rows[0]);
         })
         .catch(err => {
             console.log("Error in getting friend request count. ", err);
@@ -812,7 +819,7 @@ io.on("connection", socket => {
         onlineUsers.delete(socket.id);
         db.getUsersById(Object.values(onlineUsers))
             .then(users => {
-                io.emit("onlineusers", users.rows);
+                io.emit("onlineUsers", users.rows);
             })
             .catch(err => {
                 console.log("Error in getting user. ", err);

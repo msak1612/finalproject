@@ -153,3 +153,15 @@ export function unlockSolution() {
 export function setSideBarVisibility(visible) {
     return { type: "SET_SIDEBAR_VISIBLE", visible: visible };
 }
+
+export function addNotification(notification) {
+    return { type: "ADD_NOTIFICATION", notification: notification };
+}
+
+export function clearNotifications() {
+    return { type: "CLEAR_NOTIFICATIONS" };
+}
+
+export function showNotification() {
+    return { type: "SHOW_NOTIFICATION" };
+}

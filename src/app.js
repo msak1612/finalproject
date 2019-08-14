@@ -15,13 +15,26 @@ import SideBar from "./sidebar";
 import Posts from "./posts";
 
 import axios from "./axios";
-import { setUser, setSideBarVisibility } from "./actions";
+import {
+    setUser,
+    setSideBarVisibility,
+    clearNotifications,
+    showNotification
+} from "./actions";
 import { init } from "./socket";
 
 export default function App() {
     const dispatch = useDispatch();
     const user = useSelector(state => state.user);
-
+    const notifications = useSelector(
+        state => state.notifications.notifications
+    );
+    const notification_count = useSelector(state =>
+        state.notifications.notifications
+            ? state.notifications.notifications.length
+            : 0
+    );
+    const show_notification = useSelector(state => state.notifications.show);
     useEffect(() => {
         axios
             .get("/user")
@@ -36,6 +49,14 @@ export default function App() {
 
     function closeSideBar() {
         dispatch(setSideBarVisibility(false));
+    }
+
+    function handleBellClick() {
+        dispatch(showNotification());
+    }
+
+    function handleNotificationClick() {
+        dispatch(clearNotifications());
     }
 
     return (
@@ -56,9 +77,22 @@ export default function App() {
                         <Link to="/users">
                             <img id="search" src="/images/search.png" />
                         </Link>
-                        <Link to="/friends">
-                            <img id="bell" src="/images/bell.png" />
-                        </Link>
+                        {show_notification && (
+                            <div id="notification">
+                                <span onClick={handleNotificationClick}>
+                                    {notifications[0]}
+                                </span>
+                            </div>
+                        )}
+                        <img
+                            id="bell"
+                            src={
+                                notification_count == 0
+                                    ? "/images/bell.png"
+                                    : "/images/bell1.png"
+                            }
+                            onClick={handleBellClick}
+                        />
                         <Link to="/collections">
                             <img id="plus" src="/images/plus.png" />
                         </Link>

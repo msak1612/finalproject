@@ -803,6 +803,14 @@ h4 {
     border-radius: 50%;
 }
 
+#notification {
+    color: black;
+    position: absolute;
+    margin-top: 60px;
+    margin-left: -30px;
+    background: silver;
+}
+
 input[name="search"] {
     margin-left: 27vw;
     margin-top: 2.25vh;

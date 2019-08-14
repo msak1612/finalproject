@@ -4,7 +4,8 @@ import {
     chatMessages,
     newChatMessage,
     setOnlineUsers,
-    friendRequestCount
+    friendRequestCount,
+    addNotification
 } from "./actions";
 // onlineUsers, userJoined, userLeft, newChatMsg,
 
@@ -13,16 +14,32 @@ export let socket;
 export const init = () => {
     if (!socket) {
         socket = io.connect();
-        socket.on("onlineusers", users => {
+        socket.on("onlineUsers", users => {
             let id = store.getState().user.id;
             const result = users.filter(user => user.id != id);
             store.dispatch(setOnlineUsers(result));
         });
 
         socket.on("chatMessages", msgs => store.dispatch(chatMessages(msgs)));
-        socket.on("friendrequest", request_count => {
+        socket.on("friendRequest", request_count => {
+            if (request_count.count > 0) {
+                store.dispatch(
+                    addNotification(
+                        "You received " +
+                            request_count.count +
+                            " friend request"
+                    )
+                );
+            }
             store.dispatch(friendRequestCount(request_count.count));
         });
         socket.on("newMessage", msg => store.dispatch(newChatMessage(msg)));
+        socket.on("gainedScore", msg => {
+            console.log("score gained");
+
+            store.dispatch(
+                addNotification("You have reached a milestone! Scored " + msg)
+            );
+        });
     }
 };
