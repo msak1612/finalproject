@@ -440,6 +440,9 @@ h2 {
     text-align: center;
 }
 
+h3 {
+}
+
 p {
     font-size: 14px;
     font-weight: 100;
@@ -928,8 +931,15 @@ input[name="search"] {
 
 .classifiers {
     text-decoration: none;
-    color: black;
+    letter-spacing: 1px;
+    color: #52616b;
     margin-top: 5px;
+    font-size: 14px;
+    font-weight: 400;
+    border: 1px solid silver;
+    border-radius: 0.25rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+    padding-left: 5px;
 }
 
 .classifiers:hover,
@@ -937,6 +947,7 @@ input[name="search"] {
 .classifiers:focus {
     color: blue;
     transition: 0.2s ease;
+    background: #c9d6df;
 }
 
 /* The rest copied directly from react-burger-menu docs */

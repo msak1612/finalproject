@@ -44,7 +44,7 @@ export default function SideBar() {
         >
             <hr id="line1"></hr>
             <Link
-                className="center"
+                //className="center"
                 className="menu-item"
                 to="/collections"
                 onClick={closeSideBar}
