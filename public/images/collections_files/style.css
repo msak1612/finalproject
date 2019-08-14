@@ -148,12 +148,12 @@ hr {
 }
 
 .profile-pic {
-    margin-left: 5px;
     margin-right: 5px;
     margin-top: 3px;
     height: inherit;
     border-radius: 1rem;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+    background: white;
 }
 
 #challenge-pix {
@@ -263,8 +263,7 @@ hr {
 
 .header-name {
     margin-right: 10px;
-    margin-top: 15px;
-    font-weight: 500;
+    font-weight: 600;
     text-transform: capitalize;
     color: white;
     text-align: center;
@@ -791,8 +790,7 @@ h4 {
 #bell,
 #search,
 #plus {
-    margin-top: 5px;
-    margin: 5.5px;
+    margin: 5px;
     height: 5.5vh;
 }
 
@@ -818,32 +816,24 @@ input[name="search"] {
     background-color: #c9d6df;
 }
 .challenge-container {
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: 1fr 1fr;
     display: grid;
-    margin: 0px;
+    grid-template-columns: 0.3fr 1.2fr 1.5fr 1fr;
+    grid-template-rows: 1.4fr 0.6fr;
     width: 100vw;
     height: 100vh;
-    /* grid-gap: 1px; */
-    background-color: #c9d6df;
-    border: 1px solid silver;
-    border-radius: 0.5rem;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+    grid-gap: 1px;
 }
 
 .left-part {
-    grid-area: 1 / 1 / 3 / 2;
+    grid-area: 1 / 2 / 3 / 3;
     border: 1px solid silver;
     border-radius: 0.5rem;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
-    height: 97%;
-    width: 90%;
-    background-color: #f0f5f9;
-    margin: 10px;
-    padding: 10px;
+    height: 100vh;
+    width: 40vw;
 }
 
-/* .leftmost {
+.leftmost {
     grid-area: 1 / 1 / 3 / 2;
     border: 1px solid silver;
     border-radius: 0.5rem;
@@ -858,43 +848,36 @@ input[name="search"] {
     justify-content: flex-start;
     text-align: center;
     background: #52616b;
-} */
+}
 
-/* .friends {
+.friends {
     border: 1px solid #f0f5f9;
     width: 8vw;
     height: 15vh;
     margin-left: auto;
     margin-right: auto;
     margin-bottom: 7px;
-} */
+}
 
 .right-part {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    grid-template-rows: 1fr 1fr;
-    grid-area: 1 / 2 / 3 / 3;
+    grid-area: 1 / 3 / 2 / 5;
     border: 1px solid silver;
     border-radius: 0.5rem;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
-    margin-left: -40px;
-    margin-top: 10px;
+    margin-right: 1vw;
+    margin-bottom: 2vh;
     overflow-y: hidden;
-    height: 97%;
-    width: 50vw;
-    background-color: #f0f5f9;
-
-    /* margin: 10px; */
-    /* padding: 10px; */
+    height: 100vh;
+    width: 40vw;
 }
 
 #ace {
-    grid-area: 1 / 1 / 2 / 4;
-    margin: 10px;
+    width: 100%;
+    height: 50%;
 }
 
 .tc {
-    grid-area: 2 / 1 / 3 / 3;
+    grid-area: 2 / 3 / 3 / 4;
     border: 1px solid silver;
     border-radius: 0.5rem;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
@@ -902,19 +885,13 @@ input[name="search"] {
 }
 
 .actions {
-    grid-area: 2 / 3 / 3 / 4;
+    grid-area: 2 / 4 / 3 / 5;
     border: 1px solid silver;
     border-radius: 0.5rem;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
-    align-items: center;
-    min-width: 20vw;
-    display: inline-flex;
-    justify-content: space-around;
-}
-
-.actions button[name="unlock"] {
-    margin-bottom: 2px;
-    margin-right: 5px;
+    display: flex;
+    justify-content: center;
+    text-align: center;
 }
 
 #left-half {

@@ -5,6 +5,7 @@ import Registration from "./registration";
 import SignInInfo from "./signin-info";
 import SignUpInfo from "./signup-info";
 import Login from "./login";
+
 export default function Welcome() {
     return (
         <HashRouter>

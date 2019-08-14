@@ -54,13 +54,13 @@ export default function App() {
                             Chat
                         </Link>
                         <Link to="/users">
-                            <img id="search" src="/images/search.svg" />
+                            <img id="search" src="/images/search.png" />
                         </Link>
                         <Link to="/friends">
-                            <img
-                                id="notification"
-                                src="/images/notification.svg"
-                            />
+                            <img id="bell" src="/images/bell.png" />
+                        </Link>
+                        <Link to="/collections">
+                            <img id="plus" src="/images/plus.png" />
                         </Link>
                         <ProfilePic />
                         <span className="header-name">

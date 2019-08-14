@@ -49,13 +49,13 @@ export default function Challenge(props) {
                         draftSolution: data.usersolution
                             ? atob(data.usersolution)
                             : data_unlocked
-                            ? atob(data.solution)
-                            : atob(data.template),
+                                ? atob(data.solution)
+                                : atob(data.template),
                         solvedAlready: data.usersolution
                             ? true
                             : data_unlocked
-                            ? true
-                            : false,
+                                ? true
+                                : false,
                         unlocked: data_unlocked
                     })
                 );
@@ -97,13 +97,13 @@ export default function Challenge(props) {
     }
 
     return (
-        <div className="display-rowwise">
-            <div>
+        <section className="challenge-container ">
+            <div className="left-part">
                 <h2>{name}</h2>
                 <ReactMarkdown source={description} />
             </div>
-            <div className="display-colwise">
-                <div className="display-rowwise">
+            <div className="right-part">
+                <div>
                     {draftSolution && (
                         <AceEditor
                             mode="javascript"
@@ -121,48 +121,56 @@ export default function Challenge(props) {
                             readOnly={solvedAlready}
                         />
                     )}
-                    <button name="save" onClick={() => handleSubmitClick()}>
-                        Submit
-                    </button>
-                    {!solvedAlready && (
-                        <button
-                            name="unlock"
-                            onClick={() => handleUnlockClick()}
-                        >
-                            Unlock Solution
+                    <div className="actions">
+                        <button name="save" onClick={() => handleSubmitClick()}>
+                            Submit Solution
                         </button>
-                    )}
-                </div>
-                {result && (
-                    <div className="display-colwise">
-                        <h4>
-                            {result.numPassedTests} out of{" "}
-                            {result.numFailedTests + result.numPassedTests}{" "}
-                            Passed
-                            <div>Score: {result.score}</div>
-                        </h4>
-                        {result.testResults &&
-                            result.testResults.map(result => (
-                                <div key={result.title}>
-                                    <span>{result.title}</span>
-                                    &nbsp;{" "}
-                                    <span
-                                        style={{
-                                            color:
-                                                result.status == "passed"
-                                                    ? "green"
-                                                    : "red"
-                                        }}
-                                    >
-                                        {result.status}
-                                    </span>
-                                </div>
-                            ))}
+                        {!solvedAlready && (
+                            <button
+                                name="unlock"
+                                onClick={() => handleUnlockClick()}
+                            >
+                                Unlock Solution
+                            </button>
+                        )}
                     </div>
-                )}
-                <Posts id={id} />
-                <Solutions challenge_id={id} />
+
+                    <div className="tc">
+                        {result && (
+                            <div>
+                                <h4>
+                                    {result.numPassedTests} out of{" "}
+                                    {result.numFailedTests +
+                                        result.numPassedTests}{" "}
+                                    Passed
+                                    <div>Score: {result.score}</div>
+                                </h4>
+                                {result.testResults &&
+                                    result.testResults.map(result => (
+                                        <div key={result.title}>
+                                            <span>{result.title}</span>
+                                            &nbsp;{" "}
+                                            <span
+                                                style={{
+                                                    color:
+                                                        result.status ==
+                                                        "passed"
+                                                            ? "green"
+                                                            : "red"
+                                                }}
+                                            >
+                                                {result.status}
+                                            </span>
+                                        </div>
+                                    ))}
+                            </div>
+                        )}
+                    </div>
+                </div>
             </div>
-        </div>
+        </section>
     );
 } //Challenges
+
+// <Posts id={id} />
+// <Solutions challenge_id={id} />
