@@ -199,6 +199,15 @@ function onSetChallenge(state, action) {
     };
 }
 
+function onResetChallenge(state, action) {
+    let challenge = state.challenge;
+    challenge.draftSolution = challenge.template;
+    return {
+        ...state,
+        challenge: challenge
+    };
+}
+
 function onSetDraftSolution(state, action) {
     let challenge = state.challenge;
     challenge.draftSolution = action.solution;
@@ -308,7 +317,8 @@ const challengeReducer = createReducer(
         tag: "",
         challenge: {
             description: "",
-            draftSolution: ""
+            draftSolution: "",
+            template: ""
         },
         solutions: []
     },
@@ -321,6 +331,7 @@ const challengeReducer = createReducer(
         SET_DRAFT_SOLUTION: onSetDraftSolution,
         UNLOCK_SOLUTION: onUnlockSolution,
         SET_RESULT: onSetResult,
+        RESET_CHALLENGE: onResetChallenge,
         SET_COLLECTIONS: onSetCollections,
         ADD_COLLECTION: onAddCollection,
         ADD_CHALLENGE: onAddChallenge,

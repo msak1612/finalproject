@@ -6,7 +6,8 @@ import {
     setChallenge,
     setDraftSolution,
     setResult,
-    unlockSolution
+    unlockSolution,
+    resetChallenge
 } from "./actions";
 import AceEditor from "react-ace";
 import Posts from "./posts";
@@ -45,16 +46,17 @@ export default function Challenge(props) {
                     setChallenge({
                         name: data.name,
                         description: atob(data.description),
+                        template: atob(data.template),
                         draftSolution: data.usersolution
                             ? atob(data.usersolution)
                             : data_unlocked
-                                ? atob(data.solution)
-                                : atob(data.template),
+                            ? atob(data.solution)
+                            : atob(data.template),
                         solvedAlready: data.usersolution
                             ? true
                             : data_unlocked
-                                ? true
-                                : false,
+                            ? true
+                            : false,
                         unlocked: data_unlocked
                     })
                 );
@@ -93,6 +95,10 @@ export default function Challenge(props) {
             .catch(err => {
                 console.log(err);
             });
+    }
+
+    function handleResetClick() {
+        dispatch(resetChallenge());
     }
 
     return (
@@ -150,7 +156,6 @@ export default function Challenge(props) {
                             name="editor"
                             value={draftSolution}
                             editorProps={{ $blockScrolling: true }}
-                            readOnly={solvedAlready}
                         />
                     )}
                     <div className="code-submit">
@@ -165,39 +170,38 @@ export default function Challenge(props) {
                                 Reset
                             </button>
                         )}
+                        <button name="reset" onClick={() => handleResetClick()}>
+                            Reset
+                        </button>
                     </div>
 
-                    <div className="tc">
-                        {result && (
-                            <div>
-                                <h4>
-                                    {result.numPassedTests} out of{" "}
-                                    {result.numFailedTests +
-                                        result.numPassedTests}{" "}
-                                    Passed
-                                    <div>Score: {result.score}</div>
-                                </h4>
-                                {result.testResults &&
-                                    result.testResults.map(result => (
-                                        <div key={result.title}>
-                                            <span>{result.title}</span>
-                                            &nbsp;{" "}
-                                            <span
-                                                style={{
-                                                    color:
-                                                        result.status ==
-                                                        "passed"
-                                                            ? "green"
-                                                            : "red"
-                                                }}
-                                            >
-                                                {result.status}
-                                            </span>
-                                        </div>
-                                    ))}
-                            </div>
-                        )}
-                    </div>
+                    {result && (
+                        <div className="tc">
+                            <h4>
+                                {result.numPassedTests} out of{" "}
+                                {result.numFailedTests + result.numPassedTests}{" "}
+                                Passed
+                                <div>Score: {result.score}</div>
+                            </h4>
+                            {result.testResults &&
+                                result.testResults.map(result => (
+                                    <div key={result.title}>
+                                        <span>{result.title}</span>
+                                        &nbsp;{" "}
+                                        <span
+                                            style={{
+                                                color:
+                                                    result.status == "passed"
+                                                        ? "green"
+                                                        : "red"
+                                            }}
+                                        >
+                                            {result.status}
+                                        </span>
+                                    </div>
+                                ))}
+                        </div>
+                    )}
                 </div>
             </div>
         </section>

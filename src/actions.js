@@ -165,3 +165,7 @@ export function clearNotifications() {
 export function showNotification() {
     return { type: "SHOW_NOTIFICATION" };
 }
+
+export function resetChallenge() {
+    return { type: "RESET_CHALLENGE" };
+}
