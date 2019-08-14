@@ -173,7 +173,7 @@ module.exports.postImage = function(
 module.exports.getPosts = function(challenge_id, parent_post_id) {
     let comparator = challenge_id ? "=" : "IS";
     return db.query(`SELECT A.id, A.sender_id, A.post, A.image, A.has_spoilers, A.days, A.hours,
-     A.minutes, U.first_name, U.last_name,A.parent_post_id,
+     A.minutes, U.first_name, U.last_name,A.parent_post_id, U.profile_pic,
   (SELECT count(id) FROM posts B WHERE
     A.id = B.parent_post_id ) as replycount FROM
     (SELECT *,

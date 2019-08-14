@@ -226,6 +226,10 @@ function onSetResult(state, action) {
     return { ...state, challenge: challenge };
 }
 
+function onSetCurrentTab(state, action) {
+    return { ...state, currentTab: action.tab };
+}
+
 function onSetLevel(state, action) {
     return { ...state, level: action.level, tag: "" };
 }
@@ -315,6 +319,7 @@ const challengeReducer = createReducer(
         },
         level: -1,
         tag: "",
+        currentTab: "codeeditor",
         challenge: {
             description: "",
             draftSolution: "",
@@ -331,6 +336,7 @@ const challengeReducer = createReducer(
         SET_DRAFT_SOLUTION: onSetDraftSolution,
         UNLOCK_SOLUTION: onUnlockSolution,
         SET_RESULT: onSetResult,
+        CURRENT_TAB: onSetCurrentTab,
         RESET_CHALLENGE: onResetChallenge,
         SET_COLLECTIONS: onSetCollections,
         ADD_COLLECTION: onAddCollection,

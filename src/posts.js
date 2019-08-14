@@ -122,7 +122,7 @@ export default function Posts(props) {
     }
 
     const addPost = (
-        <div>
+        <div className="add-post">
             <textarea
                 className="post-input"
                 value={draftPost}
@@ -144,18 +144,21 @@ export default function Posts(props) {
                     }
                     key={post.id}
                 >
-                    <p>
+                    <div>
                         <b>
-                            {post.first_name}&nbsp;{post.last_name}:{" "}
-                        </b>{" "}
+                            &nbsp;{post.first_name}&nbsp;
+                            {post.last_name}
+                        </b>
                         {post.image && (
                             <img
                                 src={post.image}
                                 style={{ maxWidth: "100%", maxHeight: "100%" }}
                             />
                         )}
-                    </p>
-                    {post.post && <ReactMarkdown source={atob(post.post)} />}
+                        {post.post && (
+                            <ReactMarkdown source={atob(post.post)} />
+                        )}
+                    </div>
 
                     {props.replyPost != post.id && (
                         <div className="post-options">
@@ -195,11 +198,11 @@ export default function Posts(props) {
                             )}
                             <span>
                                 {post.days ? (
-                                    <i>{post.days}d</i>
+                                    <i>{post.days}d ago</i>
                                 ) : post.hours ? (
-                                    <i>{post.hours}h</i>
+                                    <i>{post.hours}h ago</i>
                                 ) : (
-                                    <i>{post.minutes}m</i>
+                                    <i>{post.minutes}m ago</i>
                                 )}
                             </span>
                         </div>

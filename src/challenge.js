@@ -7,7 +7,8 @@ import {
     setDraftSolution,
     setResult,
     unlockSolution,
-    resetChallenge
+    resetChallenge,
+    setCurrentTab
 } from "./actions";
 import AceEditor from "react-ace";
 import Posts from "./posts";
@@ -30,9 +31,14 @@ export default function Challenge(props) {
     );
     const unlocked = useSelector(state => state.challenges.challenge.unlocked);
     const result = useSelector(state => state.challenges.challenge.result);
+    const defaultSolution = useSelector(
+        state => state.challenges.challenge.defaultSolution
+    );
     const name = useSelector(state => state.challenges.challenge.name);
+    const currentTab = useSelector(state => state.challenges.currentTab);
     const id = props.match.params.id;
     const url = "/api/challenge";
+
     useEffect(() => {
         axios
             .get("/api/challenge", {
@@ -47,10 +53,9 @@ export default function Challenge(props) {
                         name: data.name,
                         description: atob(data.description),
                         template: atob(data.template),
+                        defaultSolution: atob(data.solution),
                         draftSolution: data.usersolution
                             ? atob(data.usersolution)
-                            : data_unlocked
-                            ? atob(data.solution)
                             : atob(data.template),
                         solvedAlready: data.usersolution
                             ? true
@@ -60,11 +65,12 @@ export default function Challenge(props) {
                         unlocked: data_unlocked
                     })
                 );
+                dispatch(setCurrentTab("codeeditor"));
             })
             .catch(err => {
                 console.log(err);
             });
-    }, [url, unlocked]); //closes useEffect
+    }, [url]); //closes useEffect
 
     function handleChange(value) {
         dispatch(setDraftSolution(value));
@@ -101,105 +107,129 @@ export default function Challenge(props) {
         dispatch(resetChallenge());
     }
 
+    function handleTabClick(e) {
+        dispatch(setCurrentTab(e.target.id));
+    }
+
+    function handleCopyClick() {
+        dispatch(setDraftSolution(defaultSolution));
+        dispatch(setCurrentTab("codeeditor"));
+    }
+
+    function TabButton(props) {
+        return (
+            <button
+                className={
+                    currentTab == props.id ? "activetablink" : "inactivetablink"
+                }
+                id={props.id}
+                onClick={e => handleTabClick(e)}
+            >
+                {props.text}
+            </button>
+        );
+    }
+
+    function TestResults() {
+        return (
+            <div className="tc">
+                <h4>
+                    <div>Score: {result.score}</div>
+                </h4>
+                {result.testResults &&
+                    result.testResults.map(result => (
+                        <div key={result.title}>
+                            <img
+                                className="testresult"
+                                src={
+                                    result.status == "passed"
+                                        ? "/images/right.png"
+                                        : "/images/wrong.png"
+                                }
+                            />
+                            <b>{result.title}</b>
+                        </div>
+                    ))}
+            </div>
+        );
+    }
+
+    function CustomAceEditor(props) {
+        return (
+            <AceEditor
+                mode="javascript"
+                theme="monokai"
+                enableBasicAutocompletion={true}
+                enableLiveAutocompletion={true}
+                showGutter={true}
+                showPrintMargin={true}
+                highlightActiveLine={true}
+                wrapEnabled={true}
+                height="50vh"
+                onChange={handleChange}
+                name="editor"
+                value={props.value}
+                editorProps={{ $blockScrolling: true }}
+                readOnly={props.readOnly}
+            />
+        );
+    }
+
     return (
         <section className="challenge-container ">
             <div className="left-part">
                 <h2>{name}</h2>
                 <ReactMarkdown source={description} />
             </div>
-
             <div className="right-part">
                 <div className="ace">
                     <div className="tab">
-                        <button
-                            className="tablinks"
-                            onClick="open(e, 'Editor')"
-                        >
-                            Code Editor
-                        </button>
-                        <button
-                            className="tablinks"
-                            onClick="open(e, 'Discussion')"
-                        >
-                            Discussions
-                        </button>
-                        <button
-                            className="tablinks"
-                            onClick="open(e, 'Unlock')"
-                        >
-                            Solutions
-                        </button>
+                        <TabButton id="codeeditor" text="Code Editor" />
+                        <TabButton id="discussion" text="Discussions" />
+                        <TabButton id="solution" text="Solutions" />
                     </div>
-                    <div className="ace tabcontent">
-                        <h2>Code Editor</h2>
-                    </div>
-
-                    <div className="tabcontent">
-                        <h2>Discussions</h2>
-                    </div>
-
-                    <div className="tabcontent">
-                        <h2>Solutions</h2>
-                    </div>
-                    {draftSolution && (
-                        <AceEditor
-                            mode="javascript"
-                            theme="monokai"
-                            enableBasicAutocompletion={true}
-                            enableLiveAutocompletion={true}
-                            showGutter={true}
-                            showPrintMargin={true}
-                            highlightActiveLine={true}
-                            wrapEnabled={true}
-                            height="50vh"
-                            onChange={handleChange}
-                            name="editor"
-                            value={draftSolution}
-                            editorProps={{ $blockScrolling: true }}
-                        />
+                    {currentTab == "codeeditor" && (
+                        <div>
+                            <CustomAceEditor
+                                value={draftSolution}
+                                readOnly={false}
+                            />
+                            <div className="code-submit">
+                                <button name="save" onClick={handleSubmitClick}>
+                                    Submit
+                                </button>
+                                <button name="reset" onClick={handleResetClick}>
+                                    Reset
+                                </button>
+                            </div>
+                            {result && <TestResults />}
+                        </div>
                     )}
-                    <div className="code-submit">
-                        <button name="save" onClick={() => handleSubmitClick()}>
-                            Submit
-                        </button>
-                        {!solvedAlready && (
-                            <button
-                                name="unlock"
-                                onClick={() => handleUnlockClick()}
-                            >
-                                Reset
-                            </button>
-                        )}
-                        <button name="reset" onClick={() => handleResetClick()}>
-                            Reset
-                        </button>
-                    </div>
-
-                    {result && (
-                        <div className="tc">
-                            <h4>
-                                {result.numPassedTests} out of{" "}
-                                {result.numFailedTests + result.numPassedTests}{" "}
-                                Passed
-                                <div>Score: {result.score}</div>
-                            </h4>
-                            {result.testResults &&
-                                result.testResults.map(result => (
-                                    <div key={result.title}>
-                                        <span>{result.title}</span>
-                                        &nbsp;{" "}
-                                        <span
-                                            style={{
-                                                color:
-                                                    result.status == "passed"
-                                                        ? "green"
-                                                        : "red"
-                                            }}
-                                        >
-                                            {result.status}
-                                        </span>
-                                    </div>
-                                ))}
+                    {currentTab == "discussion" && <Posts id={id} />}
+                    {currentTab == "solution" && (
+                        <div id="solutiontab">
+                            {unlocked == 1 && (
+                                <div>
+                                    <CustomAceEditor
+                                        value={defaultSolution}
+                                        readOnly={true}
+                                    />
+                                    <button
+                                        name="copy"
+                                        onClick={handleCopyClick}
+                                    >
+                                        Copy to Editor
+                                    </button>
+                                </div>
+                            )}
+                            {unlocked == 0 && (
+                                <button
+                                    name="unlock"
+                                    onClick={handleUnlockClick}
+                                >
+                                    Unlock
+                                </button>
+                            )}
                         </div>
                     )}
                 </div>
@@ -207,6 +237,4 @@ export default function Challenge(props) {
         </section>
     );
 } //Challenges
-
-// <Posts id={id} />
-// <Solutions challenge_id={id} />
+//

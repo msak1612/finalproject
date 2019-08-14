@@ -169,3 +169,7 @@ export function showNotification() {
 export function resetChallenge() {
     return { type: "RESET_CHALLENGE" };
 }
+
+export function setCurrentTab(tab) {
+    return { type: "CURRENT_TAB", tab: tab };
+}

@@ -661,6 +661,7 @@ app.post("/api/challenge", (req, res) => {
     let test_target = solution_path + "/verify.test.js";
     let challenge;
     let results;
+    let challenge_score;
 
     db.getChallengeById(req.body.id, req.session.userId)
         .then(data => {
@@ -707,15 +708,15 @@ app.post("/api/challenge", (req, res) => {
         })
         .then(data => {
             if (data && data.rowCount != 0) {
-                let score = (challenge.level + 1) * 10;
-                return db.incrementScore(req.session.userId, score);
+                challenge_score = (challenge.level + 1) * 10;
+                return db.incrementScore(req.session.userId, challenge_score);
             } else {
                 return db.getUserById(req.session.userId);
             }
         })
         .then(data => {
             let score = data.rows[0].score;
-            if (score % 50 === 0) {
+            if (challenge_score && score % 50 === 0) {
                 for (let [key, value] of Object.entries(onlineUsers)) {
                     if (value == parseInt(req.session.userId)) {
                         io.to(`${key}`).emit("gainedScore", score);
