@@ -43,15 +43,30 @@ body::-webkit-scrollbar {
 header {
     width: 100vw;
     min-height: 8vh;
-    height: 7vh;
     display: inline-flex;
     flex-direction: row;
-    border: 1px solid silver;
+    border: 1px solid #f0f5f9;
     border-radius: 0.5rem;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
     justify-content: flex-end;
-
     background: #52616b;
+}
+
+#header-forum {
+    margin-right: 50vw;
+}
+
+footer {
+    display: flex;
+    background: #52616b;
+    bottom: 0;
+    left: 0;
+    position: fixed;
+    width: 100vw;
+    height: 4vh;
+    color: white;
+    font-size: 12px;
+    padding: 10px;
 }
 
 .center,
@@ -59,7 +74,6 @@ header {
     line-height: 5vh;
     text-align: center;
     color: white;
-
     text-decoration: none;
     padding: 4px;
     font-family: sans-serif;
@@ -68,9 +82,9 @@ header {
     transition: 0.2s ease;
     cursor: pointer;
     letter-spacing: 1px;
-    margin: 10px 2px 0 2px;
+    margin: 10px 4px 0 2px;
     border-radius: 0.5rem;
-    height: 75%;
+    height: 70%;
     max-width: 100%;
     font-size: 14px;
 }
@@ -261,13 +275,30 @@ hr {
     text-align: center;
 }
 
-.header-name {
-    margin-right: 10px;
-    margin-top: 15px;
+.header-name,
+.header-score {
     font-weight: 500;
     text-transform: capitalize;
-    color: white;
+
     text-align: center;
+}
+
+.header-name {
+    margin-right: 0.5vw;
+    margin-top: 1vh;
+    margin-left: -3.7vw;
+    color: white;
+}
+
+.header-score {
+    margin-right: -10px;
+    margin-top: 30px;
+    color: #c9d6df;
+}
+
+#pic {
+    height: 7vh;
+    width: 7vw;
 }
 
 .profile-name {
@@ -757,8 +788,7 @@ h4 {
 .menu {
     background: #52616b;
     border: 1px solid silver;
-    max-height: 40vh;
-    overflow-y: scroll;
+    max-height: 34vh;
 }
 
 .menu-item:hover {
@@ -769,10 +799,6 @@ h4 {
 .menu-item:active {
     background: #ff5722;
     transition: 0.2s ease-in;
-}
-
-.menu::-webkit-scrollbar {
-    display: none;
 }
 
 .menu-item {
@@ -788,7 +814,7 @@ h4 {
 }
 
 #line1 {
-    background-color: silver;
+    background-color: white;
     margin-top: 5px;
     height: 2px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
@@ -796,7 +822,8 @@ h4 {
 
 #bell,
 #search,
-#plus {
+#plus,
+#chat {
     margin-top: 5px;
     margin: 5.5px;
     height: 5.5vh;
@@ -804,7 +831,8 @@ h4 {
 
 #bell:hover,
 #plus:hover,
-#search:hover {
+#search:hover,
+#chat:hover {
     background-color: white;
     border-radius: 50%;
 }
@@ -1039,4 +1067,7 @@ input[name="search"] {
     height: 30px;
     width: auto;
     vertical-align: middle;
+}
+
+.profile-container {
 }

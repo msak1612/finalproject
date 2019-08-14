@@ -44,15 +44,6 @@ export default function SideBar() {
         >
             <hr id="line1"></hr>
             <Link
-                //className="center"
-                className="menu-item"
-                to="/collections"
-                onClick={closeSideBar}
-            >
-                Collections
-            </Link>
-            <hr id="line1"></hr>
-            <Link
                 id="friends"
                 className="menu-item"
                 to="/friends"
@@ -67,13 +58,14 @@ export default function SideBar() {
             <Link id="home" className="menu-item" to="/" onClick={closeSideBar}>
                 Home
             </Link>
+
             <Link
-                id="profile"
+                id="collections"
                 className="menu-item"
-                to="/profile"
+                to="/collections"
                 onClick={closeSideBar}
             >
-                Your Profile
+                Collections
             </Link>
             <Link
                 id="settings"

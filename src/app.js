@@ -15,26 +15,13 @@ import SideBar from "./sidebar";
 import Posts from "./posts";
 
 import axios from "./axios";
-import {
-    setUser,
-    setSideBarVisibility,
-    clearNotifications,
-    showNotification
-} from "./actions";
+import { setUser, setSideBarVisibility } from "./actions";
 import { init } from "./socket";
 
 export default function App() {
     const dispatch = useDispatch();
     const user = useSelector(state => state.user);
-    const notifications = useSelector(
-        state => state.notifications.notifications
-    );
-    const notification_count = useSelector(state =>
-        state.notifications.notifications
-            ? state.notifications.notifications.length
-            : 0
-    );
-    const show_notification = useSelector(state => state.notifications.show);
+
     useEffect(() => {
         axios
             .get("/user")
@@ -51,14 +38,6 @@ export default function App() {
         dispatch(setSideBarVisibility(false));
     }
 
-    function handleBellClick() {
-        dispatch(showNotification());
-    }
-
-    function handleNotificationClick() {
-        dispatch(clearNotifications());
-    }
-
     return (
         <BrowserRouter>
             {user.id && (
@@ -68,38 +47,32 @@ export default function App() {
                         <Link className="center" to="/challenges">
                             Challenges
                         </Link>
-                        <Link className="center" to="/forum">
+                        <Link id="header-forum" className="center" to="/forum">
                             Forum
                         </Link>
-                        <Link className="center" to="/chatroom">
-                            Chat
+
+                        <Link to="/chatroom">
+                            <img id="chat" src="/images/broadcast.png" />
                         </Link>
                         <Link to="/users">
                             <img id="search" src="/images/search.png" />
                         </Link>
-                        {show_notification && (
-                            <div id="notification">
-                                <span onClick={handleNotificationClick}>
-                                    {notifications[0]}
-                                </span>
-                            </div>
-                        )}
-                        <img
-                            id="bell"
-                            src={
-                                notification_count == 0
-                                    ? "/images/bell.png"
-                                    : "/images/bell1.png"
-                            }
-                            onClick={handleBellClick}
-                        />
+                        <Link to="/friends">
+                            <img id="bell" src="/images/bell.png" />
+                        </Link>
                         <Link to="/collections">
                             <img id="plus" src="/images/plus.png" />
                         </Link>
-                        <ProfilePic />
-                        <span className="header-name">
-                            {user.first_name}&nbsp;{user.last_name}
-                        </span>
+                        <Link id="pic" to="/">
+                            <ProfilePic />
+                        </Link>
+                        <div className="header-name">
+                            {user.first_name}
+                            {"\n"}
+                            <span className="header-score">
+                                {user.score}Pt.
+                            </span>
+                        </div>
                         <SideBar outerContainerId={"main-app"} />
                     </header>
                     <div>
@@ -114,6 +87,8 @@ export default function App() {
                         <Route path="/chatroom" component={Chatroom} />
                         <Route path="/forum" component={Posts} />
                     </div>
+
+                    <footer>Copyright {"©"} 2019 by Madhuri Sakhare </footer>
                 </div>
             )}
         </BrowserRouter>
