@@ -76,6 +76,7 @@ button {
     flex-direction: row;
     justify-content: flex-end;
     vertical-align: middle;
+    align-items: center;
 }
 
 #header-forum {
@@ -192,7 +193,6 @@ hr {
 .profile-pic {
     margin-left: 5px;
     margin-right: 5px;
-    margin-top: 3px;
     height: inherit;
     border-radius: 1rem;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
@@ -308,24 +308,17 @@ hr {
     font-weight: 500;
     text-transform: capitalize;
     text-align: center;
-}
-
-.header-name {
-    margin-right: 0.5vw;
-    margin-top: 1vh;
-    margin-left: -3.7vw;
     color: white;
 }
 
-.header-score {
-    margin-right: -10px;
-    margin-top: 30px;
-    color: #c9d6df;
-    font-size: 14px;
+.header-name {
+    margin-left: -3vw;
+    width: 3vw;
+    margin-right: 4vw;
 }
 
 #pic {
-    height: 7vh;
+    height: 6vh;
     width: 7vw;
 }
 
@@ -1102,11 +1095,11 @@ input[name="search"] {
 
 /* Position and sizing of burger button */
 .bm-burger-button {
-    position: relative;
-    margin-left: 5px;
-    width: 30px;
-    height: 25px;
-    right: 5px;
+    position: absolute;
+    width: 2vw;
+    height: 4vh;
+    right: 1vw;
+    top: 0.75vh;
 }
 
 /* Color/shape of burger icon bars */

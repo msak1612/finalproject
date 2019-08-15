@@ -3,7 +3,7 @@ const app = express();
 const compression = require("compression");
 const server = require("http").Server(app);
 const io = require("socket.io")(server, {
-    origins: "localhost:8080 madhuri-socialnetwork.herokuapp.com:*"
+    origins: "localhost:8080 code-grounds.herokuapp.com:*"
 });
 
 const cookieSession = require("cookie-session");

@@ -63,6 +63,7 @@ export default function App() {
                         </div>
 
                         <div className="icontab">
+                            <h4 className="header-score">{user.score} XP</h4>
                             <Link to="/chatroom">
                                 <img id="chat" src="/images/broadcast.png" />
                             </Link>
@@ -78,18 +79,11 @@ export default function App() {
                             <Link id="pic" to="/">
                                 <ProfilePic />
                             </Link>
-                            <div className="header-name">
-                                {user.first_name}
-                                {"\n"}
-                                <span className="header-score">
-                                    {user.score}Pt.
-                                </span>
-                            </div>
+                            <h4 className="header-name">{user.first_name}</h4>
                             <SideBar outerContainerId={"main-app"} />
                         </div>
                     </header>
                     <div>
-                        <hr></hr>
                         <Route exact path="/" component={Profile} />
                         <Route path="/user/:id" component={OtherProfile} />
                         <Route path="/users" component={FindPeople} />

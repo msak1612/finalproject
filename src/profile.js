@@ -55,7 +55,7 @@ export default function Profile() {
                         <span>
                             <hr id="line"></hr>
                         </span>
-                        <h4>{user.score} Points</h4>
+                        <h4>{user.score} XP</h4>
                         <span>
                             <hr id="line"></hr>
                         </span>
