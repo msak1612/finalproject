@@ -13,6 +13,7 @@ import Chatroom from "./chatroom";
 import Collections from "./collections";
 import SideBar from "./sidebar";
 import Posts from "./posts";
+import Settings from "./settings";
 
 import axios from "./axios";
 import { setUser, setSideBarVisibility } from "./actions";
@@ -98,6 +99,7 @@ export default function App() {
                         <Route path="/challenge/:id" component={Challenge} />
                         <Route path="/chatroom" component={Chatroom} />
                         <Route path="/forum" component={Posts} />
+                        <Route path="/settings" component={Settings} />
                     </div>
 
                     <footer>Copyright {"©"} 2019 by Madhuri Sakhare </footer>

@@ -24,7 +24,7 @@ export default function BioEditor() {
         button = (
             <div>
                 <div id="biocontainer">
-                    <span>Add a short bio to tell more about yourself.</span>
+                    <h4>Add a short bio to tell more about yourself.</h4>
                 </div>
                 <button onClick={() => dispatch(showBio(false))}>
                     Add Bio

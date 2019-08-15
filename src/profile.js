@@ -52,12 +52,19 @@ export default function Profile() {
 
                         <BioEditor bio={user.bio} />
                         {showUploader && <Uploader />}
+                        <span>
+                            <hr id="line"></hr>
+                        </span>
+                        <h4>{user.score} Points</h4>
+                        <span>
+                            <hr id="line"></hr>
+                        </span>
                     </div>
                 </div>
             </div>
             <div className="display-colwise profile-right">
                 <div className="tab">
-                    <TabButton id="solved" text="Solutions" />
+                    <TabButton id="solved" text="Completed" />
                     <TabButton id="collections" text="Collections" />
                 </div>
                 {currentTab == "solved" && <Challenges solved="true" />}

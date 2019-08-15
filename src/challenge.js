@@ -198,8 +198,8 @@ export default function Challenge(props) {
                                 highlightActiveLine={true}
                                 wrapEnabled={true}
                                 height="50vh"
-                                width="45vw"
-                                fontSize="20px"
+                                width="43vw"
+                                fontSize="16px"
                                 onChange={handleChange}
                                 name="editor"
                                 value={draftSolution}
@@ -244,8 +244,8 @@ export default function Challenge(props) {
                                         highlightActiveLine={true}
                                         wrapEnabled={true}
                                         height="50vh"
-                                        width="45vw"
-                                        fontSize="18px"
+                                        width="43vw"
+                                        fontSize="16px"
                                         name="editor"
                                         value={atob(defaultSolution)}
                                         editorProps={{ $blockScrolling: true }}

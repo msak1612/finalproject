@@ -15,8 +15,6 @@ export default function SideBar() {
         dispatch(setSideBarVisibility(false));
     }
 
-    function handleSettingsClick() {} //closes handleSettingsClick
-
     function handleLogoutClick() {
         axios
             .get("/logout")
@@ -67,12 +65,7 @@ export default function SideBar() {
             >
                 Collections
             </Link>
-            <Link
-                id="settings"
-                className="menu-item"
-                to="/settings"
-                onClick={handleSettingsClick}
-            >
+            <Link id="settings" className="menu-item" to="/settings">
                 Settings
             </Link>
             <hr id="line1"></hr>
