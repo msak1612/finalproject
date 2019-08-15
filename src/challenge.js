@@ -13,6 +13,7 @@ import {
 import AceEditor from "react-ace";
 import Posts from "./posts";
 import ReactMarkdown from "react-markdown";
+import CodeBlock from "./codeBlock";
 import "brace/mode/javascript";
 import "brace/theme/github";
 import "brace/theme/monokai";
@@ -173,7 +174,10 @@ export default function Challenge(props) {
         <section className="challenge-container ">
             <div className="left-part">
                 <h2>{name}</h2>
-                <ReactMarkdown source={description} />
+                <ReactMarkdown
+                    source={description}
+                    renderers={{ code: CodeBlock }}
+                />
             </div>
             <div className="right-part">
                 <div className="ace">

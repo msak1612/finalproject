@@ -10,6 +10,7 @@ import {
 } from "./actions";
 import { Link } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
+import CodeBlock from "./codeBlock";
 
 export default function Posts(props) {
     const id = props.id ? props.id : 0;
@@ -168,7 +169,10 @@ export default function Posts(props) {
                             />
                         )}
                         {post.post && (
-                            <ReactMarkdown source={atob(post.post)} />
+                            <ReactMarkdown
+                                source={atob(post.post)}
+                                renderers={{ code: CodeBlock }}
+                            />
                         )}
                     </div>
 

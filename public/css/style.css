@@ -466,12 +466,13 @@ button {
     width: 35vw;
     display: inline-flex;
     flex-direction: row;
+    align-items: center;
 }
 
 .post-input {
     margin: 10px;
     width: 35vw;
-    height: 30px;
+    height: 10vh;
 }
 
 .collections-container {
