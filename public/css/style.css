@@ -873,11 +873,12 @@ input[name="search"] {
 
 .challenges-container {
     display: grid;
-    width: 100vw;
-    height: 100vh;
+    /* width: 100vw; */
+    /* height: 100vh; */
     grid-gap: 1px;
     background-color: #c9d6df;
 }
+
 .challenge-container {
     grid-template-columns: 1fr 1fr;
     grid-template-rows: 1fr 1fr;
@@ -938,6 +939,10 @@ input[name="search"] {
     height: 25vh;
     margin-bottom: 10px;
     overflow-y: scroll;
+}
+
+.tc::-webkit-scrollbar {
+    display: none;
 }
 
 .code-submit {
@@ -1114,6 +1119,7 @@ input[name="search"] {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
     margin-right: 2vw;
     margin-bottom: 2vh;
+    width: 55vw;
     padding: 7px;
     overflow-y: scroll;
     background-color: #f0f5f9;

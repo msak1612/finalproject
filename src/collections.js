@@ -15,7 +15,7 @@ import {
     draftCollectionDescription
 } from "./actions";
 
-export default function Collections() {
+export default function Collections(props) {
     const dispatch = useDispatch();
     const collections = useSelector(state => state.challenges.collections);
     const draftName = useSelector(
@@ -30,11 +30,15 @@ export default function Collections() {
     const editedChallenge = useSelector(
         state => state.challenges.collection.editedChallenge
     );
+    const creator_id = props.creator_id ? props.creator_id : 0;
     const url = "/api/collections";
     useEffect(() => {
         axios
-            .get(url)
+            .get(url, {
+                creator_id: creator_id
+            })
             .then(({ data }) => {
+                console.log(data);
                 dispatch(setCollections(data));
             })
             .catch(err => {

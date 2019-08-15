@@ -7,20 +7,21 @@ import { useDispatch, useSelector } from "react-redux";
 import { setChallenges, setClassifiers, setLevel, setTag } from "./actions";
 import { Challenge } from "./challenge";
 
-export default function Challenges() {
+export default function Challenges(props) {
     const dispatch = useDispatch();
     const challenges = useSelector(state => state.challenges.challenges);
     const level = useSelector(state => state.challenges.level);
     const tag = useSelector(state => state.challenges.tag);
     const tags = useSelector(state => state.challenges.classifiers.tags);
     const levels = useSelector(state => state.challenges.classifiers.levels);
-
+    const solved = props.solved ? props.solved : false;
     useEffect(() => {
         axios
             .get("/api/challenges", {
                 params: {
                     level: level,
-                    tag: tag
+                    tag: tag,
+                    solved: solved
                 }
             })
             .then(({ data }) => {
@@ -73,8 +74,8 @@ export default function Challenges() {
         dispatch(setLevel(e.target.getAttribute("level")));
     } //closes handleLevelClick
 
-    return (
-        <section className="challenges-container">
+    function ChallengeClassifiers() {
+        return (
             <div className="display-colwise" id="left-half">
                 <h3>Levels</h3>
                 <Level level={-1} />
@@ -108,6 +109,11 @@ export default function Challenges() {
                         </Link>
                     ))}
             </div>
+        );
+    }
+    return (
+        <section className="challenges-container">
+            {!solved && <ChallengeClassifiers />}
             <div className="display-colwise" id="right-half">
                 {challenges.map(challenge => (
                     <div key={challenge.id}>

@@ -319,7 +319,7 @@ const challengeReducer = createReducer(
         },
         level: -1,
         tag: "",
-        currentTab: "codeeditor",
+        currentTab: "",
         challenge: {
             description: "",
             draftSolution: "",

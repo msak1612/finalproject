@@ -223,6 +223,14 @@ module.exports.getChallengesByLevel = function(level) {
     );
 };
 
+//list all challenges solved by the user
+module.exports.getSolvedChallenges = function(user) {
+    return db.query(
+        `SELECT C.id, C.name, C.preview, C.level, C.tags FROM challenges C INNER JOIN solutions S
+         ON S.challenge=C.id WHERE S.solver=${user} ORDER BY id`
+    );
+};
+
 //get challenge by id
 module.exports.getChallengeById = function(id, userId) {
     return db.query(`SELECT C.*, (SELECT solution as usersolution FROM solutions S

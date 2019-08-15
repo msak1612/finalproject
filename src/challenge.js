@@ -12,7 +12,6 @@ import {
 } from "./actions";
 import AceEditor from "react-ace";
 import Posts from "./posts";
-import { Solutions } from "./solutions";
 import ReactMarkdown from "react-markdown";
 import "brace/mode/javascript";
 import "brace/theme/github";
@@ -176,7 +175,7 @@ export default function Challenge(props) {
                     <div className="tab">
                         <TabButton id="codeeditor" text="Code Editor" />
                         <TabButton id="discussion" text="Discussions" />
-                        <TabButton id="solution" text="Solutions" />
+                        <TabButton id="solution" text="Solution" />
                     </div>
                     {currentTab == "codeeditor" && (
                         <div>

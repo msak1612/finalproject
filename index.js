@@ -496,12 +496,16 @@ app.get("/delete", (req, res) => {
 
 app.get("/api/challenges", (req, res) => {
     let promise;
-    if (req.query.level != -1) {
-        promise = db.getChallengesByLevel(req.query.level);
-    } else if (req.query.tag != null && req.query.tag.length > 0) {
-        promise = db.getChallengesByTag(req.query.tag);
+    if (req.query.solved === "false") {
+        if (req.query.level != -1) {
+            promise = db.getChallengesByLevel(req.query.level);
+        } else if (req.query.tag != null && req.query.tag.length > 0) {
+            promise = db.getChallengesByTag(req.query.tag);
+        } else {
+            promise = db.getAllChallenges();
+        }
     } else {
-        promise = db.getAllChallenges();
+        promise = db.getSolvedChallenges(req.session.userId);
     }
     promise
         .then(data => {
