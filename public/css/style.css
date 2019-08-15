@@ -5,7 +5,7 @@
 body {
     padding: 0;
     margin: 0;
-    background: #f0f5f9;
+    background: #c9d6df;
     font-size: 16px;
     color: #777;
     font-family: sans-serif;
@@ -164,10 +164,14 @@ hr {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
 }
 
-#main-pic,
-.other-pic {
+#main-pic {
     height: 40vh;
     width: 35vw;
+    padding: 5px;
+}
+
+.other-pic {
+    height: 40vh;
 }
 
 #challenge-pix {
@@ -294,7 +298,6 @@ hr {
 .header-score {
     font-weight: 500;
     text-transform: capitalize;
-
     text-align: center;
 }
 
@@ -309,6 +312,7 @@ hr {
     margin-right: -10px;
     margin-top: 30px;
     color: #c9d6df;
+    font-size: 14px;
 }
 
 #pic {
@@ -803,7 +807,7 @@ h4 {
 .menu {
     background: #52616b;
     border: 1px solid silver;
-    max-height: 34vh;
+    max-height: 33vh;
 }
 
 .menu-item:hover {
@@ -930,7 +934,7 @@ input[name="search"] {
     border-radius: 0.5rem;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
     justify-content: center;
-    width: 35vw;
+    width: 39vw;
     height: 25vh;
     margin-bottom: 10px;
     overflow-y: scroll;
@@ -938,7 +942,7 @@ input[name="search"] {
 
 .code-submit {
     grid-area: 2 / 3 / 3 / 4;
-    width: 35vw;
+    width: 39vw;
     margin-top: 5px;
     margin-bottom: 10px;
     align-items: center;
@@ -1009,8 +1013,6 @@ input[name="search"] {
     transition: 0.2s ease;
     background: #c9d6df;
 }
-
-/* The rest copied directly from react-burger-menu docs */
 
 /* Position and sizing of burger button */
 .bm-burger-button {
@@ -1085,4 +1087,39 @@ input[name="search"] {
 }
 
 .profile-container {
+    display: grid;
+    width: 100vw;
+    height: 100vh;
+    grid-gap: 1px;
+    border: 1px solid silver;
+    border-radius: 0.25rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+}
+
+.profile-left {
+    grid-area: 1 / 1 / 3 / 2;
+    grid-column: 1;
+    margin-bottom: 2vh;
+    margin-left: 2vw;
+    padding: 7px;
+    width: 25vw;
+
+    overflow-y: scroll;
+}
+
+.profile-right {
+    grid-column: 2;
+    border: 1px solid silver;
+    border-radius: 0.5rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+    margin-right: 2vw;
+    margin-bottom: 2vh;
+    padding: 7px;
+    overflow-y: scroll;
+    background-color: #f0f5f9;
+}
+
+.profile-left::-webkit-scrollbar,
+.profile-right::-webkit-scrollbar {
+    display: none;
 }

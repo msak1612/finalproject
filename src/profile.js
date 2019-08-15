@@ -3,7 +3,7 @@ import BioEditor from "./bioeditor";
 import ProfilePic from "./profilepic";
 import Uploader from "./uploader";
 import { useSelector } from "react-redux";
-import { Solutions } from "./solutions";
+import { Challenges } from "./challenges";
 import { Collections } from "./collections";
 
 export default function Profile() {
@@ -11,11 +11,11 @@ export default function Profile() {
     const showUploader = useSelector(state => state.edit.showUploader);
     return (
         <div className="profile-container">
-            <div className="display-rowwise">
+            <div className="display-colwise profile-left">
                 <div
                     className="display-colwise"
                     id="main-pic"
-                    style={{ maxWidth: "45vh", width: "45vh" }}
+                    style={{ maxWidth: "45vh", width: "35vh" }}
                 >
                     <ProfilePic upload="true" />
                     <div className="profile-info">
@@ -29,9 +29,7 @@ export default function Profile() {
                     </div>
                 </div>
             </div>
-            <div className="display-colwise display-rowwise">
-                <Solutions user_id={user.id} />
-            </div>
+            <div className="display-colwise profile-right"></div>
         </div>
     );
 } //closes Profile
