@@ -198,13 +198,15 @@ export default function Challenge(props) {
                                 highlightActiveLine={true}
                                 wrapEnabled={true}
                                 height="50vh"
+                                width="45vw"
+                                fontSize="20px"
                                 onChange={handleChange}
                                 name="editor"
                                 value={draftSolution}
                                 editorProps={{ $blockScrolling: true }}
                             />
                             <div className="code-submit">
-                                {!result && (
+                                {(!result || numFailedTests != 0) && (
                                     <button
                                         name="save"
                                         onClick={handleSubmitClick}
@@ -242,6 +244,8 @@ export default function Challenge(props) {
                                         highlightActiveLine={true}
                                         wrapEnabled={true}
                                         height="50vh"
+                                        width="45vw"
+                                        fontSize="18px"
                                         name="editor"
                                         value={atob(defaultSolution)}
                                         editorProps={{ $blockScrolling: true }}

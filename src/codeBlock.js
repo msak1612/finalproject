@@ -1,10 +1,10 @@
 import React from "react";
-import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import { xonokai } from "react-syntax-highlighter/dist/esm/styles/prism";
+import SyntaxHighlighter from "react-syntax-highlighter";
+import { monokai } from "react-syntax-highlighter/dist/esm/styles/hljs";
 
 export default function CodeBlock(props) {
     return (
-        <SyntaxHighlighter language={props.language} style={xonokai}>
+        <SyntaxHighlighter language={props.language} style={monokai}>
             {props.value}
         </SyntaxHighlighter>
     );
