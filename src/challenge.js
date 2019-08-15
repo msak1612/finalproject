@@ -36,6 +36,7 @@ export default function Challenge(props) {
     );
     const name = useSelector(state => state.challenges.challenge.name);
     const currentTab = useSelector(state => state.challenges.currentTab);
+    const challenges = useSelector(state => state.challenges.challenges);
     const id = props.match.params.id;
     const url = "/api/challenge";
 
@@ -116,6 +117,16 @@ export default function Challenge(props) {
         dispatch(setCurrentTab("codeeditor"));
     }
 
+    function handleNextClick() {
+        let index = challenges.findIndex(item => item.id == id);
+        index++;
+        if (index < challenges.length) {
+            location.replace("/challenge/" + challenges[index].id);
+        } else {
+            location.replace("/challenges");
+        }
+    }
+
     function TabButton(props) {
         return (
             <button
@@ -185,12 +196,25 @@ export default function Challenge(props) {
                                 editorProps={{ $blockScrolling: true }}
                             />
                             <div className="code-submit">
-                                <button name="save" onClick={handleSubmitClick}>
-                                    Submit
-                                </button>
+                                {!result && (
+                                    <button
+                                        name="save"
+                                        onClick={handleSubmitClick}
+                                    >
+                                        Submit
+                                    </button>
+                                )}
                                 <button name="reset" onClick={handleResetClick}>
                                     Reset
                                 </button>
+                                {result && (
+                                    <button
+                                        name="next"
+                                        onClick={handleNextClick}
+                                    >
+                                        Next Challenge
+                                    </button>
+                                )}
                             </div>
                             {result && <TestResults />}
                         </div>
