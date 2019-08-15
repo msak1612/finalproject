@@ -452,6 +452,8 @@ app.get("/api/users", (req, res) => {
     let promise;
     if (req.query.search) {
         promise = db.searchUsers(req.query.search);
+    } else if (req.query.score === "true") {
+        promise = db.getScorecard();
     } else {
         promise = db.getRecentUsers();
     }
@@ -671,7 +673,7 @@ app.post("/api/challenge", (req, res) => {
     let test_target = solution_path + "/verify.test.js";
     let challenge;
     let results;
-    let challenge_score;
+    let challenge_score = 0;
 
     db.getChallengeById(req.body.id, req.session.userId)
         .then(data => {
@@ -726,7 +728,7 @@ app.post("/api/challenge", (req, res) => {
         })
         .then(data => {
             let score = challenge_score ? data.rows[0].score : 0;
-            if (challenge_score && score % 50 === 0) {
+            if (challenge_score) {
                 for (let [key, value] of Object.entries(onlineUsers)) {
                     if (value == parseInt(req.session.userId)) {
                         io.to(`${key}`).emit("gainedScore", score);

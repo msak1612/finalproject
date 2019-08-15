@@ -35,7 +35,8 @@ export default function Collections(props) {
             ? state.challenges.collection.editingCollection
             : -1
     );
-    const creator_id = props.creator_id ? props.creator_id : 0;
+    const creator_id = useSelector(state => state.user.id);
+    // const creator_id = props.creator_id ? props.creator_id : 0;
     const url = "/api/collections";
     useEffect(() => {
         axios
@@ -122,6 +123,8 @@ export default function Collections(props) {
                 collection_id: collection_id
             })
             .then(({ data }) => {
+                dispatch(draftCollectionName(""));
+                dispatch(draftCollectionDescription(""));
                 dispatch(addCollection(data.id));
             })
             .catch(err => {
@@ -139,11 +142,13 @@ export default function Collections(props) {
                         className="collection-name"
                         onChange={e => handleNameChange(e)}
                         onPaste={e => handleNameChange(e)}
+                        value={draftName}
                         placeholder="Name of the collection"
                     />
                     <textarea
                         name="description"
                         className="collection-description"
+                        value={draftDescription}
                         onChange={e => handleDescriptionChange(e)}
                         onPaste={e => handleDescriptionChange(e)}
                         placeholder="Describe the collection"

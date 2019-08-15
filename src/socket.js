@@ -35,11 +35,7 @@ export const init = () => {
         });
         socket.on("newMessage", msg => store.dispatch(newChatMessage(msg)));
         socket.on("gainedScore", msg => {
-            console.log("score gained");
-
-            store.dispatch(
-                addNotification("You have reached a milestone! Scored " + msg)
-            );
+            store.dispatch(addNotification("You Scored " + msg));
         });
     }
 };

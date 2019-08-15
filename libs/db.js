@@ -29,6 +29,14 @@ module.exports.getUsersById = function(ids) {
     return db.query(`SELECT * FROM users WHERE id IN (${ids})`);
 };
 
+// get all users sorted by score
+module.exports.getScorecard = function() {
+    return db.query(
+        `SELECT RANK() OVER (ORDER BY score desc), id, first_name, last_name,
+         profile_pic, score FROM users`
+    );
+};
+
 //addProfilePic
 module.exports.addProfilePic = function(imageUrl, id) {
     return db.query(`

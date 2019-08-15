@@ -111,6 +111,10 @@ function onSetOnlineUsers(state, action) {
     return action.users;
 }
 
+function onSetScoreboard(state, action) {
+    return action.users;
+}
+
 function onSetSideBarVisibility(state, action) {
     let sideBar = state;
     state.visible = action.visible;
@@ -327,6 +331,10 @@ const onlineUsersReducer = createReducer(
     }
 );
 
+const scoreboardReducer = createReducer([], {
+    SET_SCOREBOARD: onSetScoreboard
+});
+
 const challengeReducer = createReducer(
     {
         challenges: [],
@@ -397,6 +405,7 @@ export const reducer = combineReducers({
     otherUser: otherUserReducer,
     chat: chatReducer,
     onlineUsers: onlineUsersReducer,
+    scoreboard: scoreboardReducer,
     challenges: challengeReducer,
     sideBar: sideBarVisibilityReducer,
     notifications: notificationReducer

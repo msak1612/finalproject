@@ -226,8 +226,9 @@ hr {
 
 .mini-pic {
     margin-right: 0;
-    margin-top: 0;
-    width: 125px;
+    margin-top: 5px;
+    margin-left: 10px;
+    width: 120px;
     height: 125px;
     border-radius: 5%;
 }
@@ -909,8 +910,8 @@ h4 {
 #notification {
     color: black;
     position: absolute;
-    margin-top: 60px;
-    margin-left: -30px;
+    margin-top: 5vh;
+    margin-left: -10vw;
     background: silver;
 }
 
@@ -1199,4 +1200,52 @@ input[name="search"] {
     width: 55vw;
     padding: 7px;
     background-color: #f0f5f9;
+}
+
+#scoretable {
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 2vh;
+    max-width: 80vw;
+    text-align: center;
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    border: 3px solid #ddd;
+    text-transform: capitalize;
+    width: 100%;
+    color: black;
+    background-color: silver;
+}
+
+#scoretable td,
+#scoretable th {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+#scoretable tr:nth-child(even) {
+    background-color: grey;
+}
+
+#scoretable td:nth-child(2) {
+    text-align: left;
+}
+
+#scoretable tr:hover {
+    background-color: #ddd;
+}
+
+#scoretable th {
+    padding-bottom: 12px;
+    text-align: center;
+    background-color: #454545;
+    color: white;
+}
+
+#score-pic {
+    width: 6vh;
+    height: 7vh;
+    border-radius: 10px;
+    vertical-align: middle;
+    margin-right: 10px;
 }

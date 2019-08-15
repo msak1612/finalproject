@@ -236,7 +236,7 @@ export default function Challenges(props) {
                                 >
                                     {challenge.name}
                                 </Link>
-                                {collections.length > 0 && (
+                                {!solved && collections.length > 0 && (
                                     <Modal challenge_id={challenge.id} />
                                 )}
                             </div>

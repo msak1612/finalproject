@@ -6,6 +6,10 @@ export function setOnlineUsers(users) {
     return { type: "SET_ONLINE_USERS", users: users };
 }
 
+export function setScoreboard(users) {
+    return { type: "SET_SCOREBOARD", users: users };
+}
+
 export function setCompletedSolutions(solutions) {
     return { type: "SET_COMPLETED_SOLUTIONS", solutions: solutions };
 }

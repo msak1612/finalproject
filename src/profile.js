@@ -68,9 +68,7 @@ export default function Profile() {
                     <TabButton id="collections" text="Collections" />
                 </div>
                 {currentTab == "solved" && <Challenges solved="true" />}
-                {currentTab == "collections" && (
-                    <Collections creator_id={user.id} />
-                )}
+                {currentTab == "collections" && <Collections />}
             </div>
         </div>
     );
