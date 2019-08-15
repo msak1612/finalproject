@@ -110,6 +110,14 @@ export function removeChallenge(challenge, collection) {
     };
 }
 
+export function addToCollection(challenge, collection) {
+    return {
+        type: "ADD_TO_COLLECTION",
+        challenge: challenge,
+        collection: collection
+    };
+}
+
 export function draftCollectionDescription(description) {
     return { type: "DRAFT_COLLECTION_DESCRIPTION", description: description };
 }
@@ -172,4 +180,8 @@ export function resetChallenge() {
 
 export function setCurrentTab(tab) {
     return { type: "CURRENT_TAB", tab: tab };
+}
+
+export function setEditCollection(id) {
+    return { type: "EDIT_COLLECTION", id: id };
 }

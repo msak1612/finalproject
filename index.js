@@ -585,6 +585,12 @@ app.post("/api/collections", (req, res) => {
 
         if (req.body.action === "delete") {
             promise = db.deleteCollection(req.body.collection_id);
+        } else if (req.body.collection_id != null) {
+            promise = db.editCollection(
+                req.body.collection_id,
+                req.body.name,
+                req.body.description
+            );
         } else {
             promise = db.addCollection(
                 req.body.name,

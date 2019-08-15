@@ -45,6 +45,7 @@
         "react-router-dom": "^5.0.1",
         "react-tabs": "^3.0.0",
         "react-test-renderer": "^16.6.0",
+        "reactjs-popup": "^1.4.2",
         "redux": "^3.7.1",
         "redux-devtools-extension": "^2.13.2",
         "redux-promise": "^0.5.3",

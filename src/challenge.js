@@ -30,6 +30,11 @@ export default function Challenge(props) {
     );
     const unlocked = useSelector(state => state.challenges.challenge.unlocked);
     const result = useSelector(state => state.challenges.challenge.result);
+    const numFailedTests = useSelector(state =>
+        state.challenges.challenge.result
+            ? state.challenges.challenge.result.numFailedTests
+            : -1
+    );
     const defaultSolution = useSelector(
         state => state.challenges.challenge.defaultSolution
     );
@@ -206,7 +211,7 @@ export default function Challenge(props) {
                                 <button name="reset" onClick={handleResetClick}>
                                     Reset
                                 </button>
-                                {result && (
+                                {numFailedTests == 0 && (
                                     <button
                                         name="next"
                                         onClick={handleNextClick}

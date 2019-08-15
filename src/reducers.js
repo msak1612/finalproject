@@ -149,12 +149,22 @@ function onSetCollections(state, action) {
     let collection = state.collection;
     collection.editedChallenge = -1;
     collection.editedCollection = -1;
+    collection.editingCollection = -1;
     return { ...state, collections: collections, collection: collection };
 }
 
 function onAddCollection(state, action) {
     let collection = state.collection;
     collection.editedCollection = action.collection;
+    collection.editingCollection = -1;
+    collection.editedChallenge = -1;
+    return { ...state, collection: collection };
+}
+
+function onEditCollection(state, action) {
+    let collection = state.collection;
+    collection.editingCollection = action.id;
+    collection.editedCollection = -1;
     collection.editedChallenge = -1;
     return { ...state, collection: collection };
 }
@@ -162,6 +172,7 @@ function onAddCollection(state, action) {
 function onAddChallenge(state, action) {
     let collection = state.collection;
     collection.editedChallenge = action.challenge;
+    collection.editingCollection = -1;
     collection.editedCollection = -1;
     return { ...state, collection: collection };
 }
@@ -169,6 +180,7 @@ function onAddChallenge(state, action) {
 function onRemoveCollection(state, action) {
     let collection = state.collection;
     collection.editedCollection = action.collection;
+    collection.editingCollection = -1;
     collection.editedChallenge = -1;
     return { ...state, collection: collection };
 }
@@ -177,6 +189,15 @@ function onRemoveChallenge(state, action) {
     let collection = state.collection;
     collection.editedCollection = action.collection;
     collection.editedChallenge = action.challenge;
+    collection.editingCollection = -1;
+    return { ...state, collection: collection };
+}
+
+function onAddToCollection(state, action) {
+    let collection = state.collection;
+    collection.editedCollection = action.collection;
+    collection.editedChallenge = action.challenge;
+    collection.editingCollection = -1;
     return { ...state, collection: collection };
 }
 
@@ -315,7 +336,8 @@ const challengeReducer = createReducer(
             editedCollection: -1,
             editedChallenge: -1,
             draftName: "",
-            draftDescription: ""
+            draftDescription: "",
+            editingCollection: -1
         },
         level: -1,
         tag: "",
@@ -340,8 +362,10 @@ const challengeReducer = createReducer(
         RESET_CHALLENGE: onResetChallenge,
         SET_COLLECTIONS: onSetCollections,
         ADD_COLLECTION: onAddCollection,
+        EDIT_COLLECTION: onEditCollection,
         ADD_CHALLENGE: onAddChallenge,
         REMOVE_CHALLENGE: onRemoveChallenge,
+        ADD_TO_COLLECTION: onAddToCollection,
         REMOVE_COLLECTION: onRemoveCollection,
         DRAFT_COLLECTION_NAME: onDraftCollectionName,
         DRAFT_COLLECTION_DESCRIPTION: onDraftCollectionDescription,

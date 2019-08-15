@@ -31,7 +31,11 @@ export default function Chatroom() {
                                 <div id="pic-name">
                                     <img
                                         id="chat-pic"
-                                        src={message.profile_pic}
+                                        src={
+                                            message.profile_pic
+                                                ? message.profile_pic
+                                                : "/images/default.png"
+                                        }
                                         alt={`${message.first_name} ${message.last_name}`}
                                     />
                                     <h4 id="chat-text">

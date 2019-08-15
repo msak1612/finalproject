@@ -10,9 +10,9 @@ import {
     addCollection,
     removeCollection,
     removeChallenge,
-    addChallenge,
     draftCollectionName,
-    draftCollectionDescription
+    draftCollectionDescription,
+    setEditCollection
 } from "./actions";
 
 export default function Collections(props) {
@@ -30,15 +30,21 @@ export default function Collections(props) {
     const editedChallenge = useSelector(
         state => state.challenges.collection.editedChallenge
     );
+    const editingCollection = useSelector(state =>
+        state.challenges.collection.editingCollection
+            ? state.challenges.collection.editingCollection
+            : -1
+    );
     const creator_id = props.creator_id ? props.creator_id : 0;
     const url = "/api/collections";
     useEffect(() => {
         axios
             .get(url, {
-                creator_id: creator_id
+                params: {
+                    creator_id: creator_id
+                }
             })
             .then(({ data }) => {
-                console.log(data);
                 dispatch(setCollections(data));
             })
             .catch(err => {
@@ -80,49 +86,40 @@ export default function Collections(props) {
             });
     } //closes handleDeleteClick
 
-    function addChallengesClick(e) {
-        e.preventDefault();
-        // test code to add first challenge always
-        let collection_id = e.target.getAttribute("collection_id");
-        axios
-            .get("/api/challenges", {
-                params: {
-                    level: -1,
-                    tag: null
-                }
-            })
-            .then(({ data }) => {
-                let challenge_id = data[0].id;
-                axios
-                    .post(url, {
-                        collection_id: parseInt(collection_id),
-                        challenge_id: challenge_id
-                    })
-                    .then(({ data }) => {
-                        console.log(data);
-                        dispatch(addChallenge(challenge_id));
-                    })
-                    .catch(err => {
-                        console.log(err);
-                    });
-            })
-            .catch(err => {
-                console.log(err);
-            });
-    }
+    function handleEditClick(event) {
+        dispatch(setEditCollection(event.target.getAttribute("collection_id")));
+        dispatch(
+            draftCollectionName(event.target.getAttribute("collection_name"))
+        );
+        dispatch(
+            draftCollectionDescription(
+                event.target.getAttribute("collection_description")
+            )
+        );
+    } //closes handleEditClick
 
     function handleNameChange(event) {
         dispatch(draftCollectionName(event.target.value));
     } //closes handleNameChange
+
     function handleDescriptionChange(event) {
         dispatch(draftCollectionDescription(event.target.value));
     } //closes handleDescriptionChange
 
+    function handleCancelClick() {
+        dispatch(draftCollectionName(""));
+        dispatch(draftCollectionDescription(""));
+        dispatch(setEditCollection(-1));
+    }
+
     function handleSubmitClick() {
+        let collection_id = editingCollection != -1 ? editingCollection : null;
+
         axios
             .post(url, {
                 name: draftName,
-                description: draftDescription
+                description: draftDescription,
+                collection_id: collection_id
             })
             .then(({ data }) => {
                 dispatch(addCollection(data.id));
@@ -134,56 +131,118 @@ export default function Collections(props) {
     } //closes handleSubmitClick
 
     return (
-        <div>
-            <div>
-                <input
-                    name="name"
-                    onChange={e => handleNameChange(e)}
-                    onPaste={e => handleNameChange(e)}
-                    placeholder="Name of the collection"
-                />
-                <input
-                    name="description"
-                    onChange={e => handleDescriptionChange(e)}
-                    onPaste={e => handleDescriptionChange(e)}
-                    placeholder="Describe the collection"
-                />
-                <button onClick={() => handleSubmitClick()}>Add</button>
-            </div>
+        <div className="display-colwise">
+            {editingCollection == -1 && (
+                <div className="add-collection">
+                    <input
+                        name="name"
+                        className="collection-name"
+                        onChange={e => handleNameChange(e)}
+                        onPaste={e => handleNameChange(e)}
+                        placeholder="Name of the collection"
+                    />
+                    <textarea
+                        name="description"
+                        className="collection-description"
+                        onChange={e => handleDescriptionChange(e)}
+                        onPaste={e => handleDescriptionChange(e)}
+                        placeholder="Describe the collection"
+                    />
+                    <button onClick={() => handleSubmitClick()}>Add</button>
+                </div>
+            )}
             {collections.map(collection => (
-                <div key={collection.id}>
-                    <div>{collection.name}</div>
-                    <div>{collection.description}</div>
-                    <Link
-                        to="/collections"
-                        collection_id={collection.id}
-                        onClick={e => addChallengesClick(e)}
+                <div key={collection.id} className="collections-container">
+                    <div
+                        className="display-colwise collection-info"
+                        id="left-half"
                     >
-                        Add Challenges
-                    </Link>
-                    <Link
-                        to="/collections"
-                        collection_id={collection.id}
-                        onClick={e => handleDeleteClick(e)}
-                    >
-                        Delete Collection
-                    </Link>
-                    {collection.challenges.map(challenge => (
-                        <div key={challenge.id}>
-                            <Link to={"/challenge/" + challenge.id}>
-                                {challenge.name}
-                            </Link>
-                            <p>{challenge.preview}</p>
-                            <Link
-                                to="/collections"
-                                challenge_id={challenge.id}
-                                collection_id={collection.id}
-                                onClick={e => handleRemoveClick(e)}
-                            >
-                                Remove From Collection
-                            </Link>
+                        {editingCollection != collection.id && (
+                            <div>
+                                <span>
+                                    <b>{collection.name}</b>
+                                </span>
+                                <span>
+                                    <p>
+                                        <i>{collection.description}</i>
+                                    </p>
+                                </span>
+                                {creator_id == collection.creator && (
+                                    <div className="display-colwise">
+                                        <button
+                                            collection_id={collection.id}
+                                            onClick={e => handleDeleteClick(e)}
+                                        >
+                                            Delete
+                                        </button>
+                                        <button
+                                            collection_id={collection.id}
+                                            collection_name={collection.name}
+                                            collection_description={
+                                                collection.description
+                                            }
+                                            onClick={e => handleEditClick(e)}
+                                        >
+                                            Edit
+                                        </button>
+                                    </div>
+                                )}
+                            </div>
+                        )}
+                        {editingCollection == collection.id && (
+                            <div className="add-collection">
+                                <input
+                                    name="name"
+                                    className="collection-name"
+                                    defaultValue={draftName}
+                                    onChange={e => handleNameChange(e)}
+                                    onPaste={e => handleNameChange(e)}
+                                    placeholder="Name of the collection"
+                                />
+                                <textarea
+                                    name="description"
+                                    className="collection-description"
+                                    defaultValue={draftDescription}
+                                    onChange={e => handleDescriptionChange(e)}
+                                    onPaste={e => handleDescriptionChange(e)}
+                                    placeholder="Describe the collection"
+                                />
+                                <button onClick={() => handleSubmitClick()}>
+                                    Save
+                                </button>
+                                <button onClick={() => handleCancelClick()}>
+                                    Cancel
+                                </button>
+                            </div>
+                        )}
+                    </div>
+
+                    {collection.challenges.length > 0 && (
+                        <div className="display-colwise" id="right-half">
+                            {collection.challenges.map(challenge => (
+                                <div key={challenge.id}>
+                                    <Link
+                                        id="challenge-title"
+                                        to={"/challenge/" + challenge.id}
+                                    >
+                                        {challenge.name}
+                                    </Link>
+                                    <p>{challenge.preview}</p>
+                                    {creator_id == collection.creator && (
+                                        <button
+                                            to="/collections"
+                                            challenge_id={challenge.id}
+                                            collection_id={collection.id}
+                                            onClick={e => handleRemoveClick(e)}
+                                        >
+                                            Remove
+                                        </button>
+                                    )}
+                                    <hr id="line1"></hr>
+                                </div>
+                            ))}
                         </div>
-                    ))}
+                    )}
                 </div>
             ))}
         </div>

@@ -289,6 +289,12 @@ module.exports.addCollection = function(name, creator, description) {
         VALUES ('${name}',${creator},'${description}') RETURNING *`);
 };
 
+// edit collection
+module.exports.editCollection = function(collection_id, name, description) {
+    return db.query(`UPDATE collections SET name='${name}',description='${description}'
+        WHERE id=${collection_id} RETURNING *`);
+};
+
 // add challenge to a collection
 module.exports.addToCollection = function(collection_id, challenge_id) {
     return db.query(
@@ -318,7 +324,7 @@ module.exports.getAllCollections = function() {
          'name',X.name, 'preview', X.preview, 'level', X.level, 'tags',X.tags)))
          as challenges from collections C LEFT JOIN collectionitems I ON I.collection_id=C.id
          LEFT JOIN challenges X ON X.id=I.challenge_id LEFT JOIN users U ON U.id=C.creator
-          GROUP BY C.id,U.first_name,U.last_name) SELECT * FROM Collection`
+          GROUP BY C.id,U.first_name,U.last_name) SELECT * FROM Collection ORDER BY id DESC`
     );
 };
 
@@ -330,7 +336,7 @@ module.exports.getCollectionsByCreator = function(creator) {
          'name',X.name, 'preview', X.preview, 'level', X.level, 'tags',X.tags)))
          as challenges from collections C LEFT JOIN collectionitems I ON I.collection_id=C.id
          LEFT JOIN challenges X ON X.id=I.challenge_id LEFT JOIN users U ON U.id=C.creator
-         WHERE C.creator=${creator} GROUP BY C.id,U.first_name,U.last_name) SELECT * FROM Collection`
+         WHERE C.creator=${creator} GROUP BY C.id,U.first_name,U.last_name) SELECT * FROM Collection ORDER BY id DESC`
     );
 };
 
