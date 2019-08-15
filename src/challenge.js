@@ -53,7 +53,7 @@ export default function Challenge(props) {
                         name: data.name,
                         description: atob(data.description),
                         template: atob(data.template),
-                        defaultSolution: atob(data.solution),
+                        defaultSolution: data.solution,
                         draftSolution: data.usersolution
                             ? atob(data.usersolution)
                             : atob(data.template),
@@ -112,7 +112,7 @@ export default function Challenge(props) {
     }
 
     function handleCopyClick() {
-        dispatch(setDraftSolution(defaultSolution));
+        dispatch(setDraftSolution(atob(defaultSolution)));
         dispatch(setCurrentTab("codeeditor"));
     }
 
@@ -154,27 +154,6 @@ export default function Challenge(props) {
         );
     }
 
-    function CustomAceEditor(props) {
-        return (
-            <AceEditor
-                mode="javascript"
-                theme="monokai"
-                enableBasicAutocompletion={true}
-                enableLiveAutocompletion={true}
-                showGutter={true}
-                showPrintMargin={true}
-                highlightActiveLine={true}
-                wrapEnabled={true}
-                height="50vh"
-                onChange={handleChange}
-                name="editor"
-                value={props.value}
-                editorProps={{ $blockScrolling: true }}
-                readOnly={props.readOnly}
-            />
-        );
-    }
-
     return (
         <section className="challenge-container ">
             <div className="left-part">
@@ -190,9 +169,20 @@ export default function Challenge(props) {
                     </div>
                     {currentTab == "codeeditor" && (
                         <div>
-                            <CustomAceEditor
+                            <AceEditor
+                                mode="javascript"
+                                theme="monokai"
+                                enableBasicAutocompletion={true}
+                                enableLiveAutocompletion={true}
+                                showGutter={true}
+                                showPrintMargin={true}
+                                highlightActiveLine={true}
+                                wrapEnabled={true}
+                                height="50vh"
+                                onChange={handleChange}
+                                name="editor"
                                 value={draftSolution}
-                                readOnly={false}
+                                editorProps={{ $blockScrolling: true }}
                             />
                             <div className="code-submit">
                                 <button name="save" onClick={handleSubmitClick}>
@@ -210,8 +200,19 @@ export default function Challenge(props) {
                         <div id="solutiontab">
                             {unlocked == 1 && (
                                 <div>
-                                    <CustomAceEditor
-                                        value={defaultSolution}
+                                    <AceEditor
+                                        mode="javascript"
+                                        theme="monokai"
+                                        enableBasicAutocompletion={true}
+                                        enableLiveAutocompletion={true}
+                                        showGutter={true}
+                                        showPrintMargin={true}
+                                        highlightActiveLine={true}
+                                        wrapEnabled={true}
+                                        height="50vh"
+                                        name="editor"
+                                        value={atob(defaultSolution)}
+                                        editorProps={{ $blockScrolling: true }}
                                         readOnly={true}
                                     />
                                     <button

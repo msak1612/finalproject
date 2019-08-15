@@ -715,7 +715,7 @@ app.post("/api/challenge", (req, res) => {
             }
         })
         .then(data => {
-            let score = data.rows[0].score;
+            let score = challenge_score ? data.rows[0].score : 0;
             if (challenge_score && score % 50 === 0) {
                 for (let [key, value] of Object.entries(onlineUsers)) {
                     if (value == parseInt(req.session.userId)) {

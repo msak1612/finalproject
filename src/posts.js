@@ -144,15 +144,27 @@ export default function Posts(props) {
                     }
                     key={post.id}
                 >
-                    <div>
-                        <b>
-                            &nbsp;{post.first_name}&nbsp;
-                            {post.last_name}
-                        </b>
+                    <div className="display-rowwise">
+                        <div className="display-colwise">
+                            <img
+                                src={
+                                    post.profile_pic
+                                        ? post.profile_pic
+                                        : "/images/default.png"
+                                }
+                                id="chat-pic"
+                            />
+                            <span style={{ textAlign: "center" }}>
+                                <b>
+                                    &nbsp;{post.first_name}&nbsp;
+                                    {post.last_name}
+                                </b>
+                            </span>
+                        </div>
                         {post.image && (
                             <img
                                 src={post.image}
-                                style={{ maxWidth: "100%", maxHeight: "100%" }}
+                                style={{ maxWidth: "80%", maxHeight: "80%" }}
                             />
                         )}
                         {post.post && (
@@ -222,7 +234,10 @@ export default function Posts(props) {
     }
 
     return (
-        <div className="display-colwise">
+        <div
+            className="display-colwise"
+            style={{ alignItems: id == 0 ? "center" : "baseline" }}
+        >
             {!replyPost && addPost}
             <PostList posts={posts.posts} replyPost={replyPost} />
         </div>

@@ -42,38 +42,50 @@ export default function App() {
         <BrowserRouter>
             {user.id && (
                 <div id="main-app" onClick={closeSideBar}>
-                    <img id="logo-s" src="/images/logo.png" alt="logo" />
                     <header>
-                        <Link className="center" to="/challenges">
-                            Challenges
-                        </Link>
-                        <Link id="header-forum" className="center" to="/forum">
-                            Forum
-                        </Link>
-
-                        <Link to="/chatroom">
-                            <img id="chat" src="/images/broadcast.png" />
-                        </Link>
-                        <Link to="/users">
-                            <img id="search" src="/images/search.png" />
-                        </Link>
-                        <Link to="/friends">
-                            <img id="bell" src="/images/bell.png" />
-                        </Link>
-                        <Link to="/collections">
-                            <img id="plus" src="/images/plus.png" />
-                        </Link>
-                        <Link id="pic" to="/">
-                            <ProfilePic />
-                        </Link>
-                        <div className="header-name">
-                            {user.first_name}
-                            {"\n"}
-                            <span className="header-score">
-                                {user.score}Pt.
-                            </span>
+                        <div className="headertab">
+                            <img
+                                id="logo-s"
+                                src="/images/logo.png"
+                                alt="logo"
+                            />
+                            <Link className="center" to="/challenges">
+                                Challenges
+                            </Link>
+                            <Link
+                                id="header-forum"
+                                className="center"
+                                to="/forum"
+                            >
+                                Forum
+                            </Link>
                         </div>
-                        <SideBar outerContainerId={"main-app"} />
+
+                        <div className="icontab">
+                            <Link to="/chatroom">
+                                <img id="chat" src="/images/broadcast.png" />
+                            </Link>
+                            <Link to="/users">
+                                <img id="search" src="/images/search.png" />
+                            </Link>
+                            <Link to="/friends">
+                                <img id="bell" src="/images/bell.png" />
+                            </Link>
+                            <Link to="/collections">
+                                <img id="plus" src="/images/plus.png" />
+                            </Link>
+                            <Link id="pic" to="/">
+                                <ProfilePic />
+                            </Link>
+                            <div className="header-name">
+                                {user.first_name}
+                                {"\n"}
+                                <span className="header-score">
+                                    {user.score}Pt.
+                                </span>
+                            </div>
+                            <SideBar outerContainerId={"main-app"} />
+                        </div>
                     </header>
                     <div>
                         <hr></hr>

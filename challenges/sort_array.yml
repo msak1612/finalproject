@@ -19,7 +19,7 @@ solution: |
 template: |
     export default function sortArray(input) {
         // Your Playground !!!
-        return "";
+        return [];
     }
 test: |
     import sortArray from "./template";
