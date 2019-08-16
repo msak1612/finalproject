@@ -53,7 +53,12 @@ export default function SideBar() {
                 )}
             </Link>
             <hr id="line1"></hr>
-            <Link id="home" className="menu-item" to="/" onClick={closeSideBar}>
+            <Link
+                id="home"
+                className="menu-item"
+                to="/profile"
+                onClick={closeSideBar}
+            >
                 Home
             </Link>
 

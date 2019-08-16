@@ -24,7 +24,7 @@ export default function OtherProfile(props) {
             .get(url)
             .then(({ data }) => {
                 if (data.sameUser) {
-                    props.history.push("/");
+                    props.history.push("/profile");
                 }
                 dispatch(setOtherUser(data.user));
                 let friends = [];

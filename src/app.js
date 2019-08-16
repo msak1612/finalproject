@@ -116,7 +116,7 @@ export default function App() {
                             <Link to="/collections">
                                 <img id="plus" src="/images/plus.png" />
                             </Link>
-                            <Link id="pic" to="/">
+                            <Link id="pic" to="/profile">
                                 <ProfilePic />
                             </Link>
                             <h4 className="header-name">{user.first_name}</h4>
@@ -124,7 +124,8 @@ export default function App() {
                         </div>
                     </header>
                     <div>
-                        <Route exact path="/" component={Profile} />
+                        <Route exact path="/" component={Challenges} />
+                        <Route path="/profile" component={Profile} />
                         <Route path="/user/:id" component={OtherProfile} />
                         <Route path="/users" component={FindPeople} />
                         <Route path="/friends" component={Friends} />
