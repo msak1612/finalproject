@@ -136,8 +136,6 @@ export default function App() {
                         <Route path="/settings" component={Settings} />
                         <Route path="/scoreboard" component={Scoreboard} />
                     </div>
-
-                    <footer>Copyright {"©"} 2019 by Madhuri Sakhare </footer>
                 </div>
             )}
         </BrowserRouter>

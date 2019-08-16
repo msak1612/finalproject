@@ -129,6 +129,7 @@ export default function Posts(props) {
                 value={draftPost}
                 onChange={e => handleChange(e)}
                 onPaste={e => handleChange(e)}
+                placeholder="Please use markdown syntax for code highlighting..."
                 autoFocus
             />
             <button onClick={() => handlePostClick()}>Post</button>
@@ -141,7 +142,13 @@ export default function Posts(props) {
             return posts.map(post => (
                 <div
                     className={
-                        post.parent_post_id == 0 ? "post-item" : "reply-item"
+                        id == 0
+                            ? post.parent_post_id == 0
+                                ? "post-item discussion-item"
+                                : "reply-item discussion-reply-item"
+                            : post.parent_post_id == 0
+                            ? "post-item"
+                            : "reply-item"
                     }
                     key={post.id}
                 >

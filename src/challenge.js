@@ -66,8 +66,8 @@ export default function Challenge(props) {
                         solvedAlready: data.usersolution
                             ? true
                             : data_unlocked
-                                ? true
-                                : false,
+                            ? true
+                            : false,
                         unlocked: data_unlocked
                     })
                 );
@@ -152,6 +152,19 @@ export default function Challenge(props) {
                 <h4>
                     <div id="score">Score: {result.score}</div>
                 </h4>
+                <h4>
+                    <div
+                        id={
+                            numFailedTests == 0
+                                ? "successresult"
+                                : "failureresult"
+                        }
+                    >
+                        {numFailedTests == 0
+                            ? "All test cases passed!"
+                            : "There are failed test cases. Try Again!"}
+                    </div>
+                </h4>
                 {result.testResults &&
                     result.testResults.map(result => (
                         <div key={result.title}>
@@ -198,7 +211,7 @@ export default function Challenge(props) {
                                 highlightActiveLine={true}
                                 wrapEnabled={true}
                                 height="50vh"
-                                width="45vw"
+                                width="43vw"
                                 fontSize="16px"
                                 onChange={handleChange}
                                 name="editor"

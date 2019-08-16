@@ -33,7 +33,7 @@ module.exports.getUsersById = function(ids) {
 module.exports.getScorecard = function() {
     return db.query(
         `SELECT RANK() OVER (ORDER BY score desc), id, first_name, last_name,
-         profile_pic, score FROM users`
+         profile_pic, score FROM users WHERE score>0`
     );
 };
 

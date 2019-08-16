@@ -318,6 +318,7 @@ hr {
 #score {
     background: #c9d6df;
     padding: 5px;
+    margin-top: -20px;
 }
 
 .header-name {
@@ -436,21 +437,32 @@ button {
 .post-item {
     background-color: white;
     width: 40vw;
+    max-width: 40vw;
     border-radius: 15px;
     margin-bottom: 10px;
     padding-left: 10px;
     text-align: left;
-    text-transform: capitalize;
 }
 
 .reply-item {
     background-color: lightgrey;
     width: 38vw;
+    max-width: 38vw;
     border-radius: 15px;
     margin-bottom: 10px;
     padding-left: 10px;
     text-align: right;
     margin-right: 10px;
+}
+
+.discussion-item {
+    width: 80vw;
+    max-width: 80vw;
+}
+
+.discussion-reply-item {
+    width: 78vw;
+    max-width: 78vw;
 }
 
 .post-item p,
@@ -997,27 +1009,23 @@ input[name="search"] {
 }
 
 .right-part {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    grid-template-rows: 1fr 1fr;
-    grid-area: 1 / 2 / 3 / 3;
+    display: flex;
+    flex-direction: row;
     border: 1px solid silver;
     border-radius: 0.5rem;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
     margin-top: 10px;
+    margin-right: 10px;
     overflow-y: hidden;
     height: 97vh;
-    width: 49vw;
+    width: 50vw;
+    justify-content: space-around;
     background-color: #f0f5f9;
 }
 
 .ace {
     margin-top: 50px;
-    grid-area: 1 / 1 / 2 / 4;
-    margin: 10px;
-    height: 2vh;
-    width: 49vw;
-    margin-left: 60px;
+    width: 43vw;
 }
 
 .tc {
@@ -1026,7 +1034,7 @@ input[name="search"] {
     border-radius: 0.5rem;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
     justify-content: center;
-    width: 45vw;
+    width: 43vw;
     height: 25vh;
     margin-bottom: 10px;
     overflow-y: scroll;
@@ -1034,6 +1042,21 @@ input[name="search"] {
 
 .tc::-webkit-scrollbar {
     display: none;
+}
+
+#successresult,
+#failureresult {
+    color: white;
+    padding: 5px;
+    margin-top: -22px;
+}
+
+#successresult {
+    background-color: green;
+}
+
+#failureresult {
+    background-color: indianred;
 }
 
 .code-submit {
