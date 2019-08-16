@@ -124,15 +124,15 @@ function onSetSideBarVisibility(state, action) {
 function onAddNotification(state, action) {
     let notifications = state.notifications;
     notifications.push(action.notification);
-    return { ...state, notifications: notifications, show: false };
+    return { ...state, notifications: notifications, show: "" };
 }
 
 function onShowNotification(state, action) {
-    return { ...state, show: true };
+    return { ...state, show: action.show };
 }
 
 function onClearNotifications(state, action) {
-    return { ...state, notifications: [], show: false };
+    return { ...state, notifications: [] };
 }
 
 function onSetChallenges(state, action) {
@@ -389,7 +389,7 @@ const sideBarVisibilityReducer = createReducer(
 );
 
 const notificationReducer = createReducer(
-    { notifications: [], show: false },
+    { notifications: [], show: "" },
     {
         ADD_NOTIFICATION: onAddNotification,
         CLEAR_NOTIFICATIONS: onClearNotifications,

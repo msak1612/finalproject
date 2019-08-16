@@ -55,11 +55,12 @@ export default function App() {
     }
 
     function handleBellClick() {
-        dispatch(showNotification());
+        dispatch(showNotification(notifications[0]));
+        dispatch(clearNotifications());
     }
 
     function handleNotificationClick() {
-        dispatch(clearNotifications());
+        dispatch(showNotification(""));
     }
 
     return (
@@ -96,10 +97,10 @@ export default function App() {
                             <Link to="/users">
                                 <img id="search" src="/images/search.png" />
                             </Link>
-                            {show_notification && (
+                            {show_notification && show_notification.length > 0 && (
                                 <div id="notification">
                                     <span onClick={handleNotificationClick}>
-                                        {notifications[0]}
+                                        {show_notification}
                                     </span>
                                 </div>
                             )}

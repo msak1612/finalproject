@@ -949,9 +949,11 @@ h4 {
 #notification {
     color: black;
     position: absolute;
-    margin-top: 5vh;
-    margin-left: -10vw;
-    background: silver;
+    margin-top: 6vh;
+    margin-left: -8vw;
+    padding: 10px;
+    background: white;
+    border-radius: 20px;
 }
 
 input[name="search"] {

@@ -327,13 +327,19 @@ app.post("/api/user/:id", async (req, res) => {
                 sender_id
             );
             invitationChange = true;
+        } else if (action == "reject") {
+            friendshipStatus = await db.endFriendship(sender_id, receiver_id);
+            invitationChange = true;
         } else if (action == "end") {
             friendshipStatus = await db.endFriendship(sender_id, receiver_id);
         }
 
         //Friend Request Notifications
         if (invitationChange) {
-            let notify_id = action == "accept" ? sender_id : receiver_id;
+            let notify_id =
+                action == "accept" || action == "reject"
+                    ? sender_id
+                    : receiver_id;
             let request_count = await db.getFriendRequestCount(notify_id);
             for (let [key, value] of Object.entries(onlineUsers)) {
                 if (value == parseInt(notify_id)) {
@@ -781,15 +787,6 @@ io.on("connection", socket => {
         })
         .catch(err => {
             console.log("Error in getting user. ", err);
-        });
-
-    console.log(socket.id);
-    db.getFriendRequestCount(userId)
-        .then(data => {
-            socket.emit("friendRequest", data.rows[0]);
-        })
-        .catch(err => {
-            console.log("Error in getting friend request count. ", err);
         });
 
     // //part1: is getting the recent 10 messages.

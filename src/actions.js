@@ -174,8 +174,8 @@ export function clearNotifications() {
     return { type: "CLEAR_NOTIFICATIONS" };
 }
 
-export function showNotification() {
-    return { type: "SHOW_NOTIFICATION" };
+export function showNotification(show) {
+    return { type: "SHOW_NOTIFICATION", show: show };
 }
 
 export function resetChallenge() {

@@ -29,7 +29,10 @@ function useFriendButtonSubmit(props) {
             .then(({ data }) => {
                 if (props.action === "accept") {
                     dispatch(acceptFriend(props.id));
-                } else if (props.action === "end") {
+                } else if (
+                    props.action === "end" ||
+                    props.action === "reject"
+                ) {
                     dispatch(endFriendship(props.id));
                 } else if (props.action === "cancel") {
                     dispatch(cancelFriendship(props.id));
@@ -61,7 +64,7 @@ export default function FriendButton(props) {
                 button = (
                     <div className="display-rowwise">
                         <Button id={id} action="accept" text="Accept" />
-                        <Button id={id} action="end" text="Reject" />
+                        <Button id={id} action="reject" text="Reject" />
                     </div>
                 );
             } else {

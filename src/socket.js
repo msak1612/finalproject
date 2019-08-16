@@ -5,7 +5,8 @@ import {
     newChatMessage,
     setOnlineUsers,
     friendRequestCount,
-    addNotification
+    addNotification,
+    clearNotifications
 } from "./actions";
 // onlineUsers, userJoined, userLeft, newChatMsg,
 
@@ -30,6 +31,8 @@ export const init = () => {
                             " friend request"
                     )
                 );
+            } else {
+                store.dispatch(store.dispatch(clearNotifications()));
             }
             store.dispatch(friendRequestCount(request_count.count));
         });
