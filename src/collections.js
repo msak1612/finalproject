@@ -125,6 +125,9 @@ export default function Collections(props) {
                 dispatch(draftCollectionName(""));
                 dispatch(draftCollectionDescription(""));
                 dispatch(addCollection(data.id));
+                if (collection_id === null) {
+                    location.replace("/");
+                }
             })
             .catch(err => {
                 console.log(err);
