@@ -770,7 +770,7 @@ button.ghost {
     background-color: #52616b;
     overflow-y: scroll;
     height: 75vh;
-    width: 15vw;
+    width: 19vw;
 }
 .online-container::-webkit-scrollbar {
     display: none;
@@ -781,13 +781,12 @@ button.ghost {
     width: 35vh;
     display: flex;
     flex-flow: row nowrap;
-    background: #eeeeee;
     margin: 5px;
     justify-content: space-around;
-    border: 1px solid #52616b;
+    border: 1px solid silver;
     border-radius: 1rem;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
-    background: #eeeeee;
+    background: green;
 }
 
 .online-container h4 {
@@ -800,6 +799,7 @@ button.ghost {
     width: 50px;
     height: 50px;
     border-radius: 5%;
+    vertical-align: middle;
 }
 
 .count {
@@ -834,7 +834,7 @@ h4 {
 }
 
 .online-user-name span {
-    color: #52616b;
+    color: black;
     animation: online-user 5s linear infinite;
     font-weight: 600;
     text-transform: capitalize;
