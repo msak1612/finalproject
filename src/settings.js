@@ -34,14 +34,14 @@ export default function Settings() {
     } //closes handleDeleteClick
 
     return (
-        <div>
-            <h2>Settings</h2>
-            <h3>Delete Account</h3>
+        <div className="settings">
+            <h3>Delete Your Account</h3>
             <div className="display-rowwise">
                 <p>
                     It is a pleasure having you here. Do you really want to
                     delete?
                 </p>
+                &nbsp;&nbsp;
                 <Link
                     className="center"
                     to="/delete"

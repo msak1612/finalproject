@@ -240,7 +240,9 @@ export default function Posts(props) {
     return (
         <div
             className="display-colwise"
-            style={{ alignItems: id == 0 ? "center" : "baseline" }}
+            style={{
+                alignItems: id == 0 ? "center" : "baseline"
+            }}
         >
             {!replyPost && addPost}
             <PostList posts={posts.posts} replyPost={replyPost} />

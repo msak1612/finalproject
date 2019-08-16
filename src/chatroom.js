@@ -56,7 +56,7 @@ export default function Chatroom() {
                 ></textarea>
             </section>
             <div className="display-colwise online-container">
-                <h4>Online Users</h4>
+                <h4>Online Coders</h4>
                 {onlineUsers.length > 0 &&
                     onlineUsers.map(user => (
                         <div key={user.id} className="online-user">

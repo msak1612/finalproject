@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-import { render } from "react-dom";
 import { Link } from "react-router-dom";
 
 import axios from "./axios";

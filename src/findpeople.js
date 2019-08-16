@@ -35,12 +35,12 @@ function FindPeople() {
     return (
         <section className="display-colwise">
             <div style={{ textAlign: "center" }}>
-                <h4>Are you looking for someone in particular?</h4>
+                <h4>Are you looking for expert coders in particular?</h4>
                 {input}
             </div>
             <UserList
                 list={users}
-                title={val ? null : "Checkout who just joined!"}
+                title={val ? null : "Recently joined coders!"}
             />
         </section>
     );
