@@ -213,8 +213,10 @@ hr {
 }
 
 .friend-list {
+    border: 1px solid silver;
     border-radius: 1.5rem;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+    background: #c9d6df;
 }
 
 .profile {
@@ -245,6 +247,7 @@ hr {
     border: 1px solid silver;
     border-radius: 1.5rem;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+    background: #f0f5f9;
 }
 
 .userlist {
@@ -960,12 +963,16 @@ h4 {
 
 #notification {
     color: black;
+    font-weight: 500;
     position: absolute;
     margin-top: 6vh;
     margin-left: -8vw;
     padding: 10px;
-    background: white;
+    border: 1px solid white;
+    border-radius: 1.5rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
     border-radius: 20px;
+    background: white;
 }
 
 input[name="search"] {
@@ -1014,7 +1021,7 @@ input[name="search"] {
     border: 1px solid silver;
     border-radius: 0.5rem;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
-    margin-top: 10px;
+    margin-top: 1.8vh;
     margin-right: 10px;
     overflow-y: hidden;
     height: 97vh;
@@ -1026,6 +1033,7 @@ input[name="search"] {
 .ace {
     margin-top: 50px;
     width: 43vw;
+    overflow-x: scroll;
 }
 
 .tc {
@@ -1038,8 +1046,10 @@ input[name="search"] {
     height: 25vh;
     margin-bottom: 10px;
     overflow-y: scroll;
+    overflow-x: scroll;
 }
 
+.ace::-webkit-scrollbar,
 .tc::-webkit-scrollbar {
     display: none;
 }
@@ -1178,7 +1188,7 @@ input[name="search"] {
     flex-direction: row;
     /* background: #f0f5f9; */
     justify-content: flex-start;
-    margin-bottom: 10px;
+    margin-bottom: 3vh;
 }
 
 /* Style the buttons that are used to open the tab content */
